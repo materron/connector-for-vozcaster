@@ -2,7 +2,7 @@
 Contributors: materron
 Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.0
 Stable tag: 1.5.7
 License: GPLv2 or later
