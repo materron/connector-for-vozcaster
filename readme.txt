@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.7
+Stable tag: 1.5.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,9 @@ Service URLs and policies:
 3. Episode log: list of episodes published via the bot.
 
 == Changelog ==
+
+= 1.5.8 =
+* Spanish (es_ES) translation added. The plugin automatically displays in Spanish on WordPress installations set to Spanish.
 
 = 1.5.7 =
 * Renamed from VozPress Connector to Connector for VozCaster to align with WordPress.org plugin guidelines on naming.
