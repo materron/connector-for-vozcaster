@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.8
+Stable tag: 1.5.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,7 +61,9 @@ Permanently, only in your own WordPress media library. The bot processes the aud
 
 = Does the bot send my audio to third-party AI services? =
 
-No. Transcription uses a local Whisper model running on the bot's server. Content generation uses a local Ollama model. No audio or transcript leaves the bot's server unless you explicitly configure an optional third-party AI service.
+Your **audio is never sent to a third-party AI service**. Transcription runs on a local Whisper model on the bot's server, so the audio file itself stays on that server (and on Telegram, which carries your message).
+
+To draft the episode **title, description and content**, the bot sends the transcribed *text* to Anthropic's Claude API. If you ask the bot to generate a cover image, the *image prompt* is sent to OpenAI's image API. These providers receive text only, and only when you request content or image generation. See the "External Services" section below for the providers and their privacy policies.
 
 = Can I connect more than one WordPress site to the bot? =
 
@@ -99,7 +101,12 @@ The following data is transmitted:
 3. **From the bot's server to Telegram's servers**
    - User-sent voice messages and audio files pass through Telegram's infrastructure as part of normal bot communication. See Telegram's Privacy Policy: https://telegram.org/privacy
 
-The bot's server processes audio with locally-running models (Whisper, Ollama, DeepFilter, ffmpeg). It does **not** transmit your audio or content to any third-party AI service unless the bot is explicitly configured to do so by its operator.
+4. **From the bot's server to AI providers (text only)**
+   - To draft the episode title, description and content, the bot sends the transcribed *text* of your recording to **Anthropic (Claude)**.
+   - If you request a cover image, the bot sends a *text prompt* to **OpenAI** to generate the image.
+   - Only text is sent, and only when content or image generation is requested. Your audio file is **never** transmitted to these providers.
+
+Audio is transcribed locally with a Whisper model on the bot's server; other audio processing (DeepFilter noise reduction, ffmpeg, and an Ollama model used only as a local fallback) also runs locally. The audio file itself is not sent to any third-party AI service.
 
 Service URLs and policies:
 
@@ -109,14 +116,18 @@ Service URLs and policies:
 * Telegram Messenger: https://telegram.org
 * Telegram privacy policy: https://telegram.org/privacy
 * Telegram terms of service: https://telegram.org/tos
-
-== Screenshots ==
-
-1. Settings page: authorised users and per-feed permissions.
-2. Per-podcast settings: title prefix, intro/outro audio, post footer.
-3. Episode log: list of episodes published via the bot.
+* Anthropic (Claude, AI text generation): https://www.anthropic.com
+* Anthropic privacy policy: https://www.anthropic.com/legal/privacy
+* Anthropic terms of service: https://www.anthropic.com/legal/consumer-terms
+* OpenAI (AI image generation): https://openai.com
+* OpenAI privacy policy: https://openai.com/policies/privacy-policy
+* OpenAI terms of service: https://openai.com/policies/terms-of-use
 
 == Changelog ==
+
+= 1.5.9 =
+* Hardened the REST authentication token handling (sanitised header input).
+* Documentation: the "External Services" section and FAQ now disclose the AI providers used by the VozCaster bot to generate episode text (Anthropic) and cover images (OpenAI). Your audio is never sent to these providers; only text is.
 
 = 1.5.8 =
 * Spanish (es_ES) translation added. The plugin automatically displays in Spanish on WordPress installations set to Spanish.

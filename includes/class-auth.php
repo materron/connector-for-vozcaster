@@ -43,7 +43,7 @@ class VPConn_Auth {
 		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 			return $user_id;
 		}
-		$token = $_SERVER['HTTP_X_VOZPRESS_TOKEN'] ?? '';
+		$token = sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_VOZPRESS_TOKEN'] ?? '' ) );
 		if ( '' === $token ) {
 			return $user_id;
 		}
