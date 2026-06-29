@@ -724,9 +724,18 @@ class VPConn_API {
 		$chunk_dir  = $upload_dir['basedir'] . '/vozpress-chunks/' . $upload_id;
 		wp_mkdir_p( $chunk_dir );
 
+		// Initialise the WordPress filesystem API for the operations below.
+		global $wp_filesystem;
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		if ( ! WP_Filesystem() ) {
+			return new WP_Error( 'fs_error', 'Could not initialise the filesystem.', [ 'status' => 500 ] );
+		}
+
 		// Guardar fragmento.
 		$chunk_file = $chunk_dir . '/chunk-' . str_pad( $chunk_index, 5, '0', STR_PAD_LEFT ) . '.bin';
-		if ( false === file_put_contents( $chunk_file, $chunk_data ) ) {
+		if ( ! $wp_filesystem->put_contents( $chunk_file, $chunk_data, FS_CHMOD_FILE ) ) {
 			return new WP_Error( 'chunk_write_error', 'No se pudo guardar el fragmento.', [ 'status' => 500 ] );
 		}
 
@@ -740,24 +749,28 @@ class VPConn_API {
 		}
 
 		// Todos los chunks recibidos — ensamblar.
+		// WP_Filesystem has no streaming-append method, so assemble chunk by chunk
+		// with file_put_contents( FILE_APPEND ) to keep memory bounded for large
+		// audio files instead of loading the whole episode into memory at once.
 		$assembled_path = $chunk_dir . '/assembled.mp3';
-		$out = fopen( $assembled_path, 'wb' );
-		if ( ! $out ) {
-			return new WP_Error( 'assemble_error', 'No se pudo crear el archivo ensamblado.', [ 'status' => 500 ] );
+		if ( $wp_filesystem->exists( $assembled_path ) ) {
+			$wp_filesystem->delete( $assembled_path );
 		}
 		for ( $i = 0; $i < $chunk_total; $i++ ) {
-			$cf = $chunk_dir . '/chunk-' . str_pad( $i, 5, '0', STR_PAD_LEFT ) . '.bin';
-			fwrite( $out, file_get_contents( $cf ) );
-			unlink( $cf );
+			$cf    = $chunk_dir . '/chunk-' . str_pad( $i, 5, '0', STR_PAD_LEFT ) . '.bin';
+			$bytes = $wp_filesystem->get_contents( $cf );
+			if ( false === $bytes || false === file_put_contents( $assembled_path, $bytes, FILE_APPEND ) ) {
+				return new WP_Error( 'assemble_error', 'No se pudo ensamblar el audio.', [ 'status' => 500 ] );
+			}
+			$wp_filesystem->delete( $cf );
 		}
-		fclose( $out );
 
 		// Crear attachment en la biblioteca de medios.
 		$result = $this->_create_attachment_from_file( $assembled_path, $filename, 'audio/mpeg' );
 
 		// Limpiar directorio temporal.
-		@unlink( $assembled_path );
-		@rmdir( $chunk_dir );
+		$wp_filesystem->delete( $assembled_path );
+		$wp_filesystem->delete( $chunk_dir, true );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -775,10 +788,15 @@ class VPConn_API {
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 
+		global $wp_filesystem;
+		if ( ! WP_Filesystem() ) {
+			return new WP_Error( 'fs_error', 'Could not initialise the filesystem.', [ 'status' => 500 ] );
+		}
+
 		$upload_dir  = wp_upload_dir();
 		$dest_path   = $upload_dir['path'] . '/' . wp_unique_filename( $upload_dir['path'], $filename );
 
-		if ( ! rename( $src_path, $dest_path ) ) {
+		if ( ! $wp_filesystem->move( $src_path, $dest_path, true ) ) {
 			return new WP_Error( 'move_error', 'No se pudo mover el archivo ensamblado.', [ 'status' => 500 ] );
 		}
 
@@ -1049,6 +1067,10 @@ class VPConn_API {
 			'posts_per_page' => 500,
 			'orderby'        => 'date',
 			'order'          => 'DESC',
+			// Needed to list real podcast episodes (posts with a non-empty
+			// enclosure). Bounded by posts_per_page and run only when numbering
+			// a new episode, not on front-end requests.
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'     => [
 				[
 					'key'     => 'enclosure',
@@ -1242,7 +1264,11 @@ class VPConn_API {
 		if ( ! in_array( $content_type, $allowed_mime, true ) ) {
 			return new WP_Error(
 				'invalid_mime',
-				sprintf( __( 'File type not allowed: %s', 'connector-for-vozcaster' ), esc_html( $content_type ) ),
+				sprintf(
+					/* translators: %s: the rejected MIME content type. */
+					__( 'File type not allowed: %s', 'connector-for-vozcaster' ),
+					esc_html( $content_type )
+				),
 				[ 'status' => 415 ]
 			);
 		}

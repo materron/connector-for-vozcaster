@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.9
+Stable tag: 1.5.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,10 @@ Service URLs and policies:
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
 
 == Changelog ==
+
+= 1.5.10 =
+* Passes Plugin Check with no errors. File operations during chunked audio assembly now use the WordPress Filesystem API; output escaping, input unslashing and `wp_parse_url()` applied where flagged.
+* The Telegram connection result pages are now fully translatable (English source strings with an updated Spanish es_ES translation).
 
 = 1.5.9 =
 * Hardened the REST authentication token handling (sanitised header input).

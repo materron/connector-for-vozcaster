@@ -124,7 +124,11 @@ class VPConn_Auth {
 	public static function initiate( string $state, int $telegram_id ): void {
 		if ( ! preg_match( self::STATE_PATTERN, $state ) || $telegram_id <= 0 ) {
 			status_header( 400 );
-			wp_die( 'Parámetros inválidos.', 'Error', [ 'response' => 400 ] );
+			wp_die(
+				esc_html__( 'Invalid parameters.', 'connector-for-vozcaster' ),
+				esc_html__( 'Error', 'connector-for-vozcaster' ),
+				[ 'response' => 400 ]
+			);
 		}
 
 		// Guardar telegram_id asociado a este state (TTL: 10 min).
@@ -133,7 +137,7 @@ class VPConn_Auth {
 		// URL de callback en el front-end (no REST) para que las cookies de sesión funcionen.
 		$callback_url = add_query_arg( 'vpconn_auth', $state, home_url( '/' ) );
 
-		wp_redirect( wp_login_url( $callback_url ) );
+		wp_safe_redirect( wp_login_url( $callback_url ) );
 		exit;
 	}
 
@@ -143,44 +147,56 @@ class VPConn_Auth {
 	 * En este punto el usuario ya tiene la cookie de sesión de WP activa.
 	 */
 	public function handle_auth_callback(): void {
-		$state = sanitize_text_field( $_GET['vpconn_auth'] ?? '' );
+		// Public OAuth-like callback after WP login. $state is a single-use 32-hex
+		// random token validated against a server-side transient, so it is the CSRF
+		// protection here; a form nonce does not apply to this flow.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$state = isset( $_GET['vpconn_auth'] ) ? sanitize_text_field( wp_unslash( $_GET['vpconn_auth'] ) ) : '';
 		if ( ! $state || ! preg_match( self::STATE_PATTERN, $state ) ) {
 			return;
 		}
 
 		// Si el usuario no está logueado, redirigir al login de nuevo con este callback.
 		if ( ! is_user_logged_in() ) {
-			wp_redirect( wp_login_url( add_query_arg( 'vpconn_auth', $state, home_url( '/' ) ) ) );
+			wp_safe_redirect( wp_login_url( add_query_arg( 'vpconn_auth', $state, home_url( '/' ) ) ) );
 			exit;
 		}
 
 		$telegram_id = (int) get_transient( 'vpconn_pending_' . $state );
 		if ( ! $telegram_id ) {
-			wp_die(
-				self::auth_page(
-					'⚠️ Enlace caducado',
-					'El enlace de autorización ha expirado (10 minutos).',
-					'Vuelve al bot y usa <code>/conectar</code> de nuevo.',
-					'#e65c00'
+			$page = self::auth_page(
+				'⚠️ ' . esc_html__( 'Link expired', 'connector-for-vozcaster' ),
+				esc_html__( 'This authorization link has expired (10 minutes).', 'connector-for-vozcaster' ),
+				sprintf(
+					/* translators: %s: the /conectar bot command, wrapped in a <code> tag. */
+					esc_html__( 'Go back to the bot and use %s again.', 'connector-for-vozcaster' ),
+					'<code>/conectar</code>'
 				),
-				'VozCaster — Enlace caducado',
-				[ 'response' => 400 ]
+				'#e65c00'
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is trusted HTML built by auth_page(); all dynamic values are escaped within.
+			wp_die( $page, esc_html__( 'VozCaster — Link expired', 'connector-for-vozcaster' ), [ 'response' => 400 ] );
 		}
 
 		$user = wp_get_current_user();
 
 		if ( ! self::is_user_allowed( $user->ID ) ) {
-			wp_die(
-				self::auth_page(
-					'🚫 No autorizado',
-					'El usuario <strong>' . esc_html( $user->user_login ) . '</strong> no está en la lista de usuarios permitidos.',
-					'Pide al administrador que te active en <em>Ajustes → VozCaster</em>.',
-					'#cc0000'
+			$page = self::auth_page(
+				'🚫 ' . esc_html__( 'Not authorized', 'connector-for-vozcaster' ),
+				sprintf(
+					/* translators: %s: the WordPress username, wrapped in a <strong> tag. */
+					esc_html__( 'The user %s is not on the list of allowed users.', 'connector-for-vozcaster' ),
+					'<strong>' . esc_html( $user->user_login ) . '</strong>'
 				),
-				'VozCaster — No autorizado',
-				[ 'response' => 403 ]
+				sprintf(
+					/* translators: %s: the plugin settings location, wrapped in an <em> tag. */
+					esc_html__( 'Ask the administrator to enable you under %s.', 'connector-for-vozcaster' ),
+					'<em>' . esc_html__( 'Settings → VozCaster', 'connector-for-vozcaster' ) . '</em>'
+				),
+				'#cc0000'
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is trusted HTML built by auth_page(); all dynamic values are escaped within.
+			wp_die( $page, esc_html__( 'VozCaster — Not authorized', 'connector-for-vozcaster' ), [ 'response' => 403 ] );
 		}
 
 		// Generar token personal para este usuario.
@@ -199,16 +215,18 @@ class VPConn_Auth {
 
 		delete_transient( 'vpconn_pending_' . $state );
 
-		wp_die(
-			self::auth_page(
-				'✅ ¡Conectado!',
-				'Hola, <strong>' . esc_html( $user->display_name ) . '</strong>.',
-				'Ya puedes volver al bot de Telegram y continuar.',
-				'#46b450'
+		$page = self::auth_page(
+			'✅ ' . esc_html__( 'Connected!', 'connector-for-vozcaster' ),
+			sprintf(
+				/* translators: %s: the user's display name, wrapped in a <strong> tag. */
+				esc_html__( 'Hello, %s.', 'connector-for-vozcaster' ),
+				'<strong>' . esc_html( $user->display_name ) . '</strong>'
 			),
-			'VozCaster — Conexión completada',
-			[ 'response' => 200 ]
+			esc_html__( 'You can now go back to the Telegram bot and continue.', 'connector-for-vozcaster' ),
+			'#46b450'
 		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is trusted HTML built by auth_page(); all dynamic values are escaped within.
+		wp_die( $page, esc_html__( 'VozCaster — Connection completed', 'connector-for-vozcaster' ), [ 'response' => 200 ] );
 	}
 
 	/**
@@ -229,10 +247,10 @@ class VPConn_Auth {
 			. '<a href="' . esc_url( $bot_url ) . '" '
 			. 'style="display:inline-block;background:#0088cc;color:#fff;padding:.55em 1.4em;'
 			. 'border-radius:6px;text-decoration:none;font-weight:bold;font-size:.95rem">'
-			. '↩ Volver al bot de Telegram</a></div>';
+			. '↩ ' . esc_html__( 'Back to the Telegram bot', 'connector-for-vozcaster' ) . '</a></div>';
 
 		return '<div style="font-family:sans-serif;text-align:center;padding:2em;max-width:460px;margin:auto">'
-			. '<h2 style="color:' . $color . '">' . $heading . '</h2>'
+			. '<h2 style="color:' . esc_attr( $color ) . '">' . $heading . '</h2>'
 			. '<p>' . $body1 . '</p>'
 			. '<p>' . $body2 . '</p>'
 			. $back_btn

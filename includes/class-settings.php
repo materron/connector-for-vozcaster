@@ -49,9 +49,9 @@ class VPConn_Settings {
 				exit;
 
 			case 'save_title_config':
-				$prefix             = sanitize_text_field( $_POST['title_prefix'] ?? '' );
+				$prefix             = sanitize_text_field( wp_unslash( $_POST['title_prefix'] ?? '' ) );
 				$include            = ! empty( $_POST['title_include_season'] ) ? 1 : 0;
-				$numbering_mode_raw = sanitize_key( $_POST['episode_numbering_mode'] ?? 'enclosure' );
+				$numbering_mode_raw = sanitize_key( wp_unslash( $_POST['episode_numbering_mode'] ?? 'enclosure' ) );
 				$numbering_mode     = in_array( $numbering_mode_raw, [ 'enclosure', 'title' ], true ) ? $numbering_mode_raw : 'enclosure';
 				update_option( 'vpconn_title_prefix', $prefix );
 				update_option( 'vpconn_title_include_season', $include );
@@ -62,12 +62,10 @@ class VPConn_Settings {
 			case 'save_mix_config':
 				$duck_start  = isset( $_POST['intro_duck_start'] )  ? (float) $_POST['intro_duck_start']  : 20;
 				$duck_vol    = isset( $_POST['intro_duck_volume'] )  ? (float) $_POST['intro_duck_volume'] : 30;
-				$fade_end    = isset( $_POST['intro_fade_end'] ) && '' !== trim( $_POST['intro_fade_end'] )
-					? (float) $_POST['intro_fade_end']
-					: '';
-				$knee_delay  = isset( $_POST['intro_knee_delay'] ) && '' !== trim( $_POST['intro_knee_delay'] )
-					? (float) $_POST['intro_knee_delay']
-					: '';
+				$fade_end_raw = isset( $_POST['intro_fade_end'] ) ? sanitize_text_field( wp_unslash( $_POST['intro_fade_end'] ) ) : '';
+				$fade_end     = '' !== $fade_end_raw ? (float) $fade_end_raw : '';
+				$knee_raw     = isset( $_POST['intro_knee_delay'] ) ? sanitize_text_field( wp_unslash( $_POST['intro_knee_delay'] ) ) : '';
+				$knee_delay   = '' !== $knee_raw ? (float) $knee_raw : '';
 				$outro_start = isset( $_POST['outro_fade_start'] )   ? (float) $_POST['outro_fade_start']  : 17;
 				$outro_vol   = isset( $_POST['outro_duck_volume'] )   ? (float) $_POST['outro_duck_volume'] : 35;
 
@@ -91,7 +89,8 @@ class VPConn_Settings {
 				exit;
 
 			case 'save_feed_permissions':
-				$raw  = (array) ( $_POST['feed_perm'] ?? [] );
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nested array; every key and value is sanitized in the loop below (int cast, sanitize_key, whitelist check).
+				$raw  = isset( $_POST['feed_perm'] ) ? (array) wp_unslash( $_POST['feed_perm'] ) : [];
 				$perms = [];
 				foreach ( $raw as $uid_str => $feeds ) {
 					$uid = (int) $uid_str;
@@ -119,7 +118,7 @@ class VPConn_Settings {
 				exit;
 
 			case 'revoke_token':
-				$user_id = (int) ( $_POST['user_id'] ?? 0 );
+				$user_id = absint( wp_unslash( $_POST['user_id'] ?? 0 ) );
 				if ( $user_id > 0 ) {
 					VPConn_Auth::revoke_user_token( $user_id );
 				}
@@ -221,7 +220,7 @@ class VPConn_Settings {
 			case 'select_intro_from_library':
 			case 'select_outro_from_library':
 				$type          = ( 'select_intro_from_library' === $action ) ? 'intro' : 'outro';
-				$attachment_id = (int) ( $_POST['attachment_id'] ?? 0 );
+				$attachment_id = absint( wp_unslash( $_POST['attachment_id'] ?? 0 ) );
 				$msg_ok        = ( 'intro' === $type ) ? 'intro_uploaded' : 'outro_uploaded';
 				$msg_err       = ( 'intro' === $type ) ? 'intro_upload_err' : 'outro_upload_err';
 
@@ -253,7 +252,10 @@ class VPConn_Settings {
 			return;
 		}
 
-		$msg = sanitize_key( $_GET['vpconn_msg'] ?? '' );
+		// Read-only admin notice shown after a nonce-verified redirect; $msg is a
+		// whitelisted key (sanitize_key + lookup in the $messages array below).
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$msg = sanitize_key( wp_unslash( $_GET['vpconn_msg'] ?? '' ) );
 		if ( ! $msg ) {
 			return;
 		}
@@ -276,6 +278,7 @@ class VPConn_Settings {
 
 		$errors = [ 'intro_upload_err', 'outro_upload_err' ];
 		if ( in_array( $msg, $errors, true ) && isset( $messages[ $msg ] ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice detail after a nonce-verified redirect.
 			$detail = ! empty( $_GET['vpconn_err'] ) ? ' — ' . esc_html( rawurldecode( sanitize_text_field( wp_unslash( $_GET['vpconn_err'] ) ) ) ) : '';
 			printf(
 				'<div class="notice notice-error is-dismissible"><p>%s%s</p></div>',
@@ -541,7 +544,7 @@ class VPConn_Settings {
 						<?php if ( $intro['exists'] ) : ?>
 							<p>
 								<a href="<?php echo esc_url( $intro['url'] ); ?>" target="_blank">
-									<?php echo esc_html( basename( parse_url( $intro['url'], PHP_URL_PATH ) ) ); ?>
+									<?php echo esc_html( basename( wp_parse_url( $intro['url'], PHP_URL_PATH ) ) ); ?>
 								</a>
 								&nbsp;
 								<form method="post" action="" style="display:inline;">
@@ -581,7 +584,7 @@ class VPConn_Settings {
 						<?php if ( $outro['exists'] ) : ?>
 							<p>
 								<a href="<?php echo esc_url( $outro['url'] ); ?>" target="_blank">
-									<?php echo esc_html( basename( parse_url( $outro['url'], PHP_URL_PATH ) ) ); ?>
+									<?php echo esc_html( basename( wp_parse_url( $outro['url'], PHP_URL_PATH ) ) ); ?>
 								</a>
 								&nbsp;
 								<form method="post" action="" style="display:inline;">
@@ -906,6 +909,10 @@ class VPConn_Settings {
 		// The category slug is the WordPress category slug — it is both the feed
 		// identifier and the exact category to assign to published posts.
 		global $wpdb;
+		// Direct query: there is no WordPress API to look up options by a name
+		// pattern. The LIKE pattern is a static literal with no user input, so it
+		// needs no preparation; this runs only on the admin settings screen.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$cat_feed_opts = $wpdb->get_col(
 			"SELECT option_name FROM {$wpdb->options}
 			  WHERE option_name LIKE 'powerpress_cat_feed_%'"
