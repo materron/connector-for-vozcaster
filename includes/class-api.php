@@ -129,7 +129,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'upload_intro' ],
-				'permission_callback' => [ $this, 'check_token_permission' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
 			]
 		);
 
@@ -140,7 +140,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'upload_outro' ],
-				'permission_callback' => [ $this, 'check_token_permission' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
 			]
 		);
 
@@ -162,7 +162,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'update_intro_outro_settings' ],
-				'permission_callback' => [ $this, 'check_token_permission' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
 			]
 		);
 
@@ -184,7 +184,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'update_settings' ],
-				'permission_callback' => [ $this, 'check_token_permission' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
 			]
 		);
 
@@ -292,7 +292,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'season_increment' ],
-				'permission_callback' => [ $this, 'check_token_permission' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
 			]
 		);
 
@@ -347,6 +347,16 @@ class VPConn_API {
 		// a partir del header X-VozPress-Token antes de que llegue aquí.
 		$user_id = get_current_user_id();
 		return $user_id > 0 && VPConn_Auth::is_user_allowed( $user_id );
+	}
+
+	/**
+	 * Permission check for endpoints that change site-wide configuration
+	 * (global intro/outro audio, mix settings, plugin options, current season).
+	 * These require an administrator capability on top of a valid bot token,
+	 * so a publish-only allowlisted user cannot alter global settings.
+	 */
+	public function check_token_admin_permission(): bool {
+		return $this->check_token_permission() && current_user_can( 'manage_options' );
 	}
 
 	// -------------------------------------------------------------------------
@@ -784,10 +794,7 @@ class VPConn_API {
 	 * Devuelve ['id' => int, 'url' => string] o WP_Error.
 	 */
 	private function _create_attachment_from_file( string $src_path, string $filename, string $mime ): array|WP_Error {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-
+		require_once ABSPATH . 'wp-admin/includes/file.php'; // for WP_Filesystem().
 		global $wp_filesystem;
 		if ( ! WP_Filesystem() ) {
 			return new WP_Error( 'fs_error', 'Could not initialise the filesystem.', [ 'status' => 500 ] );
@@ -814,6 +821,7 @@ class VPConn_API {
 			return $attachment_id;
 		}
 
+		require_once ABSPATH . 'wp-admin/includes/image.php'; // for wp_generate_attachment_metadata().
 		wp_update_attachment_metadata(
 			$attachment_id,
 			wp_generate_attachment_metadata( $attachment_id, $dest_path )
@@ -1222,10 +1230,6 @@ class VPConn_API {
 	 * @param string[] $allowed_mime Tipos MIME permitidos.
 	 */
 	private function handle_file_upload( WP_REST_Request $request, array $allowed_mime ): WP_REST_Response|WP_Error {
-		require_once ABSPATH . 'wp-admin/includes/file.php';
-		require_once ABSPATH . 'wp-admin/includes/media.php';
-		require_once ABSPATH . 'wp-admin/includes/image.php';
-
 		// Leer el body binario (WordPress lo almacena internamente; php://input ya está consumido).
 		$raw = $request->get_body();
 		if ( empty( $raw ) ) {
@@ -1293,6 +1297,7 @@ class VPConn_API {
 			return $attachment_id;
 		}
 
+		require_once ABSPATH . 'wp-admin/includes/image.php'; // for wp_generate_attachment_metadata().
 		wp_update_attachment_metadata(
 			$attachment_id,
 			wp_generate_attachment_metadata( $attachment_id, $upload['file'] )

@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.10
+Stable tag: 1.5.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,11 @@ Service URLs and policies:
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
 
 == Changelog ==
+
+= 1.5.11 =
+* Settings-changing REST endpoints (global intro/outro, mix settings, plugin options, season) now require an administrator capability, not just an authorised bot user.
+* The media picker script on the settings screen is now enqueued via `admin_enqueue_scripts` and `wp_localize_script` instead of inline output.
+* Core admin includes in the REST upload helpers are loaded only where needed, immediately before the function that uses them.
 
 = 1.5.10 =
 * Passes Plugin Check with no errors. File operations during chunked audio assembly now use the WordPress Filesystem API; output escaping, input unslashing and `wp_parse_url()` applied where flagged.

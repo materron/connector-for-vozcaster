@@ -16,6 +16,33 @@ class VPConn_Settings {
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
 		add_action( 'admin_init', [ $this, 'handle_actions' ] );
 		add_action( 'admin_notices', [ $this, 'show_token_notice' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+	}
+
+	/**
+	 * Enqueues the media picker script on the plugin settings screen only.
+	 */
+	public function enqueue_admin_assets( string $hook ): void {
+		if ( 'settings_page_connector-for-vozcaster' !== $hook ) {
+			return;
+		}
+		wp_enqueue_media();
+		wp_enqueue_script(
+			'vpconn-admin',
+			VPCONN_URL . 'assets/js/admin.js',
+			[ 'jquery' ],
+			VPCONN_VERSION,
+			true
+		);
+		wp_localize_script(
+			'vpconn-admin',
+			'vpconnAdmin',
+			[
+				'selectIntro' => __( 'Select intro audio', 'connector-for-vozcaster' ),
+				'selectOutro' => __( 'Select outro audio', 'connector-for-vozcaster' ),
+				'select'      => __( 'Select', 'connector-for-vozcaster' ),
+			]
+		);
 	}
 
 	public function add_settings_page(): void {
@@ -327,8 +354,6 @@ class VPConn_Settings {
 		$knee_delay      = '' !== $knee_time_raw ? max( 0, (float) $knee_time_raw - $duck_start ) : '';
 		$outro_start     = (float) get_option( 'vpconn_outro_fade_start',  17 );
 		$outro_vol       = (float) get_option( 'vpconn_outro_duck_volume', 35 );
-
-		wp_enqueue_media();
 
 		?>
 		<div class="wrap">
@@ -792,27 +817,6 @@ class VPConn_Settings {
 					</button>
 				</form>
 			<?php endif; ?>
-
-		<script>
-		function vpconnOpenMediaPicker( type ) {
-			var titles = {
-				intro: '<?php echo esc_js( __( 'Select intro audio', 'connector-for-vozcaster' ) ); ?>',
-				outro: '<?php echo esc_js( __( 'Select outro audio', 'connector-for-vozcaster' ) ); ?>'
-			};
-			var frame = wp.media( {
-				title:    titles[ type ] || titles.intro,
-				button:   { text: '<?php echo esc_js( __( 'Select', 'connector-for-vozcaster' ) ); ?>' },
-				library:  { type: 'audio' },
-				multiple: false
-			} );
-			frame.on( 'select', function () {
-				var attachment = frame.state().get( 'selection' ).first().toJSON();
-				document.getElementById( 'vpconn_' + type + '_media_id' ).value = attachment.id;
-				document.getElementById( 'vpconn_' + type + '_select_form' ).submit();
-			} );
-			frame.open();
-		}
-		</script>
 
 		</div>
 		<?php
