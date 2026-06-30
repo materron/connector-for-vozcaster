@@ -822,6 +822,7 @@ class VPConn_API {
 		}
 
 		require_once ABSPATH . 'wp-admin/includes/image.php'; // for wp_generate_attachment_metadata().
+		require_once ABSPATH . 'wp-admin/includes/media.php'; // for wp_read_audio_metadata()/wp_read_video_metadata(), used internally for media attachments.
 		wp_update_attachment_metadata(
 			$attachment_id,
 			wp_generate_attachment_metadata( $attachment_id, $dest_path )
@@ -1298,6 +1299,7 @@ class VPConn_API {
 		}
 
 		require_once ABSPATH . 'wp-admin/includes/image.php'; // for wp_generate_attachment_metadata().
+		require_once ABSPATH . 'wp-admin/includes/media.php'; // for wp_read_audio_metadata()/wp_read_video_metadata(), used internally for media attachments.
 		wp_update_attachment_metadata(
 			$attachment_id,
 			wp_generate_attachment_metadata( $attachment_id, $upload['file'] )

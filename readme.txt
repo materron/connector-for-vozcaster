@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.13
+Stable tag: 1.5.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,6 +130,9 @@ Service URLs and policies:
 3. Recent episode log: episodes published to the site through the bot.
 
 == Changelog ==
+
+= 1.5.14 =
+* Fixed a fatal error on audio episode upload: `wp-admin/includes/media.php` (which defines `wp_read_audio_metadata()`) was not loaded in the REST API request context, causing attachment metadata generation to fail for audio files.
 
 = 1.5.13 =
 * Added plugin banner, icon and screenshots for the WordPress.org listing.
