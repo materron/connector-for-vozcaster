@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.12
+Stable tag: 1.5.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,7 +123,16 @@ Service URLs and policies:
 * OpenAI privacy policy: https://openai.com/policies/privacy-policy
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
 
+== Screenshots ==
+
+1. Podcast access permissions and the list of WordPress users authorised to publish from the bot.
+2. Per-podcast settings: title prefix and season numbering, intro/outro audio, audio mix levels and the post footer.
+3. Recent episode log: episodes published to the site through the bot.
+
 == Changelog ==
+
+= 1.5.13 =
+* Added plugin banner, icon and screenshots for the WordPress.org listing.
 
 = 1.5.12 =
 * Documentation: corrected the "paid account" FAQ to describe the free and Pro tiers of the VozCaster bot (removed outdated "beta" wording).
