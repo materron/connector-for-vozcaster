@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 1.5.11
+Stable tag: 1.5.12
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,7 +53,7 @@ Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register
 
 = Do I need a paid account to use it? =
 
-No. The bot operates in beta and is currently free for all connected sites. Advanced features (automatic transcription, AI-assisted content generation, audio noise reduction with DeepFilter) will move to a paid plan when the bot exits beta; sites already connected at that time will not lose access to features they were already using.
+This plugin is free and open source. The VozCaster bot it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing works on the free tier; advanced features — automatic transcription, AI-assisted content generation and audio noise reduction — require a Pro subscription. See https://vozcaster.com for the current plans.
 
 = Where is my audio stored? =
 
@@ -124,6 +124,9 @@ Service URLs and policies:
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
 
 == Changelog ==
+
+= 1.5.12 =
+* Documentation: corrected the "paid account" FAQ to describe the free and Pro tiers of the VozCaster bot (removed outdated "beta" wording).
 
 = 1.5.11 =
 * Settings-changing REST endpoints (global intro/outro, mix settings, plugin options, season) now require an administrator capability, not just an authorised bot user.
