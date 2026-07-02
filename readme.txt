@@ -25,6 +25,16 @@ You send a voice note to the bot, and a published draft (or live episode) appear
 * **Granular permissions**: choose which WordPress users can publish to which podcast.
 * **Token-based authentication** so the bot never sees your WordPress password.
 
+= Free and Pro =
+
+This plugin is free and open source, and basic publishing through the bot is free too — no card, no invitation. The audio is always processed for you: silence trimming, basic noise reduction and intro/outro mixing.
+
+The paid **Pro** and **Studio** plans add the full AI workflow: automatic transcription (Whisper), a complete article written from what you said, a generated featured image, and advanced noise reduction (DeepFilter) — so the published episode arrives with title, content and cover already done, sounding its best. Pro includes 30 AI episodes per month, Studio 100. See [plans and pricing](https://vozcaster.com/pricing.html).
+
+= Languages =
+
+The bot conversation is currently in Spanish. Episode content is generated in the language you record in — the transcription detects it automatically.
+
 = How it works =
 
 1. Install and activate this plugin on your WordPress site.
@@ -53,7 +63,7 @@ Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register
 
 = Do I need a paid account to use it? =
 
-This plugin is free and open source. The VozCaster bot it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing works on the free tier; advanced features — automatic transcription, AI-assisted content generation and audio noise reduction — require a Pro subscription. See https://vozcaster.com for the current plans.
+This plugin is free and open source. The VozCaster bot it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription. See https://vozcaster.com/pricing.html for the current plans.
 
 = Where is my audio stored? =
 
