@@ -1107,8 +1107,12 @@ class VPConn_API {
 			if ( ! isset( $lines[3] ) ) {
 				continue;
 			}
+			// PowerPress stores this field PHP-serialized, so it has to be read
+			// back with unserialize(). `allowed_classes => false` turns any
+			// serialized object into __PHP_Incomplete_Class instead of
+			// instantiating it, which rules out object injection.
 			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-			$extra = @unserialize( $lines[3] );
+			$extra = @unserialize( $lines[3], [ 'allowed_classes' => false ] );
 			if ( ! is_array( $extra ) || empty( $extra['episode_no'] ) ) {
 				continue;
 			}

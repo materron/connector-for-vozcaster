@@ -458,6 +458,12 @@ class VPConn_Settings {
 										name="allowed_users[]"
 										value="<?php echo esc_attr( $wp_user->ID ); ?>"
 										<?php checked( $is_allowed ); ?>
+										aria-label="
+										<?php
+										/* translators: %s: WordPress username. */
+										echo esc_attr( sprintf( __( 'Allow %s to publish from VozCaster', 'connector-for-vozcaster' ), $wp_user->user_login ) );
+										?>
+										"
 									>
 								</td>
 								<td><strong><?php echo esc_html( $wp_user->user_login ); ?></strong></td>
@@ -588,7 +594,8 @@ class VPConn_Settings {
 						<form method="post" action="" enctype="multipart/form-data">
 							<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<input type="hidden" name="vpconn_action" value="upload_intro">
-							<input type="file" name="audio_file" accept="audio/*" style="margin-right:8px;">
+							<input type="file" name="audio_file" accept="audio/*" style="margin-right:8px;"
+								aria-label="<?php esc_attr_e( 'Intro audio file', 'connector-for-vozcaster' ); ?>">
 							<button type="submit" class="button button-secondary">
 								<?php $intro['exists'] ? esc_html_e( 'Replace intro', 'connector-for-vozcaster' ) : esc_html_e( 'Upload intro', 'connector-for-vozcaster' ); ?>
 							</button>
@@ -628,7 +635,8 @@ class VPConn_Settings {
 						<form method="post" action="" enctype="multipart/form-data">
 							<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<input type="hidden" name="vpconn_action" value="upload_outro">
-							<input type="file" name="audio_file" accept="audio/*" style="margin-right:8px;">
+							<input type="file" name="audio_file" accept="audio/*" style="margin-right:8px;"
+								aria-label="<?php esc_attr_e( 'Outro audio file', 'connector-for-vozcaster' ); ?>">
 							<button type="submit" class="button button-secondary">
 								<?php $outro['exists'] ? esc_html_e( 'Replace outro', 'connector-for-vozcaster' ) : esc_html_e( 'Upload outro', 'connector-for-vozcaster' ); ?>
 							</button>
@@ -828,8 +836,27 @@ class VPConn_Settings {
 
 	public static function create_log_option(): void {
 		if ( false === get_option( self::OPTION_LOG ) ) {
-			add_option( self::OPTION_LOG, [] );
+			// autoload = false: the log is only read on the settings screen, so
+			// it has no business being loaded on every front-end request.
+			add_option( self::OPTION_LOG, [], '', false );
 		}
+	}
+
+	/**
+	 * Installs created before 1.5.15 stored the episode log with autoload = yes.
+	 * Flips it off once; called from the version-gated upgrade routine.
+	 */
+	public static function migrate_log_autoload(): void {
+		$log = get_option( self::OPTION_LOG );
+		if ( false === $log ) {
+			return;
+		}
+
+		// wp_set_option_autoload() would be the direct route, but it only exists
+		// since WordPress 6.4 and this plugin still supports 6.3. Recreating the
+		// option sets the flag on every supported version.
+		delete_option( self::OPTION_LOG );
+		add_option( self::OPTION_LOG, $log, '', false );
 	}
 
 	/**
@@ -914,12 +941,13 @@ class VPConn_Settings {
 		// identifier and the exact category to assign to published posts.
 		global $wpdb;
 		// Direct query: there is no WordPress API to look up options by a name
-		// pattern. The LIKE pattern is a static literal with no user input, so it
-		// needs no preparation; this runs only on the admin settings screen.
+		// pattern. This runs only on the admin settings screen.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$cat_feed_opts = $wpdb->get_col(
-			"SELECT option_name FROM {$wpdb->options}
-			  WHERE option_name LIKE 'powerpress_cat_feed_%'"
+			$wpdb->prepare(
+				"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+				$wpdb->esc_like( 'powerpress_cat_feed_' ) . '%'
+			)
 		);
 		foreach ( $cat_feed_opts as $opt_name ) {
 			$term_id = (int) substr( $opt_name, strlen( 'powerpress_cat_feed_' ) );

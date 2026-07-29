@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit;
+
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
@@ -7,6 +9,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'vpconn_token' );
 delete_option( 'vpconn_authorized_users' );
 delete_option( 'vpconn_episode_log' );
+delete_option( 'vpconn_version' );
 delete_transient( 'vpconn_token_plain' );
 
 // NOTE: intro/outro attachment IDs and mix config are intentionally kept

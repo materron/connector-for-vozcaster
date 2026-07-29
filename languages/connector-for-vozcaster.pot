@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.5.10\n"
+"Project-Id-Version: Connector for VozCaster 1.5.15\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -540,4 +540,17 @@ msgstr ""
 
 #: includes/class-settings.php:816
 msgid "Clear history"
+msgstr ""
+
+#. translators: %s: WordPress username.
+#: includes/class-settings.php:464
+msgid "Allow %s to publish from VozCaster"
+msgstr ""
+
+#: includes/class-settings.php:598
+msgid "Intro audio file"
+msgstr ""
+
+#: includes/class-settings.php:639
+msgid "Outro audio file"
 msgstr ""

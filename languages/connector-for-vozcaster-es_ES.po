@@ -628,3 +628,16 @@ msgstr "Ver"
 #: includes/class-settings.php:816
 msgid "Clear history"
 msgstr "Borrar historial"
+
+#. translators: %s: WordPress username.
+#: includes/class-settings.php:464
+msgid "Allow %s to publish from VozCaster"
+msgstr "Permitir a %s publicar desde VozCaster"
+
+#: includes/class-settings.php:598
+msgid "Intro audio file"
+msgstr "Archivo de audio de la intro"
+
+#: includes/class-settings.php:639
+msgid "Outro audio file"
+msgstr "Archivo de audio del outro"
