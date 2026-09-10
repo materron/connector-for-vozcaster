@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,10 +141,14 @@ Service URLs and policies:
 
 == Changelog ==
 
+= 1.6.1 =
+* Season change now reports the real next episode number instead of always announcing E1: reverting to a season that already has published episodes continues from the last one (e.g. back to T3E6, not T3E1). New season with no episodes still starts at E1.
+* `POST /season/increment` returns `next_episode_number` and `next_episode_in_season`.
+
 = 1.6.0 =
 * Season number: any authorised user who can edit posts can now view and change the podcast season from the bot with `/temporada` — it no longer requires a WordPress administrator. `/temporada 4` fixes the season to a given number after a confirmation prompt; `/temporada` on its own shows the current season and offers a one-tap jump to the next one.
 * Season number is now shown and editable under Settings → VozCaster.
-* Reconciliation: if an editor bumps the season directly in the PowerPress episode box, the connector adopts it instead of silently reverting to the stored value. Lowering the season still requires editing the latest published episode.
+* Reconciliation: if an editor bumps the season directly in the PowerPress episode box, the connector adopts it instead of silently reverting to the stored value. Moving to a season below the latest published episode still requires editing that episode.
 
 = 1.5.15 =
 * Performance: the episode log no longer autoloads on every request. Existing installs are migrated automatically on first load after the update.

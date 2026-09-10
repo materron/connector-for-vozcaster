@@ -1055,8 +1055,8 @@ class VPConn_API {
 	 * `get_next_episode_info()` then treats as the source of truth.
 	 */
 	public function season_increment( WP_REST_Request $request ): WP_REST_Response {
-		$info     = $this->get_next_episode_info( 'podcast' );
-		$previous = (int) $info['season_number'];
+		$before   = $this->get_next_episode_info( 'podcast' );
+		$previous = (int) $before['season_number'];
 
 		$target = (int) $request->get_param( 'season' );
 		if ( $target > 0 ) {
@@ -1069,10 +1069,17 @@ class VPConn_API {
 		update_option( 'vpconn_current_season', $new );
 		// Legacy option no longer used by the season algorithm — clean it up.
 		delete_option( 'vpconn_season_start_year' );
+
+		// Recompute so the caller can tell the user the real next episode: it is
+		// E1 only when the target season has no published episodes yet, otherwise
+		// it continues from the last published episode of that season.
+		$after = $this->get_next_episode_info( 'podcast' );
 		return new WP_REST_Response(
 			[
-				'season'   => $new,
-				'previous' => $previous,
+				'season'               => (int) $after['season_number'],
+				'previous'             => $previous,
+				'next_episode_number'  => (int) $after['episode_number'],
+				'next_episode_in_season' => (int) $after['episode_no_in_season'],
 			],
 			200
 		);

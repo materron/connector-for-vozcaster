@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.6.0\n"
+"Project-Id-Version: Connector for VozCaster 1.6.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
 "vozcaster\n"
-"POT-Creation-Date: 2026-09-10T16:43:24+00:00\n"
+"POT-Creation-Date: 2026-09-10T17:04:25+00:00\n"
 "PO-Revision-Date: 2026-06-02 13:00+0200\n"
 "Last-Translator: Miguel Ángel Terrón <info@potencia.pro>\n"
 "Language-Team: Spanish <info@potencia.pro>\n"
@@ -44,12 +44,12 @@ msgstr ""
 msgid "https://potencia.pro"
 msgstr ""
 
-#: includes/class-api.php:1284
+#: includes/class-api.php:1291
 msgid "No file received."
 msgstr "No se ha recibido ningún archivo."
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1321
+#: includes/class-api.php:1328
 #, php-format
 msgid "File type not allowed: %s"
 msgstr "Tipo de archivo no permitido: %s"
@@ -394,15 +394,17 @@ msgstr "Cambiar esto es un cambio importante:"
 
 #: includes/class-settings.php:567
 msgid ""
-"it renumbers every following episode, restarts the in-season counter at E1, "
-"and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, "
-"Spotify). Lowering the season also requires editing the latest published "
-"episode in PowerPress."
+"the next episode is numbered within the target season (E1 if it has no "
+"published episodes yet, otherwise it continues from the last one published "
+"in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, "
+"Spotify). Moving to a season below the latest published episode also "
+"requires editing that episode in PowerPress."
 msgstr ""
-"renumera todos los episodios siguientes, reinicia el contador de episodio a "
-"E1 y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
-"Spotify). Para bajar la temporada hay que editar además el último episodio "
-"publicado en PowerPress."
+"el próximo episodio se numera dentro de la temporada de destino (E1 si aún "
+"no tiene episodios publicados, o si no continúa desde el último publicado en "
+"ella) y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
+"Spotify). Pasar a una temporada por debajo del último episodio publicado "
+"requiere editar además ese episodio en PowerPress."
 
 #: includes/class-settings.php:573
 msgid "Chapter numbering in title"
@@ -676,3 +678,14 @@ msgstr "Ver"
 #: includes/class-settings.php:857
 msgid "Clear history"
 msgstr "Borrar historial"
+
+#~ msgid ""
+#~ "it renumbers every following episode, restarts the in-season counter at "
+#~ "E1, and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, "
+#~ "Spotify). Lowering the season also requires editing the latest published "
+#~ "episode in PowerPress."
+#~ msgstr ""
+#~ "renumera todos los episodios siguientes, reinicia el contador de episodio "
+#~ "a E1 y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
+#~ "Spotify). Para bajar la temporada hay que editar además el último "
+#~ "episodio publicado en PowerPress."

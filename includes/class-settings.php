@@ -564,7 +564,7 @@ class VPConn_Settings {
 								?>
 								<br>
 								<strong><?php esc_html_e( 'Changing this is a big change:', 'connector-for-vozcaster' ); ?></strong>
-								<?php esc_html_e( 'it renumbers every following episode, restarts the in-season counter at E1, and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, Spotify). Lowering the season also requires editing the latest published episode in PowerPress.', 'connector-for-vozcaster' ); ?>
+								<?php esc_html_e( 'the next episode is numbered within the target season (E1 if it has no published episodes yet, otherwise it continues from the last one published in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, Spotify). Moving to a season below the latest published episode also requires editing that episode in PowerPress.', 'connector-for-vozcaster' ); ?>
 							</p>
 						</td>
 					</tr>
