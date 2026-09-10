@@ -2,9 +2,9 @@
 Contributors: materron
 Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.5.15
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,11 @@ Service URLs and policies:
 3. Recent episode log: episodes published to the site through the bot.
 
 == Changelog ==
+
+= 1.6.0 =
+* Season number: any authorised user who can edit posts can now view and change the podcast season from the bot with `/temporada` — it no longer requires a WordPress administrator. `/temporada 4` fixes the season to a given number after a confirmation prompt; `/temporada` on its own shows the current season and offers a one-tap jump to the next one.
+* Season number is now shown and editable under Settings → VozCaster.
+* Reconciliation: if an editor bumps the season directly in the PowerPress episode box, the connector adopts it instead of silently reverting to the stored value. Lowering the season still requires editing the latest published episode.
 
 = 1.5.15 =
 * Performance: the episode log no longer autoloads on every request. Existing installs are migrated automatically on first load after the update.

@@ -285,14 +285,24 @@ class VPConn_API {
 			]
 		);
 
-		// POST /season/increment — incrementa temporada manualmente
+		// POST /season/increment — cambia la temporada manualmente.
+		// Sin parámetros: incrementa en 1. Con `season`: la fija a ese número.
 		register_rest_route(
 			self::NAMESPACE,
 			'/season/increment',
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'season_increment' ],
-				'permission_callback' => [ $this, 'check_token_admin_permission' ],
+				'permission_callback' => [ $this, 'check_token_edit_permission' ],
+				'args'                => [
+					'season' => [
+						'required'          => false,
+						'type'              => 'integer',
+						'minimum'           => 1,
+						'maximum'           => 99,
+						'sanitize_callback' => 'absint',
+					],
+				],
 			]
 		);
 
@@ -351,12 +361,23 @@ class VPConn_API {
 
 	/**
 	 * Permission check for endpoints that change site-wide configuration
-	 * (global intro/outro audio, mix settings, plugin options, current season).
+	 * (global intro/outro audio, mix settings, plugin options).
 	 * These require an administrator capability on top of a valid bot token,
 	 * so a publish-only allowlisted user cannot alter global settings.
 	 */
 	public function check_token_admin_permission(): bool {
 		return $this->check_token_permission() && current_user_can( 'manage_options' );
+	}
+
+	/**
+	 * Permission check for endpoints that any editorial user may use.
+	 * Requires a valid bot token plus the `edit_posts` capability, so a
+	 * Contributor (or above) can run it while a Subscriber or a read-only
+	 * account cannot. Used for the season number, which is an editorial
+	 * decision rather than a site configuration one.
+	 */
+	public function check_token_edit_permission(): bool {
+		return $this->check_token_permission() && current_user_can( 'edit_posts' );
 	}
 
 	// -------------------------------------------------------------------------
@@ -560,6 +581,7 @@ class VPConn_API {
 		return [
 			'title_prefix'            => (string) get_option( 'vpconn_title_prefix', '' ),
 			'title_include_season'    => (bool) get_option( 'vpconn_title_include_season', false ),
+			'current_season'          => (int) get_option( 'vpconn_current_season', 0 ),
 			'episode_numbering_mode'  => (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' ),
 			'intro_duck_start'        => (float) get_option( 'vpconn_intro_duck_start',  20 ),
 			'intro_duck_volume'       => (float) get_option( 'vpconn_intro_duck_volume', 30 ) / 100,
@@ -1027,21 +1049,33 @@ class VPConn_API {
 
 	/**
 	 * POST /season/increment
-	 * Incrementa manualmente el número de temporada en 1.
+	 * Changes the podcast season manually. With a `season` parameter it fixes
+	 * the season to that exact number; without it, it bumps the current season
+	 * by 1. Either way the value is stored in `vpconn_current_season`, which
+	 * `get_next_episode_info()` then treats as the source of truth.
 	 */
-	public function season_increment(): WP_REST_Response {
-		$manual = (int) get_option( 'vpconn_current_season', 0 );
-		if ( $manual > 0 ) {
-			$new = $manual + 1;
+	public function season_increment( WP_REST_Request $request ): WP_REST_Response {
+		$info     = $this->get_next_episode_info( 'podcast' );
+		$previous = (int) $info['season_number'];
+
+		$target = (int) $request->get_param( 'season' );
+		if ( $target > 0 ) {
+			$new = min( 99, max( 1, $target ) );
 		} else {
-			// Start from whatever the algorithm currently derives for the default feed.
-			$info = $this->get_next_episode_info( 'podcast' );
-			$new  = (int) $info['season_number'] + 1;
+			$manual = (int) get_option( 'vpconn_current_season', 0 );
+			$new    = $manual > 0 ? $manual + 1 : $previous + 1;
 		}
+
 		update_option( 'vpconn_current_season', $new );
 		// Legacy option no longer used by the season algorithm — clean it up.
 		delete_option( 'vpconn_season_start_year' );
-		return new WP_REST_Response( [ 'season' => $new ], 200 );
+		return new WP_REST_Response(
+			[
+				'season'   => $new,
+				'previous' => $previous,
+			],
+			200
+		);
 	}
 
 	// -------------------------------------------------------------------------
@@ -1137,13 +1171,22 @@ class VPConn_API {
 			$episode_in_season = count( $podcast_posts ) + 1;
 		}
 
-		// Manual override (set via /season/increment or wp-admin). If the user
-		// has fixed the current season to a different number, start the
-		// in-season counter from 1.
+		// Reconcile the stored season (set via /season/increment or wp-admin)
+		// with the season read from the latest episode's own PowerPress data.
+		// Convergence is forward-only:
+		//   - stored ahead of the latest episode  -> adopt it, restart at E1
+		//     (a deliberate bump before publishing the first episode of a season).
+		//   - latest episode ahead of the stored  -> an editor bumped the season
+		//     straight in the PowerPress box; adopt it and bring the option back
+		//     in sync, without restarting the in-season counter.
+		// Lowering the season therefore also requires editing the latest
+		// published episode's PowerPress fields, not just this option.
 		$manual_season = (int) get_option( 'vpconn_current_season', 0 );
-		if ( $manual_season > 0 && $manual_season !== $season ) {
+		if ( $manual_season > 0 && $manual_season > $season ) {
 			$season            = $manual_season;
 			$episode_in_season = 1;
+		} elseif ( $manual_season > 0 && $season > $manual_season ) {
+			update_option( 'vpconn_current_season', $season );
 		}
 
 		// Number that goes in the post title (depends on numbering mode).

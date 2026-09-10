@@ -80,9 +80,14 @@ class VPConn_Settings {
 				$include            = ! empty( $_POST['title_include_season'] ) ? 1 : 0;
 				$numbering_mode_raw = sanitize_key( wp_unslash( $_POST['episode_numbering_mode'] ?? 'enclosure' ) );
 				$numbering_mode     = in_array( $numbering_mode_raw, [ 'enclosure', 'title' ], true ) ? $numbering_mode_raw : 'enclosure';
+				$season             = isset( $_POST['current_season'] ) ? absint( wp_unslash( $_POST['current_season'] ) ) : 0;
 				update_option( 'vpconn_title_prefix', $prefix );
 				update_option( 'vpconn_title_include_season', $include );
 				update_option( 'vpconn_episode_numbering_mode', $numbering_mode );
+				if ( $season > 0 && $season <= 99 ) {
+					update_option( 'vpconn_current_season', $season );
+					delete_option( 'vpconn_season_start_year' );
+				}
 				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'title_config_saved' ], admin_url( 'options-general.php' ) ) );
 				exit;
 
@@ -344,6 +349,7 @@ class VPConn_Settings {
 		$title_prefix           = (string) get_option( 'vpconn_title_prefix', '' );
 		$title_include_season   = (bool)   get_option( 'vpconn_title_include_season', false );
 		$episode_numbering_mode = (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' );
+		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
 		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
 		$duck_start      = (float) get_option( 'vpconn_intro_duck_start',  20 );
 		$duck_vol        = (float) get_option( 'vpconn_intro_duck_volume', 30 );
@@ -533,6 +539,33 @@ class VPConn_Settings {
 								>
 								<?php esc_html_e( 'Include T2E15 in the title (if a prefix is defined)', 'connector-for-vozcaster' ); ?>
 							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="current_season"><?php esc_html_e( 'Current season', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="number" id="current_season" name="current_season"
+								min="1" max="99" step="1"
+								value="<?php echo esc_attr( $current_season > 0 ? (string) $current_season : '' ); ?>"
+								placeholder="<?php echo esc_attr( $current_season > 0 ? (string) $current_season : __( 'auto', 'connector-for-vozcaster' ) ); ?>"
+								style="width:80px;"
+							>
+							<p class="description">
+								<?php
+								if ( $current_season > 0 ) {
+									/* translators: %d: the season number currently stored. */
+									printf( esc_html__( 'Stored season: %d. Leave blank to keep it.', 'connector-for-vozcaster' ), (int) $current_season );
+								} else {
+									esc_html_e( 'Not set — the season is derived from the latest published episode.', 'connector-for-vozcaster' );
+								}
+								?>
+								<br>
+								<strong><?php esc_html_e( 'Changing this is a big change:', 'connector-for-vozcaster' ); ?></strong>
+								<?php esc_html_e( 'it renumbers every following episode, restarts the in-season counter at E1, and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, Spotify). Lowering the season also requires editing the latest published episode in PowerPress.', 'connector-for-vozcaster' ); ?>
+							</p>
 						</td>
 					</tr>
 					<tr>
