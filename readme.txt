@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -140,6 +140,9 @@ Service URLs and policies:
 3. Recent episode log: episodes published to the site through the bot.
 
 == Changelog ==
+
+= 1.7.1 =
+* Fix: episodes published by the bot never set PowerPress's per-episode "Apple Podcast Episode Artwork" (`itunes_image`) — only the regular WordPress featured image. It had to be filled in by hand every time. New episodes now get it automatically from the same image (the one uploaded by the bot, or the podcast's default cover as fallback). Episodes published before this fix are unaffected — their Apple Podcasts artwork field stays empty until edited manually or the episode is republished.
 
 = 1.7.0 =
 * New "Image style" setting under Settings → VozCaster: fixed text prepended to every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look). Previously only settable from the bot with `/estilo`, and stored only in the bot's own database — it now lives on the site (`GET`/`POST /settings`), so `/estilo` and wp-admin both read and write the same value.

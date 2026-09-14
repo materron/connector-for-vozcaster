@@ -951,12 +951,15 @@ class VPConn_API {
 		$this->assign_podcast_category( $post_id, $category_slug );
 
 		// Imagen destacada: primero la subida por el bot, luego el cover del podcast del feed.
+		$cover_attachment_id = 0;
 		if ( $featured_media > 0 ) {
 			set_post_thumbnail( $post_id, $featured_media );
+			$cover_attachment_id = $featured_media;
 		} else {
 			$cover_id = $this->get_podcast_cover_id( $feed_slug );
 			if ( $cover_id > 0 ) {
 				set_post_thumbnail( $post_id, $cover_id );
+				$cover_attachment_id = $cover_id;
 			}
 		}
 
@@ -964,7 +967,16 @@ class VPConn_API {
 		// episode_title = título limpio (sin "Capítulo N:") → <itunes:title>
 		$audio_url = wp_get_attachment_url( $podcast_audio_id );
 		if ( $audio_url ) {
-			$this->set_powerpress_audio( $post_id, $audio_url, $podcast_audio_id, $clean_title, $episode_no_powerpress, $season_number );
+			$episode_image_url = $cover_attachment_id > 0 ? wp_get_attachment_url( $cover_attachment_id ) : '';
+			$this->set_powerpress_audio(
+				$post_id,
+				$audio_url,
+				$podcast_audio_id,
+				$clean_title,
+				$episode_no_powerpress,
+				$season_number,
+				(string) $episode_image_url
+			);
 		}
 
 		// Transcripción VTT para PowerPress.
@@ -1383,12 +1395,15 @@ class VPConn_API {
 	 *   línea 3: tipo MIME
 	 *   línea 4: datos adicionales PHP-serializados (episode_no, season, episode_title, etc.)
 	 *
-	 * @param int    $post_id        ID del post.
-	 * @param string $audio_url      URL del archivo de audio.
-	 * @param int    $audio_id       ID del attachment de audio.
-	 * @param string $episode_title  Título limpio del episodio (sin prefijo de capítulo).
-	 * @param int    $episode_number Número de episodio.
-	 * @param int    $season_number  Número de temporada.
+	 * @param int    $post_id           ID del post.
+	 * @param string $audio_url         URL del archivo de audio.
+	 * @param int    $audio_id          ID del attachment de audio.
+	 * @param string $episode_title     Título limpio del episodio (sin prefijo de capítulo).
+	 * @param int    $episode_number    Número de episodio.
+	 * @param int    $season_number     Número de temporada.
+	 * @param string $episode_image_url URL de la imagen destacada del episodio (portada
+	 *                                  para Apple Podcasts vía <itunes:image>). Vacío para
+	 *                                  no fijar ninguna y dejar que el feed use la del podcast.
 	 */
 	private function set_powerpress_audio(
 		int $post_id,
@@ -1396,7 +1411,8 @@ class VPConn_API {
 		int $audio_id,
 		string $episode_title = '',
 		int $episode_number = 0,
-		int $season_number = 1
+		int $season_number = 1,
+		string $episode_image_url = ''
 	): void {
 		$file_size = 0;
 		$file_path = get_attached_file( $audio_id );
@@ -1422,6 +1438,12 @@ class VPConn_API {
 		if ( $season_number > 0 ) {
 			// PowerPress usa 'season' → <itunes:season> en el RSS feed.
 			$extra['season'] = $season_number;
+		}
+		if ( $episode_image_url ) {
+			// PowerPress usa 'itunes_image' → <itunes:image> por episodio, mostrado en
+			// wp-admin como "Apple Podcast Episode Artwork". Sin esto, el campo se queda
+			// vacío aunque la imagen destacada del post sí se haya fijado.
+			$extra['itunes_image'] = $episode_image_url;
 		}
 		if ( $episode_title ) {
 			// PowerPress usa 'episode_title' → <itunes:title> en el RSS feed.
