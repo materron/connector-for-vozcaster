@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.6.1
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,7 +21,7 @@ You send a voice note to the bot, and a published draft (or live episode) appear
 * **Receives audio** from the VozCaster bot and uploads it to your WordPress media library.
 * **Creates podcast episodes** using PowerPress, with episode and season numbering managed automatically.
 * **Supports multiple podcasts on the same site** — works with any PowerPress custom channels you have configured.
-* **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), category mapping.
+* **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), fixed image style, category mapping.
 * **Granular permissions**: choose which WordPress users can publish to which podcast.
 * **Token-based authentication** so the bot never sees your WordPress password.
 
@@ -140,6 +140,9 @@ Service URLs and policies:
 3. Recent episode log: episodes published to the site through the bot.
 
 == Changelog ==
+
+= 1.7.0 =
+* New "Image style" setting under Settings → VozCaster: fixed text prepended to every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look). Previously only settable from the bot with `/estilo`, and stored only in the bot's own database — it now lives on the site (`GET`/`POST /settings`), so `/estilo` and wp-admin both read and write the same value.
 
 = 1.6.1 =
 * Season change now reports the real next episode number instead of always announcing E1: reverting to a season that already has published episodes continues from the last one (e.g. back to T3E6, not T3E1). New season with no episodes still starts at E1.

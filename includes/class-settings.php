@@ -75,6 +75,12 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'post_footer_saved' ], admin_url( 'options-general.php' ) ) );
 				exit;
 
+			case 'save_image_style':
+				$image_style = isset( $_POST['image_style'] ) ? sanitize_text_field( wp_unslash( $_POST['image_style'] ) ) : '';
+				update_option( 'vpconn_image_style', $image_style );
+				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'image_style_saved' ], admin_url( 'options-general.php' ) ) );
+				exit;
+
 			case 'save_title_config':
 				$prefix             = sanitize_text_field( wp_unslash( $_POST['title_prefix'] ?? '' ) );
 				$include            = ! empty( $_POST['title_include_season'] ) ? 1 : 0;
@@ -306,6 +312,7 @@ class VPConn_Settings {
 			'mix_config_saved'       => __( 'Mix settings saved.', 'connector-for-vozcaster' ),
 			'title_config_saved'     => __( 'Title settings saved.', 'connector-for-vozcaster' ),
 			'post_footer_saved'      => __( 'Post footer saved.', 'connector-for-vozcaster' ),
+			'image_style_saved'      => __( 'Image style saved.', 'connector-for-vozcaster' ),
 		];
 
 		$errors = [ 'intro_upload_err', 'outro_upload_err' ];
@@ -351,6 +358,7 @@ class VPConn_Settings {
 		$episode_numbering_mode = (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' );
 		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
 		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
+		$image_style     = (string) get_option( 'vpconn_image_style', '' );
 		$duck_start      = (float) get_option( 'vpconn_intro_duck_start',  20 );
 		$duck_vol        = (float) get_option( 'vpconn_intro_duck_volume', 30 );
 		$fade_end_raw    = get_option( 'vpconn_intro_fade_end', '' );
@@ -814,6 +822,40 @@ class VPConn_Settings {
 					</tr>
 				</table>
 				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save footer', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<hr>
+
+			<?php /* ----- Image style ----- */ ?>
+			<h2><?php esc_html_e( 'Image style', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_image_style">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="image_style"><?php esc_html_e( 'Style text', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="text"
+								id="image_style"
+								name="image_style"
+								value="<?php echo esc_attr( $image_style ); ?>"
+								style="width:100%; max-width:600px;"
+								placeholder="<?php esc_attr_e( 'e.g. Attractive woman in her 30s, seasonal clothing', 'connector-for-vozcaster' ); ?>"
+							>
+							<p class="description">
+								<?php esc_html_e( 'Added at the front of every image prompt for this podcast. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save image style', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
 
 			<hr>

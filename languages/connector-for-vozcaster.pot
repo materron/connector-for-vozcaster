@@ -199,6 +199,10 @@ msgstr ""
 msgid "Post footer saved."
 msgstr ""
 
+#: includes/class-settings.php:315
+msgid "Image style saved."
+msgstr ""
+
 #: includes/class-settings.php:369
 msgid "PowerPress"
 msgstr ""
@@ -544,6 +548,30 @@ msgstr ""
 
 #: includes/class-settings.php:816
 msgid "Save footer"
+msgstr ""
+
+#: includes/class-settings.php:830
+msgid "Image style"
+msgstr ""
+
+#: includes/class-settings.php:832
+msgid "Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo."
+msgstr ""
+
+#: includes/class-settings.php:841
+msgid "Style text"
+msgstr ""
+
+#: includes/class-settings.php:850
+msgid "e.g. Attractive woman in her 30s, seasonal clothing"
+msgstr ""
+
+#: includes/class-settings.php:853
+msgid "Added at the front of every image prompt for this podcast. Leave empty to disable."
+msgstr ""
+
+#: includes/class-settings.php:858
+msgid "Save image style"
 msgstr ""
 
 #: includes/class-settings.php:822

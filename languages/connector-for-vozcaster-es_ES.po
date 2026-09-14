@@ -207,6 +207,10 @@ msgstr "Ajustes de títulos guardados."
 msgid "Post footer saved."
 msgstr "Pie de post guardado."
 
+#: includes/class-settings.php:315
+msgid "Image style saved."
+msgstr "Estilo de imagen guardado."
+
 #: includes/class-settings.php:369
 msgid "PowerPress"
 msgstr "PowerPress"
@@ -642,6 +646,41 @@ msgstr ""
 #: includes/class-settings.php:816
 msgid "Save footer"
 msgstr "Guardar pie"
+
+#: includes/class-settings.php:830
+msgid "Image style"
+msgstr "Estilo de imagen"
+
+#: includes/class-settings.php:832
+msgid ""
+"Fixed text prepended verbatim to the front of every AI-generated cover "
+"image prompt for this podcast (e.g. a recurring subject or look you "
+"always want). You can also edit it from the Telegram bot with /estilo."
+msgstr ""
+"Texto fijo que se antepone tal cual a cada prompt de imagen de portada "
+"generado por IA para este podcast (por ejemplo, un sujeto o estilo "
+"recurrente que quieras siempre). También se puede editar desde el bot de "
+"Telegram con /estilo."
+
+#: includes/class-settings.php:841
+msgid "Style text"
+msgstr "Texto del estilo"
+
+#: includes/class-settings.php:850
+msgid "e.g. Attractive woman in her 30s, seasonal clothing"
+msgstr "p. ej. Mujer atractiva en sus 30, ropa de temporada"
+
+#: includes/class-settings.php:853
+msgid ""
+"Added at the front of every image prompt for this podcast. Leave empty to "
+"disable."
+msgstr ""
+"Se añade al principio de cada prompt de imagen de este podcast. Déjalo "
+"vacío para desactivarlo."
+
+#: includes/class-settings.php:858
+msgid "Save image style"
+msgstr "Guardar estilo de imagen"
 
 #: includes/class-settings.php:822
 msgid "Recent published episodes"

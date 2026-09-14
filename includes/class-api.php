@@ -590,6 +590,7 @@ class VPConn_API {
 			'outro_fade_start'        => (float) get_option( 'vpconn_outro_fade_start',  17 ),
 			'outro_duck_volume'       => (float) get_option( 'vpconn_outro_duck_volume', 35 ) / 100,
 			'post_footer'             => (string) get_option( 'vpconn_post_footer', '' ),
+			'image_style'             => (string) get_option( 'vpconn_image_style', '' ),
 		];
 	}
 
@@ -664,6 +665,10 @@ class VPConn_API {
 
 		if ( isset( $body['post_footer'] ) ) {
 			update_option( 'vpconn_post_footer', wp_kses_post( (string) $body['post_footer'] ) );
+		}
+
+		if ( isset( $body['image_style'] ) ) {
+			update_option( 'vpconn_image_style', sanitize_text_field( (string) $body['image_style'] ) );
 		}
 
 		return new WP_REST_Response( [ 'updated' => true, 'settings' => $this->_read_all_settings() ] );
