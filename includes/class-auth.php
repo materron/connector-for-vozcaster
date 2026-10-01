@@ -287,7 +287,7 @@ class VPConn_Auth {
 				sprintf(
 					/* translators: %s: the plugin settings location, wrapped in an <em> tag. */
 					esc_html__( 'Ask the administrator to authorize your role under %s.', 'connector-for-vozcaster' ),
-					'<em>' . esc_html__( 'Settings → VozCaster', 'connector-for-vozcaster' ) . '</em>'
+					'<em>' . esc_html__( 'VozCaster → Access', 'connector-for-vozcaster' ) . '</em>'
 				),
 				'#cc0000'
 			);

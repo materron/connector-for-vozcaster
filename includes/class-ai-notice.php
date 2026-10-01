@@ -159,7 +159,7 @@ class VPConn_AI_Notice {
 			<?php esc_html_e( 'Hide the AI notice on this post', 'connector-for-vozcaster' ); ?>
 		</label>
 		<?php if ( ! self::is_enabled() ) : ?>
-			<p class="description"><?php esc_html_e( 'The AI notice is turned off for the whole site in Settings → VozCaster.', 'connector-for-vozcaster' ); ?></p>
+			<p class="description"><?php esc_html_e( 'The AI notice is turned off for the whole site in VozCaster → Episodes.', 'connector-for-vozcaster' ); ?></p>
 		<?php endif; ?>
 		<?php
 	}

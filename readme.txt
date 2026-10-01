@@ -40,7 +40,7 @@ The bot conversation is currently in Spanish. Episode content is generated in th
 = How it works =
 
 1. Install and activate PowerPress and this plugin on your WordPress site.
-2. Go to **Users → VozCaster** (**Profile → VozCaster** for non-administrators) and press **Connect in Telegram**. Telegram opens with the bot: press Start and confirm.
+2. Open the new **VozCaster** menu in wp-admin and press **Connect in Telegram**. Telegram opens with the bot: press Start and confirm.
 3. Send a voice note or audio file to the bot. The episode appears on your site, ready to review or publish.
 
 If your site's address cannot be passed to the bot automatically (for example, WordPress installed in a subfolder), the same page tells you to send `/conectar` to the bot and paste the address instead.
@@ -49,14 +49,14 @@ If your site's address cannot be passed to the bot automatically (for example, W
 
 * WordPress with the [PowerPress](https://wordpress.org/plugins/powerpress/) plugin installed and activated.
 * A Telegram account.
-* A WordPress user with an authorised role: Author, Editor or Administrator by default, or any custom role the administrator authorises in **Settings → VozCaster**.
+* A WordPress user with an authorised role: Author, Editor or Administrator by default, or any custom role the administrator authorises in **VozCaster → Access**.
 
 == Installation ==
 
 1. Upload the `connector-for-vozcaster` folder to `/wp-content/plugins/`, or install via **Plugins → Add New → Upload Plugin**.
 2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Go to **Users → VozCaster** and press **Connect in Telegram**, then confirm in the bot.
-4. Optional: in **Settings → VozCaster**, choose which roles may publish from the bot and adjust the AI content notice.
+3. Open the **VozCaster** menu and press **Connect in Telegram**, then confirm in the bot.
+4. Optional: administrators find the settings in the same menu — **Episodes** (titles, signature, image style, AI notice), **Audio** (intro/outro), **Access** (roles and connected users) and **History**.
 
 == Frequently Asked Questions ==
 
@@ -88,15 +88,15 @@ Yes. The plugin works with PowerPress's multi-podcast (custom channels) configur
 
 = Who can publish from the bot? =
 
-Anyone whose role is authorised in **Settings → VozCaster**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role — users with it can then publish from the bot even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected the bot and lets you revoke access.
+Anyone whose role is authorised in **VozCaster → Access**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role — users with it can then publish from the bot even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected the bot and lets you revoke access.
 
 = Why do some posts show a notice about AI? =
 
-When the bot writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **Settings → VozCaster**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
+When the bot writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **VozCaster → Episodes**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
 
 = Does the plugin add links to my site? =
 
-Not unless you ask it to. There is an optional "Published with VozCaster" credit line with a link, which is **off by default** and can be turned on in **Settings → VozCaster**.
+Not unless you ask it to. There is an optional "Published with VozCaster" credit line with a link, which is **off by default** and can be turned on in **VozCaster → Episodes**.
 
 = How do I get support? =
 
@@ -148,14 +148,16 @@ Service URLs and policies:
 
 == Screenshots ==
 
-1. Roles authorised to publish from the bot, the list of connected users and the AI content notice settings.
-2. Per-podcast settings: title prefix and season numbering, intro/outro audio, audio mix levels and the post footer.
-3. Recent episode log: episodes published to the site through the bot.
+1. VozCaster → Connect: one "Connect in Telegram" button per podcast.
+2. VozCaster → Episodes: title prefix and season, post signature, image style and AI content notice.
+3. VozCaster → Audio: intro/outro audio and mix levels.
+4. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
 
 = 1.8.0 =
-* New: connect the bot from wp-admin. **Users → VozCaster** has a "Connect in Telegram" button for each podcast; it opens the bot, which asks for confirmation and connects you. No address to type and no second login. `/conectar` still works.
+* New: **VozCaster** menu in wp-admin. Everyone authorised sees **Connect**; administrators also get **Episodes**, **Audio**, **Access** and **History**, which replace the single long page under Settings → VozCaster (old links redirect).
+* New: connect the bot from wp-admin. **VozCaster → Connect** has a "Connect in Telegram" button for each podcast; it opens the bot, which asks for confirmation and connects you. No address to type and no second login. `/conectar` still works.
 * New: permissions by role. The per-user allowlist and the per-podcast permissions are gone: every role that can publish posts (Author and above) can publish from the bot, in every podcast, and administrators can authorise custom roles as well. The settings screen lists the connected users with a Revoke button.
 * New: AI content notice. Posts whose text was written by AI show a short notice, on by default, with customisable text and position, and a per-post option to hide it. It is rendered by the plugin, so changes apply to all posts.
 * New: optional "Published with VozCaster" credit line, off by default.

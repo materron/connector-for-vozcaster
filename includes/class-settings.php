@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Admin settings page: Settings → VozCaster.
+ * Admin settings pages under the VozCaster menu: Episodes, Audio, Access, History.
  */
 class VPConn_Settings {
 
@@ -19,10 +19,10 @@ class VPConn_Settings {
 	}
 
 	/**
-	 * Enqueues the media picker script on the plugin settings screen only.
+	 * Enqueues the media picker script on the Audio screen only.
 	 */
 	public function enqueue_admin_assets( string $hook ): void {
-		if ( 'settings_page_connector-for-vozcaster' !== $hook ) {
+		if ( ! str_ends_with( $hook, 'page_vozcaster-audio' ) ) {
 			return;
 		}
 		wp_enqueue_media();
@@ -44,14 +44,54 @@ class VPConn_Settings {
 		);
 	}
 
+	/**
+	 * Admin-only pages under the top-level VozCaster menu. The menu itself and
+	 * its first page (Connect) are registered by VPConn_Pairing, earlier on the
+	 * same hook, because every authorized user sees them.
+	 */
 	public function add_settings_page(): void {
-		add_options_page(
+		$pages = [
+			'episodes' => [ __( 'Episodes', 'connector-for-vozcaster' ), 'render_episodes_page' ],
+			'audio'    => [ __( 'Audio', 'connector-for-vozcaster' ), 'render_audio_page' ],
+			'access'   => [ __( 'Access', 'connector-for-vozcaster' ), 'render_access_page' ],
+			'history'  => [ __( 'History', 'connector-for-vozcaster' ), 'render_history_page' ],
+		];
+		$titles = self::get_page_titles();
+		foreach ( $pages as $tab => [ $menu_title, $callback ] ) {
+			add_submenu_page(
+				VPConn_Pairing::PAGE_SLUG,
+				$titles[ $tab ],
+				$menu_title,
+				'manage_options',
+				'vozcaster-' . $tab,
+				[ $this, $callback ]
+			);
+		}
+
+		// Settings → VozCaster (before 1.8.0): still registered so old links and
+		// bookmarks work, hidden from the menu and redirected to the new pages.
+		$legacy_hook = add_options_page(
 			__( 'VozCaster', 'connector-for-vozcaster' ),
 			__( 'VozCaster', 'connector-for-vozcaster' ),
 			'manage_options',
 			'connector-for-vozcaster',
-			[ $this, 'render_page' ]
+			'__return_null'
 		);
+		remove_submenu_page( 'options-general.php', 'connector-for-vozcaster' );
+		if ( $legacy_hook ) {
+			add_action(
+				'load-' . $legacy_hook,
+				static function (): void {
+					wp_safe_redirect( self::get_page_url( 'episodes' ) );
+					exit;
+				}
+			);
+		}
+	}
+
+	/** True on any of this plugin's admin screens. */
+	public static function is_plugin_screen( string $screen_id ): bool {
+		return str_contains( $screen_id, 'page_vozcaster' );
 	}
 
 	// -------------------------------------------------------------------------
@@ -71,13 +111,13 @@ class VPConn_Settings {
 			case 'save_post_footer':
 				$footer = isset( $_POST['post_footer'] ) ? wp_kses_post( wp_unslash( $_POST['post_footer'] ) ) : '';
 				update_option( 'vpconn_post_footer', $footer );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'post_footer_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'post_footer_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_image_style':
 				$image_style = isset( $_POST['image_style'] ) ? sanitize_text_field( wp_unslash( $_POST['image_style'] ) ) : '';
 				update_option( 'vpconn_image_style', $image_style );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'image_style_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'image_style_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_title_config':
@@ -93,7 +133,7 @@ class VPConn_Settings {
 					update_option( 'vpconn_current_season', $season );
 					delete_option( 'vpconn_season_start_year' );
 				}
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'title_config_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'title_config_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_mix_config':
@@ -122,13 +162,13 @@ class VPConn_Settings {
 				update_option( 'vpconn_outro_fade_start',  max( 1, $outro_start ) );
 				update_option( 'vpconn_outro_duck_volume', min( 100, max( 1, $outro_vol ) ) );
 
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'mix_config_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'mix_config_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_authorized_roles':
 				$roles = isset( $_POST['authorized_roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['authorized_roles'] ) ) : [];
 				VPConn_Auth::set_authorized_roles( $roles );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'roles_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'roles_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_ai_notice':
@@ -138,7 +178,7 @@ class VPConn_Settings {
 					sanitize_key( wp_unslash( $_POST['ai_notice_position'] ?? 'after' ) ),
 					! empty( $_POST['credit_enabled'] )
 				);
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'ai_notice_saved' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'ai_notice_saved' ], self::back_url() ) );
 				exit;
 
 			case 'revoke_token':
@@ -146,7 +186,7 @@ class VPConn_Settings {
 				if ( $user_id > 0 ) {
 					VPConn_Auth::revoke_user_token( $user_id );
 				}
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'token_revoked' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'token_revoked' ], self::back_url() ) );
 				exit;
 
 			case 'upload_intro':
@@ -157,10 +197,9 @@ class VPConn_Settings {
 
 				if ( empty( $_FILES['audio_file']['name'] ) ) {
 					wp_safe_redirect( add_query_arg( [
-						'page'       => 'connector-for-vozcaster',
 						'vpconn_msg' => $msg_err,
 						'vpconn_err' => rawurlencode( __( 'No file selected.', 'connector-for-vozcaster' ) ),
-					], admin_url( 'options-general.php' ) ) );
+					], self::back_url() ) );
 					exit;
 				}
 
@@ -202,10 +241,9 @@ class VPConn_Settings {
 
 				if ( isset( $uploaded['error'] ) ) {
 					wp_safe_redirect( add_query_arg( [
-						'page'       => 'connector-for-vozcaster',
 						'vpconn_msg' => $msg_err,
 						'vpconn_err' => rawurlencode( $uploaded['error'] ),
-					], admin_url( 'options-general.php' ) ) );
+					], self::back_url() ) );
 					exit;
 				}
 
@@ -218,27 +256,26 @@ class VPConn_Settings {
 
 				if ( is_wp_error( $attachment_id ) ) {
 					wp_safe_redirect( add_query_arg( [
-						'page'       => 'connector-for-vozcaster',
 						'vpconn_msg' => $msg_err,
 						'vpconn_err' => rawurlencode( $attachment_id->get_error_message() ),
-					], admin_url( 'options-general.php' ) ) );
+					], self::back_url() ) );
 					exit;
 				}
 
 				wp_update_attachment_metadata( $attachment_id, wp_generate_attachment_metadata( $attachment_id, $uploaded['file'] ) );
 				VPConn_Media::set_intro_outro_id( $type, $attachment_id );
 
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => $msg_ok ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => $msg_ok ], self::back_url() ) );
 				exit;
 
 			case 'delete_intro':
 				VPConn_Media::delete_intro_outro( 'intro' );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'intro_deleted' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'intro_deleted' ], self::back_url() ) );
 				exit;
 
 			case 'delete_outro':
 				VPConn_Media::delete_intro_outro( 'outro' );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'outro_deleted' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'outro_deleted' ], self::back_url() ) );
 				exit;
 
 			case 'select_intro_from_library':
@@ -250,19 +287,18 @@ class VPConn_Settings {
 
 				if ( $attachment_id > 0 && 'attachment' === get_post_type( $attachment_id ) ) {
 					VPConn_Media::set_intro_outro_id( $type, $attachment_id );
-					wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => $msg_ok ], admin_url( 'options-general.php' ) ) );
+					wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => $msg_ok ], self::back_url() ) );
 				} else {
 					wp_safe_redirect( add_query_arg( [
-						'page'       => 'connector-for-vozcaster',
 						'vpconn_msg' => $msg_err,
 						'vpconn_err' => rawurlencode( __( 'Invalid attachment.', 'connector-for-vozcaster' ) ),
-					], admin_url( 'options-general.php' ) ) );
+					], self::back_url() ) );
 				}
 				exit;
 
 			case 'clear_log':
 				update_option( self::OPTION_LOG, [] );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'log_cleared' ], admin_url( 'options-general.php' ) ) );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'log_cleared' ], self::back_url() ) );
 				exit;
 		}
 	}
@@ -272,7 +308,7 @@ class VPConn_Settings {
 	 */
 	public function show_token_notice(): void {
 		$screen = get_current_screen();
-		if ( ! $screen || 'settings_page_connector-for-vozcaster' !== $screen->id ) {
+		if ( ! $screen || ! self::is_plugin_screen( $screen->id ) ) {
 			return;
 		}
 
@@ -325,7 +361,46 @@ class VPConn_Settings {
 	// Page rendering
 	// -------------------------------------------------------------------------
 
-	public function render_page(): void {
+	public function render_episodes_page(): void {
+		$this->render_page( 'episodes' );
+	}
+
+	public function render_audio_page(): void {
+		$this->render_page( 'audio' );
+	}
+
+	public function render_access_page(): void {
+		$this->render_page( 'access' );
+	}
+
+	public function render_history_page(): void {
+		$this->render_page( 'history' );
+	}
+
+	/** @return array<string, string> Admin page titles by tab. */
+	public static function get_page_titles(): array {
+		return [
+			'episodes' => __( 'VozCaster — Episodes', 'connector-for-vozcaster' ),
+			'audio'    => __( 'VozCaster — Audio', 'connector-for-vozcaster' ),
+			'access'   => __( 'VozCaster — Access', 'connector-for-vozcaster' ),
+			'history'  => __( 'VozCaster — History', 'connector-for-vozcaster' ),
+		];
+	}
+
+	public static function get_page_url( string $tab ): string {
+		return admin_url( 'admin.php?page=vozcaster-' . $tab );
+	}
+
+	/**
+	 * Where a settings form goes back to after saving: the page it was sent
+	 * from, without the previous notice parameters.
+	 */
+	private static function back_url(): string {
+		$referer = wp_get_referer();
+		return $referer ? remove_query_arg( [ 'vpconn_msg', 'vpconn_err' ], $referer ) : self::get_page_url( 'episodes' );
+	}
+
+	private function render_page( string $tab ): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
@@ -341,6 +416,7 @@ class VPConn_Settings {
 		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
 		$log             = self::get_log();
 		$pp_active       = is_plugin_active( 'powerpress/powerpress.php' );
+		$tab             = array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes';
 		$nonce_field     = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
 		$title_prefix           = (string) get_option( 'vpconn_title_prefix', '' );
 		$title_include_season   = (bool)   get_option( 'vpconn_title_include_season', false );
@@ -360,166 +436,15 @@ class VPConn_Settings {
 
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'VozCaster', 'connector-for-vozcaster' ); ?></h1>
+			<h1><?php echo esc_html( self::get_page_titles()[ $tab ] ?? '' ); ?></h1>
 
-			<?php /* ----- PowerPress status ----- */ ?>
-			<h2><?php esc_html_e( 'PowerPress', 'connector-for-vozcaster' ); ?></h2>
-			<p>
-				<?php if ( $pp_active ) : ?>
-					<span style="color:#46b450;">&#10004;</span> <?php esc_html_e( 'PowerPress is installed and active.', 'connector-for-vozcaster' ); ?>
-				<?php else : ?>
-					<span style="color:#dc3232;">&#10008;</span> <?php esc_html_e( 'PowerPress is not installed or not active. Episodes will be created without podcast data.', 'connector-for-vozcaster' ); ?>
-				<?php endif; ?>
-			</p>
-
-			<hr>
-
-			<?php /* ----- Who can publish from the bot ----- */ ?>
-			<h2><?php esc_html_e( 'Who can publish from the bot', 'connector-for-vozcaster' ); ?></h2>
-			<p class="description">
-				<?php esc_html_e( 'Users with the following roles are authorized to publish from the Telegram bot, in every podcast of this site. They connect with their usual WordPress account; no password goes through Telegram.', 'connector-for-vozcaster' ); ?>
-			</p>
-
-			<form method="post" action="">
-				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_authorized_roles">
-				<fieldset style="margin-top:12px;">
-					<legend class="screen-reader-text"><?php esc_html_e( 'Authorized roles', 'connector-for-vozcaster' ); ?></legend>
-					<?php foreach ( $role_names as $role_slug => $role_name ) : ?>
-						<?php $is_admin_role = ( 'administrator' === $role_slug ); ?>
-						<label style="display:block;margin-bottom:6px;">
-							<input
-								type="checkbox"
-								name="authorized_roles[]"
-								value="<?php echo esc_attr( $role_slug ); ?>"
-								<?php checked( in_array( $role_slug, $auth_roles, true ) ); ?>
-								<?php disabled( $is_admin_role ); ?>
-							>
-							<?php echo esc_html( translate_user_role( $role_name ) ); ?>
-							<?php if ( $is_admin_role ) : ?>
-								<span class="description">— <?php esc_html_e( 'always authorized', 'connector-for-vozcaster' ); ?></span>
-							<?php endif; ?>
-						</label>
-					<?php endforeach; ?>
-				</fieldset>
-				<p class="description">
-					<?php esc_html_e( 'By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin.', 'connector-for-vozcaster' ); ?>
-				</p>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save roles', 'connector-for-vozcaster' ); ?></button></p>
-			</form>
-
-			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>
-			<p class="description">
-				<?php esc_html_e( 'Each authorized user connects their own account from Users → VozCaster (Profile → VozCaster for non-administrators).', 'connector-for-vozcaster' ); ?>
-				<a href="<?php echo esc_url( VPConn_Pairing::get_page_url() ); ?>"><?php esc_html_e( 'Connect your account', 'connector-for-vozcaster' ); ?></a>
-			</p>
-			<?php if ( empty( $connected_ids ) ) : ?>
-				<p><em><?php esc_html_e( 'Nobody has connected the bot to this site yet.', 'connector-for-vozcaster' ); ?></em></p>
-			<?php else : ?>
-				<table class="widefat fixed striped" style="margin-top:12px;">
-					<thead>
-						<tr>
-							<th><?php esc_html_e( 'Username', 'connector-for-vozcaster' ); ?></th>
-							<th><?php esc_html_e( 'Name', 'connector-for-vozcaster' ); ?></th>
-							<th><?php esc_html_e( 'Role', 'connector-for-vozcaster' ); ?></th>
-							<th><?php esc_html_e( 'Bot status', 'connector-for-vozcaster' ); ?></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ( $connected_ids as $connected_id ) : ?>
-							<?php
-							$wp_user = get_userdata( $connected_id );
-							if ( ! $wp_user ) {
-								continue;
-							}
-							$roles_display = implode( ', ', array_map( 'translate_user_role', array_intersect_key( $role_names, array_flip( $wp_user->roles ) ) ) );
-							?>
-							<tr>
-								<td><strong><?php echo esc_html( $wp_user->user_login ); ?></strong></td>
-								<td><?php echo esc_html( $wp_user->display_name ); ?></td>
-								<td><?php echo esc_html( $roles_display ); ?></td>
-								<td>
-									<?php if ( VPConn_Auth::is_user_allowed( $wp_user->ID ) ) : ?>
-										<span style="color:#46b450;">&#10004; <?php esc_html_e( 'Connected', 'connector-for-vozcaster' ); ?></span>
-									<?php else : ?>
-										<span style="color:#dc3232;">&#10008; <?php esc_html_e( 'Role not authorized', 'connector-for-vozcaster' ); ?></span>
-									<?php endif; ?>
-									&nbsp;
-									<form method="post" action="" style="display:inline;">
-										<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-										<input type="hidden" name="vpconn_action" value="revoke_token">
-										<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $wp_user->ID ); ?>">
-										<button
-											type="submit"
-											class="button button-small button-link-delete"
-											style="vertical-align:middle;"
-											onclick="return confirm('<?php echo esc_js( __( 'Revoke access? The user will need to connect again.', 'connector-for-vozcaster' ) ); ?>')">
-											<?php esc_html_e( 'Revoke', 'connector-for-vozcaster' ); ?>
-										</button>
-									</form>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
+			<?php if ( ! $pp_active ) : ?>
+				<div class="notice notice-warning inline"><p>
+					<?php esc_html_e( 'PowerPress is not installed or not active. Episodes will be created without podcast data.', 'connector-for-vozcaster' ); ?>
+				</p></div>
 			<?php endif; ?>
 
-			<hr>
-
-			<?php /* ----- AI notice and credit ----- */ ?>
-			<h2><?php esc_html_e( 'AI content notice', 'connector-for-vozcaster' ); ?></h2>
-			<p class="description">
-				<?php esc_html_e( 'When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor.', 'connector-for-vozcaster' ); ?>
-			</p>
-
-			<form method="post" action="">
-				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_ai_notice">
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row"><?php esc_html_e( 'Show the AI notice', 'connector-for-vozcaster' ); ?></th>
-						<td>
-							<label>
-								<input type="checkbox" name="ai_notice_enabled" value="1" <?php checked( $notice_enabled ); ?>>
-								<?php esc_html_e( 'Show it on posts whose text was written by AI', 'connector-for-vozcaster' ); ?>
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">
-							<label for="ai_notice_text"><?php esc_html_e( 'Notice text', 'connector-for-vozcaster' ); ?></label>
-						</th>
-						<td>
-							<textarea id="ai_notice_text" name="ai_notice_text" rows="3" class="large-text" placeholder="<?php echo esc_attr( VPConn_AI_Notice::get_default_text() ); ?>"><?php echo esc_textarea( $notice_text ); ?></textarea>
-							<p class="description"><?php esc_html_e( 'Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed.', 'connector-for-vozcaster' ); ?></p>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">
-							<label for="ai_notice_position"><?php esc_html_e( 'Position', 'connector-for-vozcaster' ); ?></label>
-						</th>
-						<td>
-							<select id="ai_notice_position" name="ai_notice_position">
-								<option value="after" <?php selected( $notice_position, 'after' ); ?>><?php esc_html_e( 'At the end of the post', 'connector-for-vozcaster' ); ?></option>
-								<option value="before" <?php selected( $notice_position, 'before' ); ?>><?php esc_html_e( 'At the beginning of the post', 'connector-for-vozcaster' ); ?></option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row"><?php esc_html_e( 'VozCaster credit', 'connector-for-vozcaster' ); ?></th>
-						<td>
-							<label>
-								<input type="checkbox" name="credit_enabled" value="1" <?php checked( $credit_enabled ); ?>>
-								<?php esc_html_e( 'Show a "Published with VozCaster" line with a link under posts published from the bot', 'connector-for-vozcaster' ); ?>
-							</label>
-							<p class="description"><?php esc_html_e( 'Off by default. Turning it on helps VozCaster grow — thank you!', 'connector-for-vozcaster' ); ?></p>
-						</td>
-					</tr>
-				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save notice settings', 'connector-for-vozcaster' ); ?></button></p>
-			</form>
-
-			<hr>
+			<?php if ( 'episodes' === $tab ) : ?>
 
 			<?php /* ----- Episode titles ----- */ ?>
 			<h2><?php esc_html_e( 'Episode titles', 'connector-for-vozcaster' ); ?></h2>
@@ -613,6 +538,127 @@ class VPConn_Settings {
 			</form>
 
 			<hr>
+
+			<?php /* ----- Post footer ----- */ ?>
+			<h2><?php esc_html_e( 'Post footer (signature)', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'HTML or Gutenberg block markup appended automatically to every post published by the bot. You can also edit it from the Telegram bot with /firma.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_post_footer">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="post_footer"><?php esc_html_e( 'Footer content', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<textarea
+								id="post_footer"
+								name="post_footer"
+								rows="10"
+								style="width:100%; font-family:monospace;"
+							><?php echo esc_textarea( $post_footer ); ?></textarea>
+							<p class="description">
+								<?php esc_html_e( 'Accepts raw HTML and Gutenberg block comments. Appended verbatim after the episode content. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save footer', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<hr>
+
+			<?php /* ----- Image style ----- */ ?>
+			<h2><?php esc_html_e( 'Image style', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_image_style">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="image_style"><?php esc_html_e( 'Style text', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="text"
+								id="image_style"
+								name="image_style"
+								value="<?php echo esc_attr( $image_style ); ?>"
+								style="width:100%; max-width:600px;"
+								placeholder="<?php esc_attr_e( 'e.g. Attractive woman in her 30s, seasonal clothing', 'connector-for-vozcaster' ); ?>"
+							>
+							<p class="description">
+								<?php esc_html_e( 'Added at the front of every image prompt for this podcast. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save image style', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<hr>
+
+			<?php /* ----- AI notice and credit ----- */ ?>
+			<h2><?php esc_html_e( 'AI content notice', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_ai_notice">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Show the AI notice', 'connector-for-vozcaster' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="ai_notice_enabled" value="1" <?php checked( $notice_enabled ); ?>>
+								<?php esc_html_e( 'Show it on posts whose text was written by AI', 'connector-for-vozcaster' ); ?>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="ai_notice_text"><?php esc_html_e( 'Notice text', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<textarea id="ai_notice_text" name="ai_notice_text" rows="3" class="large-text" placeholder="<?php echo esc_attr( VPConn_AI_Notice::get_default_text() ); ?>"><?php echo esc_textarea( $notice_text ); ?></textarea>
+							<p class="description"><?php esc_html_e( 'Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed.', 'connector-for-vozcaster' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="ai_notice_position"><?php esc_html_e( 'Position', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<select id="ai_notice_position" name="ai_notice_position">
+								<option value="after" <?php selected( $notice_position, 'after' ); ?>><?php esc_html_e( 'At the end of the post', 'connector-for-vozcaster' ); ?></option>
+								<option value="before" <?php selected( $notice_position, 'before' ); ?>><?php esc_html_e( 'At the beginning of the post', 'connector-for-vozcaster' ); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'VozCaster credit', 'connector-for-vozcaster' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="credit_enabled" value="1" <?php checked( $credit_enabled ); ?>>
+								<?php esc_html_e( 'Show a "Published with VozCaster" line with a link under posts published from the bot', 'connector-for-vozcaster' ); ?>
+							</label>
+							<p class="description"><?php esc_html_e( 'Off by default. Turning it on helps VozCaster grow — thank you!', 'connector-for-vozcaster' ); ?></p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save notice settings', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<?php elseif ( 'audio' === $tab ) : ?>
 
 			<?php /* ----- Intro & Outro ----- */ ?>
 			<h2><?php esc_html_e( 'Intro &amp; Outro', 'connector-for-vozcaster' ); ?></h2>
@@ -802,73 +848,99 @@ class VPConn_Settings {
 				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save mix settings', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
 
-			<hr>
+			<?php elseif ( 'access' === $tab ) : ?>
 
-			<?php /* ----- Post footer ----- */ ?>
-			<h2><?php esc_html_e( 'Post footer (signature)', 'connector-for-vozcaster' ); ?></h2>
+			<?php /* ----- Who can publish from the bot ----- */ ?>
+			<h2><?php esc_html_e( 'Who can publish from the bot', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'HTML or Gutenberg block markup appended automatically to every post published by the bot. You can also edit it from the Telegram bot with /firma.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Users with the following roles are authorized to publish from the Telegram bot, in every podcast of this site. They connect with their usual WordPress account; no password goes through Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_post_footer">
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row">
-							<label for="post_footer"><?php esc_html_e( 'Footer content', 'connector-for-vozcaster' ); ?></label>
-						</th>
-						<td>
-							<textarea
-								id="post_footer"
-								name="post_footer"
-								rows="10"
-								style="width:100%; font-family:monospace;"
-							><?php echo esc_textarea( $post_footer ); ?></textarea>
-							<p class="description">
-								<?php esc_html_e( 'Accepts raw HTML and Gutenberg block comments. Appended verbatim after the episode content. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
-							</p>
-						</td>
-					</tr>
-				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save footer', 'connector-for-vozcaster' ); ?></button></p>
-			</form>
-
-			<hr>
-
-			<?php /* ----- Image style ----- */ ?>
-			<h2><?php esc_html_e( 'Image style', 'connector-for-vozcaster' ); ?></h2>
-			<p class="description">
-				<?php esc_html_e( 'Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo.', 'connector-for-vozcaster' ); ?>
-			</p>
-
-			<form method="post" action="">
-				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_image_style">
-				<table class="form-table" role="presentation">
-					<tr>
-						<th scope="row">
-							<label for="image_style"><?php esc_html_e( 'Style text', 'connector-for-vozcaster' ); ?></label>
-						</th>
-						<td>
+				<input type="hidden" name="vpconn_action" value="save_authorized_roles">
+				<fieldset style="margin-top:12px;">
+					<legend class="screen-reader-text"><?php esc_html_e( 'Authorized roles', 'connector-for-vozcaster' ); ?></legend>
+					<?php foreach ( $role_names as $role_slug => $role_name ) : ?>
+						<?php $is_admin_role = ( 'administrator' === $role_slug ); ?>
+						<label style="display:block;margin-bottom:6px;">
 							<input
-								type="text"
-								id="image_style"
-								name="image_style"
-								value="<?php echo esc_attr( $image_style ); ?>"
-								style="width:100%; max-width:600px;"
-								placeholder="<?php esc_attr_e( 'e.g. Attractive woman in her 30s, seasonal clothing', 'connector-for-vozcaster' ); ?>"
+								type="checkbox"
+								name="authorized_roles[]"
+								value="<?php echo esc_attr( $role_slug ); ?>"
+								<?php checked( in_array( $role_slug, $auth_roles, true ) ); ?>
+								<?php disabled( $is_admin_role ); ?>
 							>
-							<p class="description">
-								<?php esc_html_e( 'Added at the front of every image prompt for this podcast. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
-							</p>
-						</td>
-					</tr>
-				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save image style', 'connector-for-vozcaster' ); ?></button></p>
+							<?php echo esc_html( translate_user_role( $role_name ) ); ?>
+							<?php if ( $is_admin_role ) : ?>
+								<span class="description">— <?php esc_html_e( 'always authorized', 'connector-for-vozcaster' ); ?></span>
+							<?php endif; ?>
+						</label>
+					<?php endforeach; ?>
+				</fieldset>
+				<p class="description">
+					<?php esc_html_e( 'By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin.', 'connector-for-vozcaster' ); ?>
+				</p>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save roles', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
 
-			<hr>
+			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>
+			<p class="description">
+				<?php esc_html_e( 'Each authorized user connects their own account from VozCaster → Connect.', 'connector-for-vozcaster' ); ?>
+				<a href="<?php echo esc_url( VPConn_Pairing::get_page_url() ); ?>"><?php esc_html_e( 'Connect your account', 'connector-for-vozcaster' ); ?></a>
+			</p>
+			<?php if ( empty( $connected_ids ) ) : ?>
+				<p><em><?php esc_html_e( 'Nobody has connected the bot to this site yet.', 'connector-for-vozcaster' ); ?></em></p>
+			<?php else : ?>
+				<table class="widefat fixed striped" style="margin-top:12px;">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Username', 'connector-for-vozcaster' ); ?></th>
+							<th><?php esc_html_e( 'Name', 'connector-for-vozcaster' ); ?></th>
+							<th><?php esc_html_e( 'Role', 'connector-for-vozcaster' ); ?></th>
+							<th><?php esc_html_e( 'Bot status', 'connector-for-vozcaster' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ( $connected_ids as $connected_id ) : ?>
+							<?php
+							$wp_user = get_userdata( $connected_id );
+							if ( ! $wp_user ) {
+								continue;
+							}
+							$roles_display = implode( ', ', array_map( 'translate_user_role', array_intersect_key( $role_names, array_flip( $wp_user->roles ) ) ) );
+							?>
+							<tr>
+								<td><strong><?php echo esc_html( $wp_user->user_login ); ?></strong></td>
+								<td><?php echo esc_html( $wp_user->display_name ); ?></td>
+								<td><?php echo esc_html( $roles_display ); ?></td>
+								<td>
+									<?php if ( VPConn_Auth::is_user_allowed( $wp_user->ID ) ) : ?>
+										<span style="color:#46b450;">&#10004; <?php esc_html_e( 'Connected', 'connector-for-vozcaster' ); ?></span>
+									<?php else : ?>
+										<span style="color:#dc3232;">&#10008; <?php esc_html_e( 'Role not authorized', 'connector-for-vozcaster' ); ?></span>
+									<?php endif; ?>
+									&nbsp;
+									<form method="post" action="" style="display:inline;">
+										<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										<input type="hidden" name="vpconn_action" value="revoke_token">
+										<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $wp_user->ID ); ?>">
+										<button
+											type="submit"
+											class="button button-small button-link-delete"
+											style="vertical-align:middle;"
+											onclick="return confirm('<?php echo esc_js( __( 'Revoke access? The user will need to connect again.', 'connector-for-vozcaster' ) ); ?>')">
+											<?php esc_html_e( 'Revoke', 'connector-for-vozcaster' ); ?>
+										</button>
+									</form>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
+
+			<?php else : ?>
 
 			<?php /* ----- Episode log ----- */ ?>
 			<h2><?php esc_html_e( 'Recent published episodes', 'connector-for-vozcaster' ); ?></h2>
@@ -909,6 +981,8 @@ class VPConn_Settings {
 						<?php esc_html_e( 'Clear history', 'connector-for-vozcaster' ); ?>
 					</button>
 				</form>
+			<?php endif; ?>
+
 			<?php endif; ?>
 
 		</div>

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Flow:
  * 1. An authorized user clicks "Connect in Telegram" for a podcast feed on the
- *    Users → VozCaster page (Profile → VozCaster for non-admins).
+ *    VozCaster → Connect page.
  * 2. The plugin stores a single-use code (user + feed, 15 minutes) and sends
  *    the browser to t.me/<bot>?start=<code><host>. The host travels in the
  *    link because the bot needs to know which site to call back.
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class VPConn_Pairing {
 
-	const PAGE_SLUG       = 'vpconn-connect';
+	const PAGE_SLUG       = 'vozcaster';
 	const CODE_PATTERN    = '/^[a-f0-9]{16}$/';
 	const CODE_TTL        = 15 * MINUTE_IN_SECONDS;
 	const TRANSIENT       = 'vpconn_pair_';
@@ -30,7 +30,8 @@ class VPConn_Pairing {
 	const START_MAX_CHARS = 64;
 
 	public function register_hooks(): void {
-		add_action( 'admin_menu', [ $this, 'add_page' ] );
+		// Before VPConn_Settings (priority 10), which hangs its pages from this menu.
+		add_action( 'admin_menu', [ $this, 'add_page' ], 9 );
 		add_action( 'admin_post_vpconn_pair', [ $this, 'handle_pair' ] );
 		add_action( 'admin_init', [ $this, 'handle_dismiss' ] );
 		add_action( 'admin_notices', [ $this, 'show_connect_notice' ] );
@@ -46,7 +47,7 @@ class VPConn_Pairing {
 	}
 
 	public static function get_page_url(): string {
-		return admin_url( ( current_user_can( 'list_users' ) ? 'users.php' : 'profile.php' ) . '?page=' . self::PAGE_SLUG );
+		return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
 	}
 
 	/**
@@ -90,9 +91,21 @@ class VPConn_Pairing {
 		if ( ! VPConn_Auth::is_user_allowed( get_current_user_id() ) ) {
 			return;
 		}
-		add_users_page(
+		// Top-level menu, visible to every authorized user. Its first item is
+		// this page; administrators also get the settings pages under it.
+		add_menu_page(
 			__( 'Connect with VozCaster', 'connector-for-vozcaster' ),
 			__( 'VozCaster', 'connector-for-vozcaster' ),
+			'read',
+			self::PAGE_SLUG,
+			[ $this, 'render_page' ],
+			'dashicons-microphone',
+			58
+		);
+		add_submenu_page(
+			self::PAGE_SLUG,
+			__( 'Connect with VozCaster', 'connector-for-vozcaster' ),
+			__( 'Connect', 'connector-for-vozcaster' ),
 			'read',
 			self::PAGE_SLUG,
 			[ $this, 'render_page' ]
@@ -212,7 +225,10 @@ class VPConn_Pairing {
 
 	public function show_connect_notice(): void {
 		$screen = get_current_screen();
-		if ( ! $screen || ! in_array( $screen->id, [ 'dashboard', 'plugins', 'settings_page_connector-for-vozcaster' ], true ) ) {
+		if ( ! $screen || 'toplevel_page_' . self::PAGE_SLUG === $screen->id ) {
+			return;
+		}
+		if ( ! in_array( $screen->id, [ 'dashboard', 'plugins' ], true ) && ! VPConn_Settings::is_plugin_screen( $screen->id ) ) {
 			return;
 		}
 		$user_id = get_current_user_id();
