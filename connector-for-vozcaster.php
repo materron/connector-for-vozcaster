@@ -27,6 +27,8 @@ require_once VPCONN_DIR . 'includes/class-auth.php';
 require_once VPCONN_DIR . 'includes/class-media.php';
 require_once VPCONN_DIR . 'includes/class-api.php';
 require_once VPCONN_DIR . 'includes/class-settings.php';
+require_once VPCONN_DIR . 'includes/class-ai-notice.php';
+require_once VPCONN_DIR . 'includes/class-pairing.php';
 
 register_activation_hook( __FILE__, 'vpconn_activate' );
 register_deactivation_hook( __FILE__, 'vpconn_deactivate' );
@@ -72,8 +74,12 @@ function vpconn_init(): void {
 	$auth     = new VPConn_Auth();
 	$api      = new VPConn_API();
 	$settings = new VPConn_Settings();
+	$notice   = new VPConn_AI_Notice();
+	$pairing  = new VPConn_Pairing();
 
 	$auth->register_hooks();
 	$api->register_hooks();
 	$settings->register_hooks();
+	$notice->register_hooks();
+	$pairing->register_hooks();
 }

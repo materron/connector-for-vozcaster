@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.7.1
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,9 @@ You send a voice note to the bot, and a published draft (or live episode) appear
 * **Creates podcast episodes** using PowerPress, with episode and season numbering managed automatically.
 * **Supports multiple podcasts on the same site** — works with any PowerPress custom channels you have configured.
 * **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), fixed image style, category mapping.
-* **Granular permissions**: choose which WordPress users can publish to which podcast.
+* **One-click connection from wp-admin**: press "Connect in Telegram" and confirm in the bot. No address to type, no second login.
+* **Role-based permissions**: Authors and above can publish from the bot by default; administrators can authorise custom roles too.
+* **AI content notice**: posts whose text was written by AI show a short, customisable notice (on by default, can be turned off).
 * **Token-based authentication** so the bot never sees your WordPress password.
 
 = Free and Pro =
@@ -37,23 +39,24 @@ The bot conversation is currently in Spanish. Episode content is generated in th
 
 = How it works =
 
-1. Install and activate this plugin on your WordPress site.
-2. In **Settings → Connector for VozCaster**, authorise one or more WordPress users to publish via the bot.
-3. Open Telegram, talk to the VozCaster bot, run `/conectar` and link your WordPress site.
-4. Send a voice note or audio file to the bot. The episode appears on your site, ready to review or publish.
+1. Install and activate PowerPress and this plugin on your WordPress site.
+2. Go to **Users → VozCaster** (**Profile → VozCaster** for non-administrators) and press **Connect in Telegram**. Telegram opens with the bot: press Start and confirm.
+3. Send a voice note or audio file to the bot. The episode appears on your site, ready to review or publish.
+
+If your site's address cannot be passed to the bot automatically (for example, WordPress installed in a subfolder), the same page tells you to send `/conectar` to the bot and paste the address instead.
 
 = Requirements =
 
 * WordPress with the [PowerPress](https://wordpress.org/plugins/powerpress/) plugin installed and activated.
 * A Telegram account.
-* A WordPress user authorised to publish via the bot (configurable in the plugin settings — any role works as long as the administrator marks the user as authorised).
+* A WordPress user with an authorised role: Author, Editor or Administrator by default, or any custom role the administrator authorises in **Settings → VozCaster**.
 
 == Installation ==
 
 1. Upload the `connector-for-vozcaster` folder to `/wp-content/plugins/`, or install via **Plugins → Add New → Upload Plugin**.
 2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Go to **Settings → Connector for VozCaster** and authorise the WordPress users that will publish via the bot.
-4. Open Telegram, search for the VozCaster bot, send `/conectar` and follow the instructions to link your site.
+3. Go to **Users → VozCaster** and press **Connect in Telegram**, then confirm in the bot.
+4. Optional: in **Settings → VozCaster**, choose which roles may publish from the bot and adjust the AI content notice.
 
 == Frequently Asked Questions ==
 
@@ -85,7 +88,15 @@ Yes. The plugin works with PowerPress's multi-podcast (custom channels) configur
 
 = Who can publish from the bot? =
 
-Any WordPress user whose ID is in the authorised users list (configured in Settings → Connector for VozCaster). Role does not matter — what matters is whether the administrator has authorised them.
+Anyone whose role is authorised in **Settings → VozCaster**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role — users with it can then publish from the bot even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected the bot and lets you revoke access.
+
+= Why do some posts show a notice about AI? =
+
+When the bot writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **Settings → VozCaster**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
+
+= Does the plugin add links to my site? =
+
+Not unless you ask it to. There is an optional "Published with VozCaster" credit line with a link, which is **off by default** and can be turned on in **Settings → VozCaster**.
 
 = How do I get support? =
 
@@ -105,8 +116,10 @@ The following data is transmitted:
 
    These calls are initiated by the bot, not by the plugin. They reach your site through standard REST endpoints registered by this plugin under `/wp-json/vozpress/v1/`.
 
-2. **From your WordPress site to the bot (only during the user authorisation flow)**
-   - When a WordPress user connects via `/conectar` in Telegram, your browser is redirected to your WordPress login. After login, this plugin issues a token and returns it to the bot to complete the handshake.
+2. **From your WordPress site to the bot (only when a user connects)**
+   - When a user presses **Connect in Telegram** in wp-admin, the browser opens a `t.me` link to the bot containing a single-use code and your site's address. The bot then calls this plugin to read who is connecting (username, display name, podcast name) and, after the user confirms, to redeem the code for a token.
+   - When a user connects with `/conectar` instead, the browser is redirected to your WordPress login; after login, this plugin issues a token and returns it to the bot.
+   - The plugin itself makes no outgoing requests; the "Connect in Telegram" button only opens Telegram in the user's browser.
 
 3. **From the bot's server to Telegram's servers**
    - User-sent voice messages and audio files pass through Telegram's infrastructure as part of normal bot communication. See Telegram's Privacy Policy: https://telegram.org/privacy
@@ -135,11 +148,19 @@ Service URLs and policies:
 
 == Screenshots ==
 
-1. Podcast access permissions and the list of WordPress users authorised to publish from the bot.
+1. Roles authorised to publish from the bot, the list of connected users and the AI content notice settings.
 2. Per-podcast settings: title prefix and season numbering, intro/outro audio, audio mix levels and the post footer.
 3. Recent episode log: episodes published to the site through the bot.
 
 == Changelog ==
+
+= 1.8.0 =
+* New: connect the bot from wp-admin. **Users → VozCaster** has a "Connect in Telegram" button for each podcast; it opens the bot, which asks for confirmation and connects you. No address to type and no second login. `/conectar` still works.
+* New: permissions by role. The per-user allowlist and the per-podcast permissions are gone: every role that can publish posts (Author and above) can publish from the bot, in every podcast, and administrators can authorise custom roles as well. The settings screen lists the connected users with a Revoke button.
+* New: AI content notice. Posts whose text was written by AI show a short notice, on by default, with customisable text and position, and a per-post option to hide it. It is rendered by the plugin, so changes apply to all posts.
+* New: optional "Published with VozCaster" credit line, off by default.
+* Fix: an allowlisted user without the capability to publish (e.g. a Contributor) could publish episodes directly.
+* Security: bot tokens are now stored hashed. Existing connections are migrated automatically and keep working.
 
 = 1.7.1 =
 * Fix: episodes published by the bot never set PowerPress's per-episode "Apple Podcast Episode Artwork" (`itunes_image`) — only the regular WordPress featured image. It had to be filled in by hand every time. New episodes now get it automatically from the same image (the one uploaded by the bot, or the podcast's default cover as fallback). Episodes published before this fix are unaffected — their Apple Podcasts artwork field stays empty until edited manually or the episode is republished.

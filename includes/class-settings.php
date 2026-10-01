@@ -131,6 +131,16 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'roles_saved' ], admin_url( 'options-general.php' ) ) );
 				exit;
 
+			case 'save_ai_notice':
+				VPConn_AI_Notice::save_settings(
+					! empty( $_POST['ai_notice_enabled'] ),
+					isset( $_POST['ai_notice_text'] ) ? wp_kses_post( wp_unslash( $_POST['ai_notice_text'] ) ) : '',
+					sanitize_key( wp_unslash( $_POST['ai_notice_position'] ?? 'after' ) ),
+					! empty( $_POST['credit_enabled'] )
+				);
+				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'ai_notice_saved' ], admin_url( 'options-general.php' ) ) );
+				exit;
+
 			case 'revoke_token':
 				$user_id = absint( wp_unslash( $_POST['user_id'] ?? 0 ) );
 				if ( $user_id > 0 ) {
@@ -275,6 +285,7 @@ class VPConn_Settings {
 		}
 
 		$messages = [
+			'ai_notice_saved'        => __( 'AI notice settings saved.', 'connector-for-vozcaster' ),
 			'roles_saved'            => __( 'Authorized roles updated.', 'connector-for-vozcaster' ),
 			'token_revoked'          => __( 'Bot access revoked. The user will need to connect again.', 'connector-for-vozcaster' ),
 			'intro_deleted'          => __( 'Intro file deleted.', 'connector-for-vozcaster' ),
@@ -322,6 +333,10 @@ class VPConn_Settings {
 		$role_names      = wp_roles()->get_names();
 		$auth_roles      = VPConn_Auth::get_authorized_roles();
 		$connected_ids   = VPConn_Auth::get_connected_user_ids();
+		$notice_enabled  = VPConn_AI_Notice::is_enabled();
+		$notice_text     = VPConn_AI_Notice::get_custom_text();
+		$notice_position = VPConn_AI_Notice::get_position();
+		$credit_enabled  = VPConn_AI_Notice::is_credit_enabled();
 		$intro           = VPConn_Media::get_intro_outro_info( 'intro' );
 		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
 		$log             = self::get_log();
@@ -394,6 +409,10 @@ class VPConn_Settings {
 			</form>
 
 			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>
+			<p class="description">
+				<?php esc_html_e( 'Each authorized user connects their own account from Users → VozCaster (Profile → VozCaster for non-administrators).', 'connector-for-vozcaster' ); ?>
+				<a href="<?php echo esc_url( VPConn_Pairing::get_page_url() ); ?>"><?php esc_html_e( 'Connect your account', 'connector-for-vozcaster' ); ?></a>
+			</p>
 			<?php if ( empty( $connected_ids ) ) : ?>
 				<p><em><?php esc_html_e( 'Nobody has connected the bot to this site yet.', 'connector-for-vozcaster' ); ?></em></p>
 			<?php else : ?>
@@ -444,6 +463,61 @@ class VPConn_Settings {
 					</tbody>
 				</table>
 			<?php endif; ?>
+
+			<hr>
+
+			<?php /* ----- AI notice and credit ----- */ ?>
+			<h2><?php esc_html_e( 'AI content notice', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_ai_notice">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Show the AI notice', 'connector-for-vozcaster' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="ai_notice_enabled" value="1" <?php checked( $notice_enabled ); ?>>
+								<?php esc_html_e( 'Show it on posts whose text was written by AI', 'connector-for-vozcaster' ); ?>
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="ai_notice_text"><?php esc_html_e( 'Notice text', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<textarea id="ai_notice_text" name="ai_notice_text" rows="3" class="large-text" placeholder="<?php echo esc_attr( VPConn_AI_Notice::get_default_text() ); ?>"><?php echo esc_textarea( $notice_text ); ?></textarea>
+							<p class="description"><?php esc_html_e( 'Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed.', 'connector-for-vozcaster' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">
+							<label for="ai_notice_position"><?php esc_html_e( 'Position', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<select id="ai_notice_position" name="ai_notice_position">
+								<option value="after" <?php selected( $notice_position, 'after' ); ?>><?php esc_html_e( 'At the end of the post', 'connector-for-vozcaster' ); ?></option>
+								<option value="before" <?php selected( $notice_position, 'before' ); ?>><?php esc_html_e( 'At the beginning of the post', 'connector-for-vozcaster' ); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'VozCaster credit', 'connector-for-vozcaster' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="credit_enabled" value="1" <?php checked( $credit_enabled ); ?>>
+								<?php esc_html_e( 'Show a "Published with VozCaster" line with a link under posts published from the bot', 'connector-for-vozcaster' ); ?>
+							</label>
+							<p class="description"><?php esc_html_e( 'Off by default. Turning it on helps VozCaster grow — thank you!', 'connector-for-vozcaster' ); ?></p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save notice settings', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
 
 			<hr>
 

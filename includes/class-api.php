@@ -270,6 +270,11 @@ class VPConn_API {
 						'default'           => '',
 						'sanitize_callback' => 'esc_url_raw',
 					],
+					'ai_generated'         => [
+						'required' => false,
+						'type'     => 'boolean',
+						'default'  => false,
+					],
 					'title_prefix'         => [
 						'required'          => false,
 						'type'              => 'string',
@@ -343,6 +348,11 @@ class VPConn_API {
 						'default'  => 'draft',
 						'enum'     => [ 'draft', 'publish', 'pending' ],
 					],
+					'ai_generated'   => [
+						'required' => false,
+						'type'     => 'boolean',
+						'default'  => false,
+					],
 				],
 			]
 		);
@@ -402,6 +412,8 @@ class VPConn_API {
 				'status'      => 'ok',
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
+				// Lets the bot adapt to what this version supports.
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth' ],
 			]
 		);
 	}
@@ -920,6 +932,8 @@ class VPConn_API {
 		// (e.g. Enteratec's 'el-consultorio-de-enteratec') work correctly.
 		$this->assign_podcast_category( $post_id, $category_slug );
 
+		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
+
 		// Imagen destacada: primero la subida por el bot, luego el cover del podcast del feed.
 		$cover_attachment_id = 0;
 		if ( $featured_media > 0 ) {
@@ -1023,6 +1037,8 @@ class VPConn_API {
 		if ( $featured_media > 0 ) {
 			set_post_thumbnail( $post_id, $featured_media );
 		}
+
+		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
 
 		return new WP_REST_Response(
 			[
