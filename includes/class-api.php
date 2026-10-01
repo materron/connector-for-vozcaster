@@ -293,7 +293,7 @@ class VPConn_API {
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'season_increment' ],
-				'permission_callback' => [ $this, 'check_token_edit_permission' ],
+				'permission_callback' => [ $this, 'check_token_permission' ],
 				'args'                => [
 					'season' => [
 						'required'          => false,
@@ -354,7 +354,8 @@ class VPConn_API {
 
 	public function check_token_permission(): bool {
 		// determine_current_user (registrado en VPConn_Auth) ya ha autenticado al usuario
-		// a partir del header X-VozPress-Token antes de que llegue aquí.
+		// a partir del header X-VozPress-Token antes de que llegue aquí. Since 1.8.0
+		// every authorized role may publish, so this is also the publishing check.
 		$user_id = get_current_user_id();
 		return $user_id > 0 && VPConn_Auth::is_user_allowed( $user_id );
 	}
@@ -369,17 +370,6 @@ class VPConn_API {
 		return $this->check_token_permission() && current_user_can( 'manage_options' );
 	}
 
-	/**
-	 * Permission check for endpoints that any editorial user may use.
-	 * Requires a valid bot token plus the `edit_posts` capability, so a
-	 * Contributor (or above) can run it while a Subscriber or a read-only
-	 * account cannot. Used for the season number, which is an editorial
-	 * decision rather than a site configuration one.
-	 */
-	public function check_token_edit_permission(): bool {
-		return $this->check_token_permission() && current_user_can( 'edit_posts' );
-	}
-
 	// -------------------------------------------------------------------------
 	// Callbacks
 	// -------------------------------------------------------------------------
@@ -387,36 +377,16 @@ class VPConn_API {
 	/**
 	 * GET /feeds
 	 *
-	 * Devuelve los feeds de PowerPress accesibles para el usuario autenticado
-	 * y su nivel de permiso (publish / draft).
+	 * Devuelve los feeds de PowerPress; todos son accesibles para cualquier
+	 * usuario autorizado.
 	 */
 	public function get_feeds(): WP_REST_Response {
-		$user_id     = get_current_user_id();
-		$all_feeds   = VPConn_Settings::get_powerpress_feeds();
-		$permissions = VPConn_Settings::get_user_feed_permissions( $user_id );
-
-		if ( empty( $permissions ) ) {
-			// Sin permisos específicos: backward compat — acceso a todo con publicar.
-			$feeds = array_map( fn( $f ) => array_merge( $f, [ 'can_publish' => true ] ), $all_feeds );
-		} else {
-			$feeds = [];
-			foreach ( $all_feeds as $feed ) {
-				$slug = $feed['slug'];
-				if ( isset( $permissions[ $slug ] ) ) {
-					$feeds[] = [
-						'slug'          => $slug,
-						'name'          => $feed['name'],
-						'category_slug' => $feed['category_slug'] ?? null,
-						'can_publish'   => $permissions[ $slug ] === 'publish',
-					];
-				}
-			}
-			// Garantizar al menos el feed por defecto si el usuario no tiene ninguno.
-			if ( empty( $feeds ) ) {
-				$default = $all_feeds[0] ?? [ 'slug' => 'podcast', 'name' => 'Podcast', 'category_slug' => 'podcast' ];
-				$feeds[] = array_merge( $default, [ 'can_publish' => true ] );
-			}
-		}
+		// Since 1.8.0 there are no per-feed permissions: any authorized user can
+		// publish in every feed. `can_publish` is kept for older bot versions.
+		$feeds = array_map(
+			fn( $f ) => array_merge( $f, [ 'can_publish' => true ] ),
+			VPConn_Settings::get_powerpress_feeds()
+		);
 
 		$response = new WP_REST_Response( [ 'feeds' => $feeds ] );
 		$response->header( 'Cache-Control', 'no-store, no-cache' );

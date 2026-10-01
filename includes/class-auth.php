@@ -7,19 +7,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Gestiona la autenticación de usuarios del bot de Telegram.
  *
  * Modelo de seguridad:
- * - El administrador define qué usuarios WP pueden usar el bot (whitelist por ID de usuario WP).
+ * - Pueden usar el bot los usuarios cuyo rol esté autorizado (por defecto, los que pueden
+ *   publicar entradas: Autor o superior; el administrador puede añadir roles propios).
  * - Cada usuario se autentica via flujo web: el bot genera un enlace único y temporal,
  *   el usuario hace clic, inicia sesión en WordPress con sus propias credenciales,
  *   y el plugin emite un token personal que el bot almacena.
- * - Las peticiones del bot incluyen X-VozPress-Token; el plugin lo valida contra los tokens
- *   almacenados en usermeta y establece al usuario como current_user de WordPress.
+ * - Las peticiones del bot incluyen X-VozPress-Token; el plugin lo valida contra el hash
+ *   guardado en usermeta y establece al usuario como current_user de WordPress.
  * - Ninguna contraseña pasa por Telegram.
  */
 class VPConn_Auth {
 
-	const OPTION_ALLOWED_USERS = 'vpconn_allowed_wp_users';
-	const USER_META_TOKEN      = 'vpconn_bot_token';
-	const STATE_PATTERN        = '/^[a-f0-9]{32}$/';
+	const OPTION_AUTHORIZED_ROLES     = 'vpconn_authorized_roles';
+	const USER_META_TOKEN_HASH        = 'vpconn_bot_token_hash';
+	const STATE_PATTERN               = '/^[a-f0-9]{32}$/';
+
+	// Pre-1.8.0 storage, kept only so the upgrade routine can migrate it.
+	const LEGACY_OPTION_ALLOWED_USERS = 'vpconn_allowed_wp_users';
+	const LEGACY_USER_META_TOKEN      = 'vpconn_bot_token';
 
 	public function register_hooks(): void {
 		// Autenticar peticiones REST via X-VozPress-Token.
@@ -52,65 +57,156 @@ class VPConn_Auth {
 	}
 
 	// -------------------------------------------------------------------------
-	// Tokens por usuario (usermeta)
+	// Per-user tokens (usermeta, stored as a SHA-256 hash)
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Busca el WP user_id que tiene ese token en su usermeta.
-	 * Solo busca entre los usuarios de la whitelist.
+	 * Returns the ID of the authorized user that owns this token, or false.
+	 *
+	 * Only the SHA-256 hash of the token is stored, so the lookup is a direct
+	 * meta query. A user whose role is no longer authorized keeps the token
+	 * (it shows up in the connected users list) but cannot use it.
 	 */
 	public static function find_user_id_by_token( string $token ): int|false {
 		if ( '' === $token ) {
 			return false;
 		}
-		foreach ( self::get_allowed_user_ids() as $uid ) {
-			$stored = get_user_meta( $uid, self::USER_META_TOKEN, true );
-			if ( $stored && hash_equals( (string) $stored, $token ) ) {
-				return $uid;
-			}
+		$ids = get_users(
+			[
+				// Single lookup by a unique hash, only on requests carrying the bot token header.
+				'meta_key'    => self::USER_META_TOKEN_HASH, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+				'meta_value'  => self::hash_token( $token ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				'number'      => 1,
+				'fields'      => 'ID',
+				'count_total' => false,
+			]
+		);
+		if ( empty( $ids ) ) {
+			return false;
 		}
-		return false;
+		$user_id = (int) $ids[0];
+		return self::is_user_allowed( $user_id ) ? $user_id : false;
 	}
 
 	/**
-	 * Genera un token aleatorio para el usuario y lo guarda en usermeta.
-	 * Si ya tenía token, lo sobreescribe (re-autenticación).
+	 * Generates a random token for the user and stores its hash.
+	 * Any previous token of that user stops working (re-authentication).
 	 *
-	 * @return string Token en texto plano.
+	 * @return string Plain-text token, handed to the bot once.
 	 */
 	public static function generate_user_token( int $user_id ): string {
 		$token = bin2hex( random_bytes( 32 ) );
-		update_user_meta( $user_id, self::USER_META_TOKEN, $token );
+		update_user_meta( $user_id, self::USER_META_TOKEN_HASH, self::hash_token( $token ) );
 		return $token;
 	}
 
 	/**
-	 * Revoca el token de un usuario: el bot no podrá publicar con ese token.
-	 * El usuario deberá reconectarse con /conectar.
+	 * Revokes the user's token: the bot can no longer publish with it.
+	 * The user has to connect again.
 	 */
 	public static function revoke_user_token( int $user_id ): void {
-		delete_user_meta( $user_id, self::USER_META_TOKEN );
+		delete_user_meta( $user_id, self::USER_META_TOKEN_HASH );
 	}
 
 	public static function has_token( int $user_id ): bool {
-		return (bool) get_user_meta( $user_id, self::USER_META_TOKEN, true );
+		return (bool) get_user_meta( $user_id, self::USER_META_TOKEN_HASH, true );
+	}
+
+	/** @return int[] IDs of the users that have connected the bot. */
+	public static function get_connected_user_ids(): array {
+		return array_map(
+			'intval',
+			get_users(
+				[
+					'meta_key'    => self::USER_META_TOKEN_HASH, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Admin screen only.
+					'fields'      => 'ID',
+					'orderby'     => 'display_name',
+					'count_total' => false,
+				]
+			)
+		);
+	}
+
+	private static function hash_token( string $token ): string {
+		return hash( 'sha256', $token );
+	}
+
+	/**
+	 * 1.8.0 migration: replaces the plain-text tokens of earlier versions with
+	 * their hash, so connected users keep working without reconnecting, and
+	 * drops the per-user allowlist and per-feed permissions (authorization is
+	 * now by role).
+	 */
+	public static function migrate_to_role_authorization(): void {
+		$user_ids = get_users(
+			[
+				'meta_key'    => self::LEGACY_USER_META_TOKEN, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One-off migration.
+				'fields'      => 'ID',
+				'count_total' => false,
+			]
+		);
+		foreach ( $user_ids as $user_id ) {
+			$plain = (string) get_user_meta( (int) $user_id, self::LEGACY_USER_META_TOKEN, true );
+			if ( '' !== $plain ) {
+				update_user_meta( (int) $user_id, self::USER_META_TOKEN_HASH, self::hash_token( $plain ) );
+			}
+			delete_user_meta( (int) $user_id, self::LEGACY_USER_META_TOKEN );
+		}
+		delete_option( self::LEGACY_OPTION_ALLOWED_USERS );
+		delete_option( 'vpconn_feed_permissions' );
 	}
 
 	// -------------------------------------------------------------------------
-	// Whitelist de usuarios permitidos
+	// Authorization by role
 	// -------------------------------------------------------------------------
 
+	/**
+	 * A user may use the bot when any of their roles is authorized.
+	 * On multisite, super admins are always allowed.
+	 */
 	public static function is_user_allowed( int $user_id ): bool {
-		return in_array( $user_id, self::get_allowed_user_ids(), true );
+		$user = get_userdata( $user_id );
+		if ( ! $user ) {
+			return false;
+		}
+		if ( is_multisite() && is_super_admin( $user_id ) ) {
+			return true;
+		}
+		return (bool) array_intersect( (array) $user->roles, self::get_authorized_roles() );
 	}
 
-	/** @return int[] */
-	public static function get_allowed_user_ids(): array {
-		return array_map( 'intval', (array) get_option( self::OPTION_ALLOWED_USERS, [] ) );
+	/**
+	 * Roles authorized to publish from the bot.
+	 *
+	 * Until the administrator saves a choice, every role that can publish posts
+	 * (Administrator, Editor, Author and any custom role with `publish_posts`).
+	 * Administrator is always included so nobody locks themselves out.
+	 *
+	 * @return string[] Role slugs.
+	 */
+	public static function get_authorized_roles(): array {
+		$stored = get_option( self::OPTION_AUTHORIZED_ROLES, null );
+		$roles  = is_array( $stored ) ? array_map( 'strval', $stored ) : self::get_default_authorized_roles();
+		$roles[] = 'administrator';
+		return array_values( array_unique( $roles ) );
 	}
 
-	public static function set_allowed_user_ids( array $ids ): void {
-		update_option( self::OPTION_ALLOWED_USERS, array_values( array_map( 'intval', $ids ) ) );
+	/** @return string[] Slugs of the roles that have the `publish_posts` capability. */
+	public static function get_default_authorized_roles(): array {
+		$roles = [];
+		foreach ( wp_roles()->role_objects as $slug => $role ) {
+			if ( $role->has_cap( 'publish_posts' ) ) {
+				$roles[] = (string) $slug;
+			}
+		}
+		return $roles;
+	}
+
+	/** @param string[] $roles Role slugs; unknown roles are ignored. */
+	public static function set_authorized_roles( array $roles ): void {
+		$valid = array_keys( wp_roles()->get_names() );
+		$roles = array_values( array_intersect( array_map( 'sanitize_key', $roles ), $valid ) );
+		update_option( self::OPTION_AUTHORIZED_ROLES, $roles );
 	}
 
 	// -------------------------------------------------------------------------
@@ -185,12 +281,12 @@ class VPConn_Auth {
 				'🚫 ' . esc_html__( 'Not authorized', 'connector-for-vozcaster' ),
 				sprintf(
 					/* translators: %s: the WordPress username, wrapped in a <strong> tag. */
-					esc_html__( 'The user %s is not on the list of allowed users.', 'connector-for-vozcaster' ),
+					esc_html__( 'The role of %s is not authorized to publish from VozCaster.', 'connector-for-vozcaster' ),
 					'<strong>' . esc_html( $user->user_login ) . '</strong>'
 				),
 				sprintf(
 					/* translators: %s: the plugin settings location, wrapped in an <em> tag. */
-					esc_html__( 'Ask the administrator to enable you under %s.', 'connector-for-vozcaster' ),
+					esc_html__( 'Ask the administrator to authorize your role under %s.', 'connector-for-vozcaster' ),
 					'<em>' . esc_html__( 'Settings → VozCaster', 'connector-for-vozcaster' ) . '</em>'
 				),
 				'#cc0000'

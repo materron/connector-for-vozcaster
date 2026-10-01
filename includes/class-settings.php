@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VPConn_Settings {
 
 	const OPTION_LOG              = 'vpconn_episode_log';
-	const OPTION_FEED_PERMISSIONS = 'vpconn_feed_permissions';
 	const LOG_MAX_ENTRIES         = 10;
 
 	public function register_hooks(): void {
@@ -126,33 +125,10 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'mix_config_saved' ], admin_url( 'options-general.php' ) ) );
 				exit;
 
-			case 'save_feed_permissions':
-				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nested array; every key and value is sanitized in the loop below (int cast, sanitize_key, whitelist check).
-				$raw  = isset( $_POST['feed_perm'] ) ? (array) wp_unslash( $_POST['feed_perm'] ) : [];
-				$perms = [];
-				foreach ( $raw as $uid_str => $feeds ) {
-					$uid = (int) $uid_str;
-					if ( ! $uid ) continue;
-					$clean_feeds = [];
-					foreach ( (array) $feeds as $slug => $level ) {
-						$slug  = sanitize_key( $slug );
-						if ( ! $slug ) continue;
-						if ( in_array( $level, [ 'publish', 'draft' ], true ) ) {
-							$clean_feeds[ $slug ] = $level;
-						}
-					}
-					if ( ! empty( $clean_feeds ) ) {
-						$perms[ $uid ] = $clean_feeds;
-					}
-				}
-				self::set_feed_permissions( $perms );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'feed_permissions_saved' ], admin_url( 'options-general.php' ) ) );
-				exit;
-
-			case 'save_allowed_users':
-				$ids = array_map( 'intval', (array) ( $_POST['allowed_users'] ?? [] ) );
-				VPConn_Auth::set_allowed_user_ids( $ids );
-				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'users_saved' ], admin_url( 'options-general.php' ) ) );
+			case 'save_authorized_roles':
+				$roles = isset( $_POST['authorized_roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['authorized_roles'] ) ) : [];
+				VPConn_Auth::set_authorized_roles( $roles );
+				wp_safe_redirect( add_query_arg( [ 'page' => 'connector-for-vozcaster', 'vpconn_msg' => 'roles_saved' ], admin_url( 'options-general.php' ) ) );
 				exit;
 
 			case 'revoke_token':
@@ -299,9 +275,8 @@ class VPConn_Settings {
 		}
 
 		$messages = [
-			'feed_permissions_saved' => __( 'Podcast permissions updated.', 'connector-for-vozcaster' ),
-			'users_saved'            => __( 'User list updated.', 'connector-for-vozcaster' ),
-			'token_revoked'          => __( 'User access revoked. They will need to reconnect using /connect.', 'connector-for-vozcaster' ),
+			'roles_saved'            => __( 'Authorized roles updated.', 'connector-for-vozcaster' ),
+			'token_revoked'          => __( 'Bot access revoked. The user will need to connect again.', 'connector-for-vozcaster' ),
 			'intro_deleted'          => __( 'Intro file deleted.', 'connector-for-vozcaster' ),
 			'outro_deleted'          => __( 'Outro file deleted.', 'connector-for-vozcaster' ),
 			'intro_uploaded'         => __( 'Intro file uploaded successfully.', 'connector-for-vozcaster' ),
@@ -344,10 +319,9 @@ class VPConn_Settings {
 			return;
 		}
 
-		$allowed_ids     = VPConn_Auth::get_allowed_user_ids();
-		$all_users       = get_users( [ 'orderby' => 'display_name', 'order' => 'ASC' ] );
-		$all_feed_perms  = self::get_all_feed_permissions();
-		$pp_feeds        = self::get_powerpress_feeds();
+		$role_names      = wp_roles()->get_names();
+		$auth_roles      = VPConn_Auth::get_authorized_roles();
+		$connected_ids   = VPConn_Auth::get_connected_user_ids();
 		$intro           = VPConn_Media::get_intro_outro_info( 'intro' );
 		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
 		$log             = self::get_log();
@@ -385,73 +359,47 @@ class VPConn_Settings {
 
 			<hr>
 
-			<?php /* ----- Podcast access permissions ----- */ ?>
-			<h2><?php esc_html_e( 'Podcast access permissions', 'connector-for-vozcaster' ); ?></h2>
+			<?php /* ----- Who can publish from the bot ----- */ ?>
+			<h2><?php esc_html_e( 'Who can publish from the bot', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Define which podcast each user can access from the bot and with what permission level. Users without specific permissions configured here will have access to all podcasts with publish permission (backward compatibility).', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Users with the following roles are authorized to publish from the Telegram bot, in every podcast of this site. They connect with their usual WordPress account; no password goes through Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<?php if ( count( $pp_feeds ) <= 1 ) : ?>
-				<p><em><?php esc_html_e( 'Only one podcast is configured. Add more feeds in PowerPress to enable per-podcast permissions.', 'connector-for-vozcaster' ); ?></em></p>
-			<?php else : ?>
 			<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_feed_permissions">
-				<table class="widefat fixed striped" style="margin-top:12px;">
-					<thead>
-						<tr>
-							<th><?php esc_html_e( 'User', 'connector-for-vozcaster' ); ?></th>
-							<?php foreach ( $pp_feeds as $feed ) : ?>
-								<th style="text-align:center;"><?php echo esc_html( $feed['name'] ); ?></th>
-							<?php endforeach; ?>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ( $all_users as $wp_user ) : ?>
-							<?php if ( ! in_array( $wp_user->ID, $allowed_ids, true ) ) continue; ?>
-							<?php $user_perms = $all_feed_perms[ $wp_user->ID ] ?? []; ?>
-							<tr>
-								<td><strong><?php echo esc_html( $wp_user->display_name ); ?></strong> <small><?php echo esc_html( $wp_user->user_login ); ?></small></td>
-								<?php foreach ( $pp_feeds as $feed ) : ?>
-									<?php
-									$slug  = $feed['slug'];
-									$level = $user_perms[ $slug ] ?? 'none';
-									$name  = "feed_perm[{$wp_user->ID}][{$slug}]";
-									?>
-									<td style="text-align:center;">
-										<select name="<?php echo esc_attr( $name ); ?>">
-											<option value="none"    <?php selected( $level, 'none' ); ?>><?php esc_html_e( 'No access', 'connector-for-vozcaster' ); ?></option>
-											<option value="draft"   <?php selected( $level, 'draft' ); ?>><?php esc_html_e( 'Draft', 'connector-for-vozcaster' ); ?></option>
-											<option value="publish" <?php selected( $level, 'publish' ); ?>><?php esc_html_e( 'Publish', 'connector-for-vozcaster' ); ?></option>
-										</select>
-									</td>
-								<?php endforeach; ?>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-				</table>
-				<p class="description" style="margin-top:8px;">
-					<?php esc_html_e( 'No access: user will not see this podcast. Draft: can only submit for review. Publish: publishes directly.', 'connector-for-vozcaster' ); ?>
+				<input type="hidden" name="vpconn_action" value="save_authorized_roles">
+				<fieldset style="margin-top:12px;">
+					<legend class="screen-reader-text"><?php esc_html_e( 'Authorized roles', 'connector-for-vozcaster' ); ?></legend>
+					<?php foreach ( $role_names as $role_slug => $role_name ) : ?>
+						<?php $is_admin_role = ( 'administrator' === $role_slug ); ?>
+						<label style="display:block;margin-bottom:6px;">
+							<input
+								type="checkbox"
+								name="authorized_roles[]"
+								value="<?php echo esc_attr( $role_slug ); ?>"
+								<?php checked( in_array( $role_slug, $auth_roles, true ) ); ?>
+								<?php disabled( $is_admin_role ); ?>
+							>
+							<?php echo esc_html( translate_user_role( $role_name ) ); ?>
+							<?php if ( $is_admin_role ) : ?>
+								<span class="description">— <?php esc_html_e( 'always authorized', 'connector-for-vozcaster' ); ?></span>
+							<?php endif; ?>
+						</label>
+					<?php endforeach; ?>
+				</fieldset>
+				<p class="description">
+					<?php esc_html_e( 'By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin.', 'connector-for-vozcaster' ); ?>
 				</p>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save permissions', 'connector-for-vozcaster' ); ?></button></p>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save roles', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
-			<?php endif; ?>
 
-			<hr>
-
-			<?php /* ----- Users allowed to use the bot ----- */ ?>
-			<h2><?php esc_html_e( 'Users allowed to use the bot', 'connector-for-vozcaster' ); ?></h2>
-			<p class="description">
-				<?php esc_html_e( 'Check the WordPress users allowed to publish episodes from the Telegram bot. Checked users will be able to authenticate using their usual WordPress username and password.', 'connector-for-vozcaster' ); ?>
-			</p>
-
-			<form method="post" action="">
-				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_allowed_users">
+			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>
+			<?php if ( empty( $connected_ids ) ) : ?>
+				<p><em><?php esc_html_e( 'Nobody has connected the bot to this site yet.', 'connector-for-vozcaster' ); ?></em></p>
+			<?php else : ?>
 				<table class="widefat fixed striped" style="margin-top:12px;">
 					<thead>
 						<tr>
-							<th style="width:40px;"><?php esc_html_e( 'Allowed', 'connector-for-vozcaster' ); ?></th>
 							<th><?php esc_html_e( 'Username', 'connector-for-vozcaster' ); ?></th>
 							<th><?php esc_html_e( 'Name', 'connector-for-vozcaster' ); ?></th>
 							<th><?php esc_html_e( 'Role', 'connector-for-vozcaster' ); ?></th>
@@ -459,55 +407,43 @@ class VPConn_Settings {
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ( $all_users as $wp_user ) : ?>
+						<?php foreach ( $connected_ids as $connected_id ) : ?>
 							<?php
-							$is_allowed    = in_array( $wp_user->ID, $allowed_ids, true );
-							$has_token     = VPConn_Auth::has_token( $wp_user->ID );
-							$roles_display = implode( ', ', array_map( 'translate_user_role', $wp_user->roles ) );
+							$wp_user = get_userdata( $connected_id );
+							if ( ! $wp_user ) {
+								continue;
+							}
+							$roles_display = implode( ', ', array_map( 'translate_user_role', array_intersect_key( $role_names, array_flip( $wp_user->roles ) ) ) );
 							?>
 							<tr>
-								<td style="text-align:center;">
-									<input
-										type="checkbox"
-										name="allowed_users[]"
-										value="<?php echo esc_attr( $wp_user->ID ); ?>"
-										<?php checked( $is_allowed ); ?>
-										aria-label="
-										<?php
-										/* translators: %s: WordPress username. */
-										echo esc_attr( sprintf( __( 'Allow %s to publish from VozCaster', 'connector-for-vozcaster' ), $wp_user->user_login ) );
-										?>
-										"
-									>
-								</td>
 								<td><strong><?php echo esc_html( $wp_user->user_login ); ?></strong></td>
 								<td><?php echo esc_html( $wp_user->display_name ); ?></td>
 								<td><?php echo esc_html( $roles_display ); ?></td>
 								<td>
-									<?php if ( $has_token ) : ?>
+									<?php if ( VPConn_Auth::is_user_allowed( $wp_user->ID ) ) : ?>
 										<span style="color:#46b450;">&#10004; <?php esc_html_e( 'Connected', 'connector-for-vozcaster' ); ?></span>
-										&nbsp;
+									<?php else : ?>
+										<span style="color:#dc3232;">&#10008; <?php esc_html_e( 'Role not authorized', 'connector-for-vozcaster' ); ?></span>
+									<?php endif; ?>
+									&nbsp;
+									<form method="post" action="" style="display:inline;">
+										<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+										<input type="hidden" name="vpconn_action" value="revoke_token">
+										<input type="hidden" name="user_id" value="<?php echo esc_attr( (string) $wp_user->ID ); ?>">
 										<button
 											type="submit"
-											formaction=""
-											name="vpconn_action"
-											value="revoke_token"
 											class="button button-small button-link-delete"
 											style="vertical-align:middle;"
-											onclick="this.form.querySelector('[name=user_id]').value='<?php echo esc_attr( $wp_user->ID ); ?>';return confirm('<?php esc_attr_e( 'Revoke access? The user will need to reconnect using /connect.', 'connector-for-vozcaster' ); ?>')">
+											onclick="return confirm('<?php echo esc_js( __( 'Revoke access? The user will need to connect again.', 'connector-for-vozcaster' ) ); ?>')">
 											<?php esc_html_e( 'Revoke', 'connector-for-vozcaster' ); ?>
 										</button>
-									<?php else : ?>
-										<span style="color:#999;">&#8212; <?php esc_html_e( 'Not connected', 'connector-for-vozcaster' ); ?></span>
-									<?php endif; ?>
+									</form>
 								</td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
-				<input type="hidden" name="user_id" value="">
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save changes', 'connector-for-vozcaster' ); ?></button></p>
-			</form>
+			<?php endif; ?>
 
 			<hr>
 
@@ -955,25 +891,6 @@ class VPConn_Settings {
 	 */
 	public static function get_log(): array {
 		return (array) get_option( self::OPTION_LOG, [] );
-	}
-
-	// -------------------------------------------------------------------------
-	// Feed / podcast permissions
-	// -------------------------------------------------------------------------
-
-	/** @return array<int, array<string, string>> user_id → [feed_slug → 'publish'|'draft'] */
-	public static function get_all_feed_permissions(): array {
-		return (array) get_option( self::OPTION_FEED_PERMISSIONS, [] );
-	}
-
-	/** @return array<string, string>  feed_slug → 'publish'|'draft' (empty = no restrictions) */
-	public static function get_user_feed_permissions( int $user_id ): array {
-		$all = self::get_all_feed_permissions();
-		return (array) ( $all[ $user_id ] ?? [] );
-	}
-
-	public static function set_feed_permissions( array $permissions ): void {
-		update_option( self::OPTION_FEED_PERMISSIONS, $permissions );
 	}
 
 	// -------------------------------------------------------------------------

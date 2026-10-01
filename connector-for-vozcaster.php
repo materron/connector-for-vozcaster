@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: Connect your WordPress to the VozCaster Telegram bot — publish podcast episodes from voice notes directly into PowerPress.
- * Version:     1.7.1
+ * Version:     1.8.0
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.7.1' );
+define( 'VPCONN_VERSION', '1.8.0' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
@@ -53,6 +53,11 @@ function vpconn_maybe_upgrade(): void {
 
 	// 1.5.15: the episode log no longer autoloads on every request.
 	VPConn_Settings::migrate_log_autoload();
+
+	// 1.8.0: authorization by role; tokens stored as a hash.
+	if ( ! $stored || version_compare( $stored, '1.8.0', '<' ) ) {
+		VPConn_Auth::migrate_to_role_authorization();
+	}
 
 	update_option( 'vpconn_version', VPCONN_VERSION, false );
 }
