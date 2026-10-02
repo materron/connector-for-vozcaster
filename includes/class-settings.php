@@ -396,8 +396,14 @@ class VPConn_Settings {
 	 * from, without the previous notice parameters.
 	 */
 	private static function back_url(): string {
-		$referer = wp_get_referer();
-		return $referer ? remove_query_arg( [ 'vpconn_msg', 'vpconn_err' ], $referer ) : self::get_page_url( 'episodes' );
+		// Forms post to the page itself (action=""), so the page slug is in the
+		// request URL. wp_get_referer() can't be used: it returns false when the
+		// referer equals the current URL, which is always the case here.
+		// Only called from handle_actions(), after check_admin_referer().
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$page = sanitize_key( wp_unslash( $_GET['page'] ?? '' ) );
+		$tab  = str_starts_with( $page, 'vozcaster-' ) ? substr( $page, strlen( 'vozcaster-' ) ) : '';
+		return self::get_page_url( array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes' );
 	}
 
 	private function render_page( string $tab ): void {

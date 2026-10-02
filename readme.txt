@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,9 @@ Service URLs and policies:
 4. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.8.1 =
+* Fix: saving a form on the Audio, Access or History page went back to the Episodes page instead of staying on the same page.
 
 = 1.8.0 =
 * New: **VozCaster** menu in wp-admin. Everyone authorised sees **Connect**; administrators also get **Episodes**, **Audio**, **Access** and **History**, which replace the single long page under Settings → VozCaster (old links redirect).
