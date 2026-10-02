@@ -321,6 +321,7 @@ class VPConn_Settings {
 		}
 
 		$messages = [
+			'distribution_saved'     => __( 'Platform status saved.', 'connector-for-vozcaster' ),
 			'ai_notice_saved'        => __( 'AI notice settings saved.', 'connector-for-vozcaster' ),
 			'roles_saved'            => __( 'Authorized roles updated.', 'connector-for-vozcaster' ),
 			'token_revoked'          => __( 'Bot access revoked. The user will need to connect again.', 'connector-for-vozcaster' ),

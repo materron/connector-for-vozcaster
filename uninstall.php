@@ -19,6 +19,7 @@ delete_option( 'vpconn_ai_notice_enabled' );
 delete_option( 'vpconn_ai_notice_text' );
 delete_option( 'vpconn_ai_notice_position' );
 delete_option( 'vpconn_credit_enabled' );
+delete_option( 'vpconn_distribution' );
 delete_post_meta_by_key( '_vpconn_ai_generated' );
 delete_post_meta_by_key( '_vpconn_via_bot' );
 delete_post_meta_by_key( '_vpconn_hide_ai_notice' );

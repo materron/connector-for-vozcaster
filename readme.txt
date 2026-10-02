@@ -24,6 +24,8 @@ You send a voice note to the bot, and a published draft (or live episode) appear
 * **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), fixed image style, category mapping.
 * **One-click connection from wp-admin**: press "Connect in Telegram" and confirm in the bot. No address to type, no second login.
 * **Role-based permissions**: Authors and above can publish from the bot by default; administrators can authorise custom roles too.
+* **Podcast data from Telegram**: artwork, Apple Podcasts category, owner, language and explicit flag, written straight into PowerPress, with a checklist of what platforms need before you submit.
+* **Distribute to platforms**: Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer, ordered by importance, with submit links and a status for each one.
 * **AI content notice**: posts whose text was written by AI show a short, customisable notice (on by default, can be turned off).
 * **Token-based authentication** so the bot never sees your WordPress password.
 
@@ -94,6 +96,14 @@ Anyone whose role is authorised in **VozCaster → Access**. By default that is 
 
 When the bot writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **VozCaster → Episodes**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
 
+= How do I get my podcast on Spotify, Apple Podcasts and the rest? =
+
+Go to **VozCaster → Distribute** in wp-admin, or send `/difundir` to the bot. First it checks that the feed has everything platforms ask for (title, description, square artwork of 1400–3000 px, category, author, owner email and at least one episode). Then it lists the platforms by importance, each with its submit link, a link to find your podcast there and a status you can mark: not submitted, submitted or live. You only submit once: after that every platform picks up new episodes by itself. The bot also checks Apple Podcasts on its own and marks it as live when your feed appears there.
+
+= Can I change the podcast artwork, category or owner from the bot? =
+
+Yes, with `/podcast` (site administrators only). It writes into the same PowerPress settings, so you can keep editing them in PowerPress too. The artwork is cropped to a square and resized to 3000 px if needed.
+
 = Does the plugin add links to my site? =
 
 Not unless you ask it to. There is an optional "Published with VozCaster" credit line with a link, which is **off by default** and can be turned on in **VozCaster → Episodes**.
@@ -124,7 +134,10 @@ The following data is transmitted:
 3. **From the bot's server to Telegram's servers**
    - User-sent voice messages and audio files pass through Telegram's infrastructure as part of normal bot communication. See Telegram's Privacy Policy: https://telegram.org/privacy
 
-4. **From the bot's server to AI providers (text only)**
+4. **From the bot's server to Apple's public catalogue**
+   - When you open the distribution list in the bot, it searches the public iTunes Search API for your podcast title to check whether your feed is already on Apple Podcasts. Only the podcast title is sent; the plugin itself makes no such request. Apple's privacy policy: https://www.apple.com/legal/privacy/
+
+5. **From the bot's server to AI providers (text only)**
    - To draft the episode title, description and content, the bot sends the transcribed *text* of your recording to **Anthropic (Claude)**.
    - If you request a cover image, the bot sends a *text prompt* to **OpenAI** to generate the image.
    - Only text is sent, and only when content or image generation is requested. Your audio file is **never** transmitted to these providers.
@@ -145,6 +158,9 @@ Service URLs and policies:
 * OpenAI (AI image generation): https://openai.com
 * OpenAI privacy policy: https://openai.com/policies/privacy-policy
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
+* Apple Podcasts / iTunes Search API (catalogue check from the bot): https://performance-partners.apple.com/search-api
+* Apple privacy policy: https://www.apple.com/legal/privacy/
+* Apple Media Services terms: https://www.apple.com/legal/internet-services/itunes/
 
 == Screenshots ==
 
@@ -154,6 +170,10 @@ Service URLs and policies:
 4. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.9.0 =
+* New: podcast data from the bot. `/podcast` shows and changes the show data PowerPress publishes in the feed — title, description, artwork, Apple Podcasts category, author/owner, owner email, language and explicit — for the main feed, custom channels and category feeds, with a checklist of what platforms need. New REST endpoint `GET/POST /podcast`.
+* New: distribution to platforms. **VozCaster → Distribute** (and `/difundir` in the bot) lists Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer by importance, with submit and search links and a status per platform. New REST endpoint `GET/POST /distribution`.
 
 = 1.8.1 =
 * Fix: saving a form on the Audio, Access or History page went back to the Episodes page instead of staying on the same page.

@@ -30,6 +30,7 @@ require_once VPCONN_DIR . 'includes/class-settings.php';
 require_once VPCONN_DIR . 'includes/class-ai-notice.php';
 require_once VPCONN_DIR . 'includes/class-pairing.php';
 require_once VPCONN_DIR . 'includes/class-podcast-info.php';
+require_once VPCONN_DIR . 'includes/class-distribution.php';
 
 register_activation_hook( __FILE__, 'vpconn_activate' );
 register_deactivation_hook( __FILE__, 'vpconn_deactivate' );
@@ -78,6 +79,7 @@ function vpconn_init(): void {
 	$notice   = new VPConn_AI_Notice();
 	$pairing  = new VPConn_Pairing();
 	$podcast  = new VPConn_Podcast_Info();
+	$distrib  = new VPConn_Distribution();
 
 	$auth->register_hooks();
 	$api->register_hooks();
@@ -85,4 +87,5 @@ function vpconn_init(): void {
 	$notice->register_hooks();
 	$pairing->register_hooks();
 	$podcast->register_hooks();
+	$distrib->register_hooks();
 }
