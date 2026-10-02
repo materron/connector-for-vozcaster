@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: Connect your WordPress to the VozCaster Telegram bot — publish podcast episodes from voice notes directly into PowerPress.
- * Version:     1.8.1
+ * Version:     1.9.0
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.8.1' );
+define( 'VPCONN_VERSION', '1.9.0' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
@@ -29,6 +29,7 @@ require_once VPCONN_DIR . 'includes/class-api.php';
 require_once VPCONN_DIR . 'includes/class-settings.php';
 require_once VPCONN_DIR . 'includes/class-ai-notice.php';
 require_once VPCONN_DIR . 'includes/class-pairing.php';
+require_once VPCONN_DIR . 'includes/class-podcast-info.php';
 
 register_activation_hook( __FILE__, 'vpconn_activate' );
 register_deactivation_hook( __FILE__, 'vpconn_deactivate' );
@@ -76,10 +77,12 @@ function vpconn_init(): void {
 	$settings = new VPConn_Settings();
 	$notice   = new VPConn_AI_Notice();
 	$pairing  = new VPConn_Pairing();
+	$podcast  = new VPConn_Podcast_Info();
 
 	$auth->register_hooks();
 	$api->register_hooks();
 	$settings->register_hooks();
 	$notice->register_hooks();
 	$pairing->register_hooks();
+	$podcast->register_hooks();
 }
