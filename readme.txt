@@ -22,6 +22,8 @@ From an empty WordPress to your first published episode in five minutes (video i
 
 https://www.youtube.com/watch?v=WexfifEie7M
 
+Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=WexfifEie7M).
+
 = What it does =
 
 * **Receives audio** from the VozCaster bot and uploads it to your WordPress media library.
