@@ -164,10 +164,12 @@ Service URLs and policies:
 
 == Screenshots ==
 
-1. VozCaster → Connect: one "Connect in Telegram" button per podcast.
-2. VozCaster → Episodes: title prefix and season, post signature, image style and AI content notice.
-3. VozCaster → Audio: intro/outro audio and mix levels.
-4. VozCaster → Access: roles authorised to publish from the bot and connected users.
+1. VozCaster → Connect: one "Connect in Telegram" button per podcast. No address to type and no second login.
+2. The bot asks for confirmation before connecting the site.
+3. `/podcast` in Telegram: the podcast data with its artwork, and whether it is ready to submit to platforms.
+4. VozCaster → Distribute: feed address, readiness checklist and the platforms ordered by importance.
+5. VozCaster → Episodes: title prefix, season and episode numbering, and the post signature.
+6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
 
