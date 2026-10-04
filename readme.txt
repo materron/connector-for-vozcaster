@@ -16,6 +16,12 @@ Connect your WordPress to the VozCaster Telegram bot to publish podcast episodes
 
 You send a voice note to the bot, and a published draft (or live episode) appears on your site with audio, title, content and featured image. No editing, no manual file uploads, no opening the WordPress dashboard.
 
+= See it in action =
+
+From an empty WordPress to your first published episode in five minutes (video in Spanish):
+
+https://www.youtube.com/watch?v=WexfifEie7M
+
 = What it does =
 
 * **Receives audio** from the VozCaster bot and uploads it to your WordPress media library.
