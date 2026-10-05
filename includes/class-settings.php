@@ -168,6 +168,7 @@ class VPConn_Settings {
 			case 'save_authorized_roles':
 				$roles = isset( $_POST['authorized_roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['authorized_roles'] ) ) : [];
 				VPConn_Auth::set_authorized_roles( $roles );
+				VPConn_Review::set_enabled( ! empty( $_POST['review_mode'] ) );
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'roles_saved' ], self::back_url() ) );
 				exit;
 
@@ -323,7 +324,7 @@ class VPConn_Settings {
 		$messages = [
 			'distribution_saved'     => __( 'Platform status saved.', 'connector-for-vozcaster' ),
 			'ai_notice_saved'        => __( 'AI notice settings saved.', 'connector-for-vozcaster' ),
-			'roles_saved'            => __( 'Authorized roles updated.', 'connector-for-vozcaster' ),
+			'roles_saved'            => __( 'Access settings saved.', 'connector-for-vozcaster' ),
 			'token_revoked'          => __( 'Bot access revoked. The user will need to connect again.', 'connector-for-vozcaster' ),
 			'intro_deleted'          => __( 'Intro file deleted.', 'connector-for-vozcaster' ),
 			'outro_deleted'          => __( 'Outro file deleted.', 'connector-for-vozcaster' ),
@@ -888,7 +889,25 @@ class VPConn_Settings {
 				<p class="description">
 					<?php esc_html_e( 'By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin.', 'connector-for-vozcaster' ); ?>
 				</p>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save roles', 'connector-for-vozcaster' ); ?></button></p>
+				<p style="margin-top:16px;">
+					<label>
+						<input type="checkbox" name="review_mode" value="1" <?php checked( VPConn_Review::is_enabled() ); ?>>
+						<strong><?php esc_html_e( 'Review before publishing', 'connector-for-vozcaster' ); ?></strong>
+					</label>
+				</p>
+				<p class="description">
+					<?php esc_html_e( 'Episodes sent by users whose role cannot publish posts in WordPress (for example a custom role checked above) are saved as "Pending review" instead of being published, and the site administrator gets an email to approve them. Authors and above keep publishing directly.', 'connector-for-vozcaster' ); ?>
+				</p>
+				<p class="description">
+					<?php
+					printf(
+						/* translators: %s: the [vozcaster_connect] shortcode. */
+						esc_html__( 'Tip: add the %s shortcode to any page so these users can connect the bot without opening wp-admin.', 'connector-for-vozcaster' ),
+						'<code>[vozcaster_connect]</code>'
+					);
+					?>
+				</p>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save access settings', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
 
 			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>

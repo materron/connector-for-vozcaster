@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,8 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 * **Role-based permissions**: Authors and above can publish from the bot by default; administrators can authorise custom roles too.
 * **Podcast data from Telegram**: artwork, Apple Podcasts category, owner, language and explicit flag, written straight into PowerPress, with a checklist of what platforms need before you submit.
 * **Distribute to platforms**: Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer, ordered by importance, with submit links and a status for each one.
+* **Connect from any page**: the `[vozcaster_connect]` shortcode shows the "Connect in Telegram" button on the front end, so people can connect without opening wp-admin.
+* **Optional review**: episodes from roles that cannot publish posts can be held as "Pending review", with an email to the site administrator.
 * **AI content notice**: posts whose text was written by AI show a short, customisable notice (on by default, can be turned off).
 * **Token-based authentication** so the bot never sees your WordPress password.
 
@@ -99,6 +101,14 @@ Yes. The plugin works with PowerPress's multi-podcast (custom channels) configur
 = Who can publish from the bot? =
 
 Anyone whose role is authorised in **VozCaster → Access**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role — users with it can then publish from the bot even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected the bot and lets you revoke access.
+
+= Can people publish without access to wp-admin, for example the teachers of a school? =
+
+Yes. Create a role for them (for example "Podcast teachers", a copy of Subscriber made with any role editor plugin) and check it in **VozCaster → Access**. Then add the `[vozcaster_connect]` shortcode to a page: once logged in, they see a "Connect in Telegram" button there and never need to open wp-admin. Avoid authorising the whole Subscriber role if anyone can register on your site.
+
+= Can I review episodes before they go live? =
+
+Yes. Turn on **Review before publishing** in **VozCaster → Access**. Episodes sent by users whose role cannot publish posts in WordPress are saved as "Pending review" and the site administrator gets an email with a link to approve them; the bot tells the sender that the episode is waiting for review. Authors and above keep publishing directly.
 
 = Why do some posts show a notice about AI? =
 
@@ -180,6 +190,11 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.10.0 =
+* New: `[vozcaster_connect]` shortcode — the "Connect in Telegram" buttons on any page of the site, with a login link for visitors and a notice for users without access. Optional `feed` attribute to show a single podcast.
+* New: **Review before publishing** (VozCaster → Access). Episodes and posts from roles that cannot publish posts in WordPress are saved as "Pending review", and the administrator receives an email to approve them.
+* Change: episode numbering also counts pending and scheduled episodes, so episodes waiting for review never share a number; ties between episodes created in the same second are broken by ID.
 
 = 1.9.0 =
 * New: podcast data from the bot. `/podcast` shows and changes the show data PowerPress publishes in the feed — title, description, artwork, Apple Podcasts category, author/owner, owner email, language and explicit — for the main feed, custom channels and category feeds, with a checklist of what platforms need. New REST endpoint `GET/POST /podcast`.

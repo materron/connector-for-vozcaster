@@ -413,7 +413,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode' ],
 			]
 		);
 	}
@@ -876,7 +876,9 @@ class VPConn_API {
 		$featured_media       = (int) $request->get_param( 'featured_media' );
 		$podcast_audio_id     = (int) $request->get_param( 'podcast_audio_id' );
 		$telegram_id          = (int) $request->get_param( 'telegram_id' );
-		$status               = $request->get_param( 'status' );
+		// With review on, roles that cannot publish posts land as "pending".
+		$status               = VPConn_Review::effective_status( (string) $request->get_param( 'status' ) );
+		$held_for_review      = $status !== $request->get_param( 'status' );
 		$transcript_url       = $request->get_param( 'transcript_url' );
 		$feed_slug            = $request->get_param( 'feed_slug' ) ?: 'podcast';
 		// category_slug is the WordPress category to assign to the post.
@@ -931,6 +933,10 @@ class VPConn_API {
 		// rather than feed_slug, so sites with non-standard category slugs
 		// (e.g. Enteratec's 'el-consultorio-de-enteratec') work correctly.
 		$this->assign_podcast_category( $post_id, $category_slug );
+
+		if ( $held_for_review ) {
+			VPConn_Review::notify( (int) $post_id );
+		}
 
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
 
@@ -1011,7 +1017,8 @@ class VPConn_API {
 		$content        = $request->get_param( 'content' );
 		$excerpt        = $request->get_param( 'excerpt' );
 		$featured_media = (int) $request->get_param( 'featured_media' );
-		$status         = $request->get_param( 'status' );
+		$status         = VPConn_Review::effective_status( (string) $request->get_param( 'status' ) );
+		$held           = $status !== $request->get_param( 'status' );
 
 		$author_id = get_current_user_id();
 
@@ -1039,6 +1046,10 @@ class VPConn_API {
 		}
 
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
+
+		if ( $held ) {
+			VPConn_Review::notify( (int) $post_id );
+		}
 
 		return new WP_REST_Response(
 			[
@@ -1114,12 +1125,17 @@ class VPConn_API {
 		// All published posts in the feed's category that have a non-empty
 		// enclosure meta (i.e., real podcast episodes with audio).
 		$cat        = get_term_by( 'slug', $feed_slug, 'category' );
+		// Pending (held for review) and scheduled episodes count too, so two
+		// episodes waiting for approval never get the same number.
 		$query_args = [
 			'post_type'      => 'post',
-			'post_status'    => 'publish',
+			'post_status'    => [ 'publish', 'pending', 'future' ],
 			'posts_per_page' => 500,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
+			// ID breaks ties between episodes created in the same second.
+			'orderby'        => [
+				'date' => 'DESC',
+				'ID'   => 'DESC',
+			],
 			// Needed to list real podcast episodes (posts with a non-empty
 			// enclosure). Bounded by posts_per_page and run only when numbering
 			// a new episode, not on front-end requests.

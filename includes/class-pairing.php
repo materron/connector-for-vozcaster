@@ -36,6 +36,7 @@ class VPConn_Pairing {
 		add_action( 'admin_init', [ $this, 'handle_dismiss' ] );
 		add_action( 'admin_notices', [ $this, 'show_connect_notice' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+		add_shortcode( 'vozcaster_connect', [ $this, 'shortcode' ] );
 	}
 
 	// -------------------------------------------------------------------------
@@ -178,6 +179,84 @@ class VPConn_Pairing {
 			<?php endif; ?>
 		</div>
 		<?php
+	}
+
+	/**
+	 * [vozcaster_connect] — the "Connect in Telegram" buttons on any page of the
+	 * site, so authorized users (e.g. teachers with a custom role) can connect
+	 * without ever opening wp-admin.
+	 *
+	 * Attributes: feed — show only that podcast feed (slug).
+	 *
+	 * @param array|string $atts Shortcode attributes.
+	 */
+	public function shortcode( $atts ): string {
+		$atts = shortcode_atts( [ 'feed' => '' ], (array) $atts, 'vozcaster_connect' );
+
+		ob_start();
+		echo '<div class="vpconn-connect">';
+
+		if ( ! is_user_logged_in() ) {
+			printf(
+				'<p>%1$s</p><p><a class="wp-element-button button" href="%2$s">%3$s</a></p>',
+				esc_html__( 'Log in with your account on this site to connect it with the VozCaster bot and publish podcast episodes from Telegram.', 'connector-for-vozcaster' ),
+				esc_url( wp_login_url( (string) get_permalink() ) ),
+				esc_html__( 'Log in', 'connector-for-vozcaster' )
+			);
+			echo '</div>';
+			return (string) ob_get_clean();
+		}
+
+		$user_id = get_current_user_id();
+		if ( ! VPConn_Auth::is_user_allowed( $user_id ) ) {
+			echo '<p>' . esc_html__( 'Your account is not authorized to publish from VozCaster yet. Ask the site administrator for access.', 'connector-for-vozcaster' ) . '</p></div>';
+			return (string) ob_get_clean();
+		}
+
+		$feeds = VPConn_Settings::get_powerpress_feeds();
+		if ( '' !== $atts['feed'] ) {
+			$only  = sanitize_key( $atts['feed'] );
+			$feeds = array_values( array_filter( $feeds, static fn( $f ) => $f['slug'] === $only ) ) ?: $feeds;
+		}
+
+		if ( VPConn_Auth::has_token( $user_id ) ) {
+			echo '<p><strong>' . esc_html__( 'Your account is already connected to the bot.', 'connector-for-vozcaster' ) . '</strong> ' . esc_html__( 'Connecting again replaces the previous connection.', 'connector-for-vozcaster' ) . '</p>';
+		}
+
+		if ( null === self::get_encoded_host() ) {
+			printf(
+				'<p>%1$s</p><p><code>%2$s</code></p><p><a class="wp-element-button button" href="%3$s" target="_blank" rel="noopener">%4$s</a></p>',
+				esc_html__( 'Open the bot, send /conectar and paste this address:', 'connector-for-vozcaster' ),
+				esc_html( home_url() ),
+				esc_url( 'https://t.me/' . self::get_bot_username() ),
+				esc_html__( 'Open the bot in Telegram', 'connector-for-vozcaster' )
+			);
+			echo '</div>';
+			return (string) ob_get_clean();
+		}
+
+		foreach ( $feeds as $feed ) {
+			?>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0 0 12px;">
+				<?php wp_nonce_field( 'vpconn_pair' ); ?>
+				<input type="hidden" name="action" value="vpconn_pair">
+				<input type="hidden" name="feed" value="<?php echo esc_attr( $feed['slug'] ); ?>">
+				<button type="submit" class="wp-element-button button">
+					<?php
+					echo esc_html(
+						count( $feeds ) > 1
+							/* translators: %s: podcast name. */
+							? sprintf( __( 'Connect «%s» in Telegram', 'connector-for-vozcaster' ), $feed['name'] )
+							: __( 'Connect in Telegram', 'connector-for-vozcaster' )
+					);
+					?>
+				</button>
+			</form>
+			<?php
+		}
+		echo '<p><small>' . esc_html__( 'Telegram opens with the bot. Press Start and confirm the connection there. The link works once and expires in 15 minutes.', 'connector-for-vozcaster' ) . '</small></p>';
+		echo '</div>';
+		return (string) ob_get_clean();
 	}
 
 	/**
