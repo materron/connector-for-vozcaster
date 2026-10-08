@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: Connect your WordPress to the VozCaster Telegram bot — publish podcast episodes from voice notes directly into PowerPress.
- * Version:     1.10.0
+ * Version:     1.10.1
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.10.0' );
+define( 'VPCONN_VERSION', '1.10.1' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
@@ -68,6 +68,30 @@ function vpconn_maybe_upgrade(): void {
 }
 
 add_action( 'plugins_loaded', 'vpconn_init' );
+add_action( 'init', 'vpconn_load_bundled_translations', 0 );
+
+/**
+ * Fills in the strings the WordPress.org language pack does not have yet.
+ *
+ * Sites get their translations from translate.wordpress.org, which lags
+ * behind new releases; until then every new string (the AI notice, the
+ * Connect page…) showed up in English on a Spanish site. The language pack is
+ * loaded first, so its translations win, and then the translation shipped in
+ * /languages, which only adds the entries the pack is missing.
+ */
+function vpconn_load_bundled_translations(): void {
+	$domain  = 'connector-for-vozcaster';
+	$locale  = determine_locale();
+	$bundled = VPCONN_DIR . 'languages/' . $domain . '-' . $locale . '.mo';
+	if ( ! is_readable( $bundled ) ) {
+		return;
+	}
+	$pack = WP_LANG_DIR . '/plugins/' . $domain . '-' . $locale . '.mo';
+	if ( ! is_textdomain_loaded( $domain ) && is_readable( $pack ) ) {
+		load_textdomain( $domain, $pack, $locale );
+	}
+	load_textdomain( $domain, $bundled, $locale );
+}
 
 function vpconn_init(): void {
 	vpconn_maybe_upgrade();

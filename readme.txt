@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -190,6 +190,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.10.1 =
+* Fix: strings added in recent versions (the AI content notice, the VozCaster pages, the connect shortcode) showed in English on sites using a language pack from translate.wordpress.org that did not have them yet. The translation shipped with the plugin now fills in whatever the language pack is missing.
 
 = 1.10.0 =
 * New: `[vozcaster_connect]` shortcode — the "Connect in Telegram" buttons on any page of the site, with a login link for visitors and a notice for users without access. Optional `feed` attribute to show a single podcast.
