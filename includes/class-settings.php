@@ -39,6 +39,7 @@ class VPConn_Settings {
 			[
 				'selectIntro' => __( 'Select intro audio', 'connector-for-vozcaster' ),
 				'selectOutro' => __( 'Select outro audio', 'connector-for-vozcaster' ),
+				'selectSeparator' => __( 'Select separator sound', 'connector-for-vozcaster' ),
 				'select'      => __( 'Select', 'connector-for-vozcaster' ),
 			]
 		);
@@ -192,9 +193,10 @@ class VPConn_Settings {
 
 			case 'upload_intro':
 			case 'upload_outro':
-				$type    = ( 'upload_intro' === $action ) ? 'intro' : 'outro';
-				$msg_ok  = ( 'intro' === $type ) ? 'intro_uploaded'   : 'outro_uploaded';
-				$msg_err = ( 'intro' === $type ) ? 'intro_upload_err' : 'outro_upload_err';
+			case 'upload_separator':
+				$type    = substr( $action, strlen( 'upload_' ) );
+				$msg_ok  = $type . '_uploaded';
+				$msg_err = $type . '_upload_err';
 
 				if ( empty( $_FILES['audio_file']['name'] ) ) {
 					wp_safe_redirect( add_query_arg( [
@@ -279,12 +281,18 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'outro_deleted' ], self::back_url() ) );
 				exit;
 
+			case 'delete_separator':
+				VPConn_Media::delete_intro_outro( 'separator' );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'separator_deleted' ], self::back_url() ) );
+				exit;
+
 			case 'select_intro_from_library':
 			case 'select_outro_from_library':
-				$type          = ( 'select_intro_from_library' === $action ) ? 'intro' : 'outro';
+			case 'select_separator_from_library':
+				$type          = substr( $action, strlen( 'select_' ), -strlen( '_from_library' ) );
 				$attachment_id = absint( wp_unslash( $_POST['attachment_id'] ?? 0 ) );
-				$msg_ok        = ( 'intro' === $type ) ? 'intro_uploaded' : 'outro_uploaded';
-				$msg_err       = ( 'intro' === $type ) ? 'intro_upload_err' : 'outro_upload_err';
+				$msg_ok        = $type . '_uploaded';
+				$msg_err       = $type . '_upload_err';
 
 				if ( $attachment_id > 0 && 'attachment' === get_post_type( $attachment_id ) ) {
 					VPConn_Media::set_intro_outro_id( $type, $attachment_id );
@@ -332,6 +340,9 @@ class VPConn_Settings {
 			'outro_uploaded'         => __( 'Outro file uploaded successfully.', 'connector-for-vozcaster' ),
 			'intro_upload_err'       => __( 'Error uploading intro file. Please make sure it is a valid audio file.', 'connector-for-vozcaster' ),
 			'outro_upload_err'       => __( 'Error uploading outro file. Please make sure it is a valid audio file.', 'connector-for-vozcaster' ),
+			'separator_deleted'      => __( 'Separator sound deleted.', 'connector-for-vozcaster' ),
+			'separator_uploaded'     => __( 'Separator sound uploaded successfully.', 'connector-for-vozcaster' ),
+			'separator_upload_err'   => __( 'Error uploading the separator sound. Please make sure it is a valid audio file.', 'connector-for-vozcaster' ),
 			'log_cleared'            => __( 'Episode history cleared.', 'connector-for-vozcaster' ),
 			'mix_config_saved'       => __( 'Mix settings saved.', 'connector-for-vozcaster' ),
 			'title_config_saved'     => __( 'Title settings saved.', 'connector-for-vozcaster' ),
@@ -339,7 +350,7 @@ class VPConn_Settings {
 			'image_style_saved'      => __( 'Image style saved.', 'connector-for-vozcaster' ),
 		];
 
-		$errors = [ 'intro_upload_err', 'outro_upload_err' ];
+		$errors = [ 'intro_upload_err', 'outro_upload_err', 'separator_upload_err' ];
 		if ( in_array( $msg, $errors, true ) && isset( $messages[ $msg ] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice detail after a nonce-verified redirect.
 			$detail = ! empty( $_GET['vpconn_err'] ) ? ' — ' . esc_html( rawurldecode( sanitize_text_field( wp_unslash( $_GET['vpconn_err'] ) ) ) ) : '';
@@ -422,6 +433,7 @@ class VPConn_Settings {
 		$credit_enabled  = VPConn_AI_Notice::is_credit_enabled();
 		$intro           = VPConn_Media::get_intro_outro_info( 'intro' );
 		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
+		$separator       = VPConn_Media::get_intro_outro_info( 'separator' );
 		$log             = self::get_log();
 		$pp_active       = is_plugin_active( 'powerpress/powerpress.php' );
 		$tab             = array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes';
@@ -669,9 +681,9 @@ class VPConn_Settings {
 			<?php elseif ( 'audio' === $tab ) : ?>
 
 			<?php /* ----- Intro & Outro ----- */ ?>
-			<h2><?php esc_html_e( 'Intro &amp; Outro', 'connector-for-vozcaster' ); ?></h2>
+			<h2><?php esc_html_e( 'Intro, outro &amp; separator', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Upload your intro and outro audio files here. They can also be uploaded from the Telegram bot via the Intro/Outro menu.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Upload your intro, outro and separator audio files here. They can also be uploaded from the Telegram bot via the Intro/Outro menu.', 'connector-for-vozcaster' ); ?>
 			</p>
 			<table class="form-table" role="presentation">
 				<tr>
@@ -752,6 +764,48 @@ class VPConn_Settings {
 							<input type="hidden" name="attachment_id" id="vpconn_outro_media_id" value="">
 						</form>
 						<button type="button" class="button button-secondary" style="margin-top:6px;" onclick="vpconnOpenMediaPicker('outro')">
+							<?php esc_html_e( 'Select from media library', 'connector-for-vozcaster' ); ?>
+						</button>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Separator sound', 'connector-for-vozcaster' ); ?></th>
+					<td>
+						<p class="description"><?php esc_html_e( 'Short sound played between the sections of an episode recorded in several audios (for example, interviews at an event). Without it, sections are joined with a one-second pause.', 'connector-for-vozcaster' ); ?></p>
+						<?php if ( $separator['exists'] ) : ?>
+							<p>
+								<a href="<?php echo esc_url( $separator['url'] ); ?>" target="_blank">
+									<?php echo esc_html( basename( wp_parse_url( $separator['url'], PHP_URL_PATH ) ) ); ?>
+								</a>
+								&nbsp;
+								<form method="post" action="" style="display:inline;">
+									<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<input type="hidden" name="vpconn_action" value="delete_separator">
+									<button type="submit" class="button button-small button-link-delete"
+										onclick="return confirm('<?php esc_attr_e( 'Delete the separator sound?', 'connector-for-vozcaster' ); ?>')">
+										<?php esc_html_e( 'Delete', 'connector-for-vozcaster' ); ?>
+									</button>
+								</form>
+							</p>
+							<p class="description"><?php esc_html_e( 'To replace the separator sound, upload a new file:', 'connector-for-vozcaster' ); ?></p>
+						<?php else : ?>
+							<p><em><?php esc_html_e( 'No separator sound loaded.', 'connector-for-vozcaster' ); ?></em></p>
+						<?php endif; ?>
+						<form method="post" action="" enctype="multipart/form-data">
+							<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<input type="hidden" name="vpconn_action" value="upload_separator">
+							<input type="file" name="audio_file" accept="audio/*" style="margin-right:8px;"
+								aria-label="<?php esc_attr_e( 'Separator sound file', 'connector-for-vozcaster' ); ?>">
+							<button type="submit" class="button button-secondary">
+								<?php $separator['exists'] ? esc_html_e( 'Replace separator sound', 'connector-for-vozcaster' ) : esc_html_e( 'Upload separator sound', 'connector-for-vozcaster' ); ?>
+							</button>
+						</form>
+						<form method="post" action="" id="vpconn_separator_select_form">
+							<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<input type="hidden" name="vpconn_action" value="select_separator_from_library">
+							<input type="hidden" name="attachment_id" id="vpconn_separator_media_id" value="">
+						</form>
+						<button type="button" class="button button-secondary" style="margin-top:6px;" onclick="vpconnOpenMediaPicker('separator')">
 							<?php esc_html_e( 'Select from media library', 'connector-for-vozcaster' ); ?>
 						</button>
 					</td>

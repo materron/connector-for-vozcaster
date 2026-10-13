@@ -4,21 +4,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Gestiona los archivos de intro y outro en la biblioteca de medios de WordPress.
+ * Gestiona los archivos de intro, outro y sonido de corte en la biblioteca de medios de WordPress.
  */
 class VPConn_Media {
 
-	const OPTION_INTRO_ID = 'vpconn_intro_attachment_id';
-	const OPTION_OUTRO_ID = 'vpconn_outro_attachment_id';
+	const OPTION_INTRO_ID     = 'vpconn_intro_attachment_id';
+	const OPTION_OUTRO_ID     = 'vpconn_outro_attachment_id';
+	const OPTION_SEPARATOR_ID = 'vpconn_separator_attachment_id';
+
+	/**
+	 * Option that stores the attachment ID of each audio slot.
+	 *
+	 * @param 'intro'|'outro'|'separator' $type Slot.
+	 */
+	private static function option_for( string $type ): string {
+		if ( 'separator' === $type ) {
+			return self::OPTION_SEPARATOR_ID;
+		}
+		return 'intro' === $type ? self::OPTION_INTRO_ID : self::OPTION_OUTRO_ID;
+	}
 
 	/**
 	 * Devuelve la información de un archivo intro u outro.
 	 *
-	 * @param 'intro'|'outro' $type Tipo de archivo.
+	 * @param 'intro'|'outro'|'separator' $type Tipo de archivo.
 	 * @return array{exists: bool, url?: string, id?: int}
 	 */
 	public static function get_intro_outro_info( string $type ): array {
-		$option = 'intro' === $type ? self::OPTION_INTRO_ID : self::OPTION_OUTRO_ID;
+		$option = self::option_for( $type );
 		$id     = (int) get_option( $option, 0 );
 
 		if ( ! $id ) {
@@ -42,31 +55,31 @@ class VPConn_Media {
 	/**
 	 * Guarda el ID del attachment de intro u outro.
 	 *
-	 * @param 'intro'|'outro' $type Tipo de archivo.
+	 * @param 'intro'|'outro'|'separator' $type Tipo de archivo.
 	 * @param int             $attachment_id ID del attachment en la biblioteca.
 	 */
 	public static function set_intro_outro_id( string $type, int $attachment_id ): void {
-		$option = 'intro' === $type ? self::OPTION_INTRO_ID : self::OPTION_OUTRO_ID;
+		$option = self::option_for( $type );
 		update_option( $option, $attachment_id );
 	}
 
 	/**
 	 * Elimina el registro de intro u outro (no elimina el archivo de la biblioteca).
 	 *
-	 * @param 'intro'|'outro' $type Tipo de archivo.
+	 * @param 'intro'|'outro'|'separator' $type Tipo de archivo.
 	 */
 	public static function clear_intro_outro( string $type ): void {
-		$option = 'intro' === $type ? self::OPTION_INTRO_ID : self::OPTION_OUTRO_ID;
+		$option = self::option_for( $type );
 		delete_option( $option );
 	}
 
 	/**
 	 * Elimina el attachment de intro u outro de la biblioteca de medios.
 	 *
-	 * @param 'intro'|'outro' $type Tipo de archivo.
+	 * @param 'intro'|'outro'|'separator' $type Tipo de archivo.
 	 */
 	public static function delete_intro_outro( string $type ): bool {
-		$option = 'intro' === $type ? self::OPTION_INTRO_ID : self::OPTION_OUTRO_ID;
+		$option = self::option_for( $type );
 		$id     = (int) get_option( $option, 0 );
 
 		if ( ! $id ) {

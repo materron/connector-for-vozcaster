@@ -4,9 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.10.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
-"POT-Creation-Date: 2026-10-05T09:26:05+00:00\n"
+"Project-Id-Version: Connector for VozCaster 1.11.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
+"vozcaster\n"
+"POT-Creation-Date: 2026-10-13T09:42:59+00:00\n"
 "PO-Revision-Date: 2026-10-01 13:00+0200\n"
 "Last-Translator: Miguel Ángel Terrón <info@potencia.pro>\n"
 "Language-Team: Spanish <info@potencia.pro>\n"
@@ -57,8 +58,8 @@ msgstr ""
 #: includes/class-ai-notice.php:128
 #, php-format
 msgid ""
-"Published with %1$s, the Telegram bot that turns your voice into a published"
-" podcast episode. %2$s."
+"Published with %1$s, the Telegram bot that turns your voice into a published "
+"podcast episode. %2$s."
 msgstr ""
 "Publicado con %1$s, el bot de Telegram que convierte tu voz en un episodio "
 "de podcast publicado. %2$s."
@@ -68,7 +69,7 @@ msgid "Try it free"
 msgstr "Pruébalo gratis"
 
 #: includes/class-ai-notice.php:144 includes/class-pairing.php:99
-#: includes/class-settings.php:74 includes/class-settings.php:75
+#: includes/class-settings.php:75 includes/class-settings.php:76
 msgid "VozCaster"
 msgstr "VozCaster"
 
@@ -81,17 +82,16 @@ msgid "Hide the AI notice on this post"
 msgstr "Ocultar el aviso de IA en este post"
 
 #: includes/class-ai-notice.php:162
-msgid ""
-"The AI notice is turned off for the whole site in VozCaster → Episodes."
+msgid "The AI notice is turned off for the whole site in VozCaster → Episodes."
 msgstr ""
 "El aviso de IA está desactivado para toda la web en VozCaster → Episodios."
 
-#: includes/class-api.php:1310
+#: includes/class-api.php:1349
 msgid "No file received."
 msgstr "No se ha recibido ningún archivo."
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1347
+#: includes/class-api.php:1386
 #, php-format
 msgid "File type not allowed: %s"
 msgstr "Tipo de archivo no permitido: %s"
@@ -188,12 +188,12 @@ msgstr ""
 
 #: includes/class-distribution.php:55
 msgid ""
-"YouTube Studio → Create → Submit RSS feed. A code is sent to the owner email"
-" of the feed; each episode becomes a video with the podcast artwork."
+"YouTube Studio → Create → Submit RSS feed. A code is sent to the owner email "
+"of the feed; each episode becomes a video with the podcast artwork."
 msgstr ""
 "YouTube Studio → Crear → Enviar feed RSS. Llega un código al correo del "
-"propietario del feed; cada episodio se convierte en un vídeo con la carátula"
-" del podcast."
+"propietario del feed; cada episodio se convierte en un vídeo con la carátula "
+"del podcast."
 
 #: includes/class-distribution.php:61
 msgid ""
@@ -258,7 +258,7 @@ msgstr "Enviado, pendiente"
 msgid "Live"
 msgstr "Publicado"
 
-#: includes/class-distribution.php:276 includes/class-settings.php:980
+#: includes/class-distribution.php:276 includes/class-settings.php:1034
 msgid "Title"
 msgstr "Título"
 
@@ -274,7 +274,7 @@ msgstr "Carátula cuadrada de 1400–3000 px"
 msgid "Apple Podcasts category"
 msgstr "Categoría de Apple Podcasts"
 
-#: includes/class-distribution.php:280 includes/class-settings.php:981
+#: includes/class-distribution.php:280 includes/class-settings.php:1035
 msgid "Author"
 msgstr "Autor"
 
@@ -324,8 +324,8 @@ msgstr "¿Listo para enviar?"
 
 #: includes/class-distribution.php:319
 msgid ""
-"Platforms reject feeds with missing data. Fill them in from the bot with "
-"/podcast, or in PowerPress → Settings."
+"Platforms reject feeds with missing data. Fill them in from the bot with /"
+"podcast, or in PowerPress → Settings."
 msgstr ""
 "Las plataformas rechazan los feeds con datos incompletos. Complétalos desde "
 "el bot con /podcast, o en PowerPress → Ajustes."
@@ -342,7 +342,7 @@ msgstr "Enviar"
 msgid "Find my podcast"
 msgstr "Buscar mi podcast"
 
-#: includes/class-distribution.php:341 includes/class-settings.php:982
+#: includes/class-distribution.php:341 includes/class-settings.php:1036
 msgid "Status"
 msgstr "Estado"
 
@@ -365,8 +365,8 @@ msgid ""
 "phone."
 msgstr ""
 "El bot de VozCaster comprueba Apple Podcasts por su cuenta y lo marca como "
-"publicado cuando tu feed aparece allí. Usa /difundir en el bot para ver esta"
-" lista en el móvil."
+"publicado cuando tu feed aparece allí. Usa /difundir en el bot para ver esta "
+"lista en el móvil."
 
 #: includes/class-pairing.php:98 includes/class-pairing.php:108
 #: includes/class-pairing.php:129 includes/class-pairing.php:329
@@ -384,8 +384,8 @@ msgid ""
 "Telegram."
 msgstr ""
 "VozCaster es un bot de Telegram que convierte tus notas de voz en episodios "
-"de podcast publicados en esta web. Conecta tu cuenta una vez y publica desde"
-" Telegram."
+"de podcast publicados en esta web. Conecta tu cuenta una vez y publica desde "
+"Telegram."
 
 #: includes/class-pairing.php:136
 msgid ""
@@ -419,8 +419,8 @@ msgstr ""
 
 #: includes/class-pairing.php:171
 msgid ""
-"The address of this site cannot be passed to the bot automatically. Open the"
-" bot, send /conectar and paste this address:"
+"The address of this site cannot be passed to the bot automatically. Open the "
+"bot, send /conectar and paste this address:"
 msgstr ""
 "La dirección de esta web no se puede pasar al bot automáticamente. Abre el "
 "bot, envía /conectar y pega esta dirección:"
@@ -493,14 +493,16 @@ msgstr "[%1$s] Episodio de podcast pendiente de revisión: %2$s"
 #: includes/class-review.php:55
 #, php-format
 msgid ""
-"%1$s has sent a new episode from the VozCaster bot and it is waiting for your review:\n"
+"%1$s has sent a new episode from the VozCaster bot and it is waiting for "
+"your review:\n"
 "\n"
 "%2$s\n"
 "\n"
 "Review and publish it here:\n"
 "%3$s"
 msgstr ""
-"%1$s ha enviado un episodio nuevo desde el bot de VozCaster y está esperando tu revisión:\n"
+"%1$s ha enviado un episodio nuevo desde el bot de VozCaster y está esperando "
+"tu revisión:\n"
 "\n"
 "%2$s\n"
 "\n"
@@ -520,114 +522,132 @@ msgid "Select outro audio"
 msgstr "Selecciona el audio de outro"
 
 #: includes/class-settings.php:42
+msgid "Select separator sound"
+msgstr "Seleccionar sonido de corte"
+
+#: includes/class-settings.php:43
 msgid "Select"
 msgstr "Seleccionar"
 
-#: includes/class-settings.php:54
+#: includes/class-settings.php:55
 msgid "Episodes"
 msgstr "Episodios"
 
-#: includes/class-settings.php:55
+#: includes/class-settings.php:56
 msgid "Audio"
 msgstr "Audio"
 
-#: includes/class-settings.php:56
+#: includes/class-settings.php:57
 msgid "Access"
 msgstr "Acceso"
 
-#: includes/class-settings.php:57
+#: includes/class-settings.php:58
 msgid "History"
 msgstr "Historial"
 
-#: includes/class-settings.php:202
+#: includes/class-settings.php:204
 msgid "No file selected."
 msgstr "No se ha seleccionado ningún archivo."
 
-#: includes/class-settings.php:295
+#: includes/class-settings.php:303
 msgid "Invalid attachment."
 msgstr "Adjunto no válido."
 
-#: includes/class-settings.php:325
+#: includes/class-settings.php:333
 msgid "Platform status saved."
 msgstr "Estado de la plataforma guardado."
 
-#: includes/class-settings.php:326
+#: includes/class-settings.php:334
 msgid "AI notice settings saved."
 msgstr "Ajustes del aviso de IA guardados."
 
-#: includes/class-settings.php:327
+#: includes/class-settings.php:335
 msgid "Access settings saved."
 msgstr "Ajustes de acceso guardados."
 
-#: includes/class-settings.php:328
+#: includes/class-settings.php:336
 msgid "Bot access revoked. The user will need to connect again."
 msgstr "Acceso al bot revocado. El usuario tendrá que volver a conectarse."
 
-#: includes/class-settings.php:329
+#: includes/class-settings.php:337
 msgid "Intro file deleted."
 msgstr "Archivo de intro borrado."
 
-#: includes/class-settings.php:330
+#: includes/class-settings.php:338
 msgid "Outro file deleted."
 msgstr "Archivo de outro borrado."
 
-#: includes/class-settings.php:331
+#: includes/class-settings.php:339
 msgid "Intro file uploaded successfully."
 msgstr "Archivo de intro subido correctamente."
 
-#: includes/class-settings.php:332
+#: includes/class-settings.php:340
 msgid "Outro file uploaded successfully."
 msgstr "Archivo de outro subido correctamente."
 
-#: includes/class-settings.php:333
+#: includes/class-settings.php:341
 msgid "Error uploading intro file. Please make sure it is a valid audio file."
 msgstr ""
 "Error al subir el archivo de intro. Asegúrate de que es un archivo de audio "
 "válido."
 
-#: includes/class-settings.php:334
+#: includes/class-settings.php:342
 msgid "Error uploading outro file. Please make sure it is a valid audio file."
 msgstr ""
 "Error al subir el archivo de outro. Asegúrate de que es un archivo de audio "
 "válido."
 
-#: includes/class-settings.php:335
+#: includes/class-settings.php:343
+msgid "Separator sound deleted."
+msgstr "Sonido de corte eliminado."
+
+#: includes/class-settings.php:344
+msgid "Separator sound uploaded successfully."
+msgstr "Sonido de corte subido correctamente."
+
+#: includes/class-settings.php:345
+msgid ""
+"Error uploading the separator sound. Please make sure it is a valid audio "
+"file."
+msgstr "Error al subir el sonido de corte. Asegúrate de que es un archivo de audio válido."
+
+#: includes/class-settings.php:346
 msgid "Episode history cleared."
 msgstr "Historial de episodios borrado."
 
-#: includes/class-settings.php:336
+#: includes/class-settings.php:347
 msgid "Mix settings saved."
 msgstr "Ajustes de mezcla guardados."
 
-#: includes/class-settings.php:337
+#: includes/class-settings.php:348
 msgid "Title settings saved."
 msgstr "Ajustes de títulos guardados."
 
-#: includes/class-settings.php:338
+#: includes/class-settings.php:349
 msgid "Post footer saved."
 msgstr "Pie de post guardado."
 
-#: includes/class-settings.php:339
+#: includes/class-settings.php:350
 msgid "Image style saved."
 msgstr "Estilo de imagen guardado."
 
-#: includes/class-settings.php:385
+#: includes/class-settings.php:396
 msgid "VozCaster — Episodes"
 msgstr "VozCaster — Episodios"
 
-#: includes/class-settings.php:386
+#: includes/class-settings.php:397
 msgid "VozCaster — Audio"
 msgstr "VozCaster — Audio"
 
-#: includes/class-settings.php:387
+#: includes/class-settings.php:398
 msgid "VozCaster — Access"
 msgstr "VozCaster — Acceso"
 
-#: includes/class-settings.php:388
+#: includes/class-settings.php:399
 msgid "VozCaster — History"
 msgstr "VozCaster — Historial"
 
-#: includes/class-settings.php:451
+#: includes/class-settings.php:463
 msgid ""
 "PowerPress is not installed or not active. Episodes will be created without "
 "podcast data."
@@ -635,11 +655,11 @@ msgstr ""
 "PowerPress no está instalado o no está activo. Los episodios se crearán sin "
 "datos de podcast."
 
-#: includes/class-settings.php:458
+#: includes/class-settings.php:470
 msgid "Episode titles"
 msgstr "Títulos de los episodios"
 
-#: includes/class-settings.php:460
+#: includes/class-settings.php:472
 msgid ""
 "Define the prefix prepended to the number and title of each episode. Can "
 "also be changed from the Telegram bot with /settings."
@@ -647,83 +667,83 @@ msgstr ""
 "Define el prefijo que se añade delante del número y el título de cada "
 "episodio. También se puede cambiar desde el bot de Telegram con /settings."
 
-#: includes/class-settings.php:469
+#: includes/class-settings.php:481
 msgid "Title prefix"
 msgstr "Prefijo del título"
 
-#: includes/class-settings.php:475
+#: includes/class-settings.php:487
 msgid "E.g.: Chapter, Episode, Ep."
 msgstr "Ej.: Capítulo, Episodio, Ep."
 
-#: includes/class-settings.php:479
+#: includes/class-settings.php:491
 msgid ""
 "Empty = no prefix. With prefix and no season: «Chapter 15: Title». With "
 "season: «Chapter T2E15: Title»."
 msgstr ""
-"Vacío = sin prefijo. Con prefijo y sin temporada: «Capítulo 15: Título». Con"
-" temporada: «Capítulo T2E15: Título»."
+"Vacío = sin prefijo. Con prefijo y sin temporada: «Capítulo 15: Título». Con "
+"temporada: «Capítulo T2E15: Título»."
 
-#: includes/class-settings.php:484
+#: includes/class-settings.php:496
 msgid "Include season number"
 msgstr "Incluir número de temporada"
 
-#: includes/class-settings.php:491
+#: includes/class-settings.php:503
 msgid "Include T2E15 in the title (if a prefix is defined)"
 msgstr "Incluir T2E15 en el título (si hay un prefijo definido)"
 
-#: includes/class-settings.php:497
+#: includes/class-settings.php:509
 msgid "Current season"
 msgstr "Temporada actual"
 
-#: includes/class-settings.php:504
+#: includes/class-settings.php:516
 msgid "auto"
 msgstr "automática"
 
 #. translators: %d: the season number currently stored.
-#: includes/class-settings.php:511
+#: includes/class-settings.php:523
 #, php-format
 msgid "Stored season: %d. Leave blank to keep it."
 msgstr "Temporada guardada: %d. Déjalo en blanco para mantenerla."
 
-#: includes/class-settings.php:513
+#: includes/class-settings.php:525
 msgid "Not set — the season is derived from the latest published episode."
 msgstr "Sin fijar — la temporada se deduce del último episodio publicado."
 
-#: includes/class-settings.php:517
+#: includes/class-settings.php:529
 msgid "Changing this is a big change:"
 msgstr "Cambiar esto es un cambio importante:"
 
-#: includes/class-settings.php:518
+#: includes/class-settings.php:530
 msgid ""
 "the next episode is numbered within the target season (E1 if it has no "
 "published episodes yet, otherwise it continues from the last one published "
-"in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts,"
-" Spotify). Moving to a season below the latest published episode also "
+"in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, "
+"Spotify). Moving to a season below the latest published episode also "
 "requires editing that episode in PowerPress."
 msgstr ""
 "el próximo episodio se numera dentro de la temporada de destino (E1 si aún "
-"no tiene episodios publicados, o si no continúa desde el último publicado en"
-" ella) y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
+"no tiene episodios publicados, o si no continúa desde el último publicado en "
+"ella) y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
 "Spotify). Pasar a una temporada por debajo del último episodio publicado "
 "requiere editar además ese episodio en PowerPress."
 
-#: includes/class-settings.php:524
+#: includes/class-settings.php:536
 msgid "Chapter numbering in title"
 msgstr "Numeración del capítulo en el título"
 
-#: includes/class-settings.php:531
+#: includes/class-settings.php:543
 msgid "Chapter within the season (resets at T1, T2…)"
 msgstr "Capítulo dentro de la temporada (se reinicia en T1, T2…)"
 
-#: includes/class-settings.php:532
+#: includes/class-settings.php:544
 msgid "Example: «Chapter 5: Title» even if it is episode 37 overall."
 msgstr "Ejemplo: «Capítulo 5: Título» aunque sea el episodio 37 en total."
 
-#: includes/class-settings.php:538
+#: includes/class-settings.php:550
 msgid "Global sequential number (inferred from the previous post title)"
 msgstr "Número secuencial global (inferido del título del post anterior)"
 
-#: includes/class-settings.php:539
+#: includes/class-settings.php:551
 msgid ""
 "Example: «Chapter 38: Title». PowerPress still uses the chapter within the "
 "season internally."
@@ -731,29 +751,28 @@ msgstr ""
 "Ejemplo: «Capítulo 38: Título». PowerPress sigue usando internamente el "
 "capítulo dentro de la temporada."
 
-#: includes/class-settings.php:545
+#: includes/class-settings.php:557
 msgid "Save title settings"
 msgstr "Guardar ajustes de títulos"
 
-#: includes/class-settings.php:551
+#: includes/class-settings.php:563
 msgid "Post footer (signature)"
 msgstr "Pie de post (firma)"
 
-#: includes/class-settings.php:553
+#: includes/class-settings.php:565
 msgid ""
 "HTML or Gutenberg block markup appended automatically to every post "
-"published by the bot. You can also edit it from the Telegram bot with "
-"/firma."
+"published by the bot. You can also edit it from the Telegram bot with /firma."
 msgstr ""
 "Código HTML o de bloques de Gutenberg que se añade automáticamente al final "
 "de cada post publicado por el bot. También se puede editar desde el bot de "
 "Telegram con /firma."
 
-#: includes/class-settings.php:562
+#: includes/class-settings.php:574
 msgid "Footer content"
 msgstr "Contenido del pie"
 
-#: includes/class-settings.php:572
+#: includes/class-settings.php:584
 msgid ""
 "Accepts raw HTML and Gutenberg block comments. Appended verbatim after the "
 "episode content. Leave empty to disable."
@@ -761,98 +780,98 @@ msgstr ""
 "Acepta HTML en bruto y comentarios de bloques de Gutenberg. Se añade tal "
 "cual al final del contenido del episodio. Déjalo vacío para desactivarlo."
 
-#: includes/class-settings.php:577
+#: includes/class-settings.php:589
 msgid "Save footer"
 msgstr "Guardar pie"
 
-#: includes/class-settings.php:583
+#: includes/class-settings.php:595
 msgid "Image style"
 msgstr "Estilo de imagen"
 
-#: includes/class-settings.php:585
+#: includes/class-settings.php:597
 msgid ""
-"Fixed text prepended verbatim to the front of every AI-generated cover image"
-" prompt for this podcast (e.g. a recurring subject or look you always want)."
-" You can also edit it from the Telegram bot with /estilo."
+"Fixed text prepended verbatim to the front of every AI-generated cover image "
+"prompt for this podcast (e.g. a recurring subject or look you always want). "
+"You can also edit it from the Telegram bot with /estilo."
 msgstr ""
 "Texto fijo que se antepone tal cual a cada prompt de imagen de portada "
 "generado por IA para este podcast (por ejemplo, un sujeto o estilo "
 "recurrente que quieras siempre). También se puede editar desde el bot de "
 "Telegram con /estilo."
 
-#: includes/class-settings.php:594
+#: includes/class-settings.php:606
 msgid "Style text"
 msgstr "Texto del estilo"
 
-#: includes/class-settings.php:603
+#: includes/class-settings.php:615
 msgid "e.g. Attractive woman in her 30s, seasonal clothing"
 msgstr "p. ej. Mujer atractiva en sus 30, ropa de temporada"
 
-#: includes/class-settings.php:606
+#: includes/class-settings.php:618
 msgid ""
 "Added at the front of every image prompt for this podcast. Leave empty to "
 "disable."
 msgstr ""
-"Se añade al principio de cada prompt de imagen de este podcast. Déjalo vacío"
-" para desactivarlo."
+"Se añade al principio de cada prompt de imagen de este podcast. Déjalo vacío "
+"para desactivarlo."
 
-#: includes/class-settings.php:611
+#: includes/class-settings.php:623
 msgid "Save image style"
 msgstr "Guardar estilo de imagen"
 
-#: includes/class-settings.php:617
+#: includes/class-settings.php:629
 msgid "AI content notice"
 msgstr "Aviso de contenido generado con IA"
 
-#: includes/class-settings.php:619
+#: includes/class-settings.php:631
 msgid ""
-"When the bot writes the text of a post with AI, a short notice is shown with"
-" it so readers know. It is added when the post is displayed, so changes here"
-" apply to every post published from the bot. It can also be hidden on a "
+"When the bot writes the text of a post with AI, a short notice is shown with "
+"it so readers know. It is added when the post is displayed, so changes here "
+"apply to every post published from the bot. It can also be hidden on a "
 "single post from the editor."
 msgstr ""
-"Cuando el bot escribe con IA el texto de un post, se muestra con él un breve"
-" aviso para que los lectores lo sepan. Se añade al mostrar el post, así que "
+"Cuando el bot escribe con IA el texto de un post, se muestra con él un breve "
+"aviso para que los lectores lo sepan. Se añade al mostrar el post, así que "
 "los cambios de aquí se aplican a todos los posts publicados desde el bot. "
 "También se puede ocultar en un post concreto desde el editor."
 
-#: includes/class-settings.php:627
+#: includes/class-settings.php:639
 msgid "Show the AI notice"
 msgstr "Mostrar el aviso de IA"
 
-#: includes/class-settings.php:631
+#: includes/class-settings.php:643
 msgid "Show it on posts whose text was written by AI"
 msgstr "Mostrarlo en los posts cuyo texto ha escrito la IA"
 
-#: includes/class-settings.php:637
+#: includes/class-settings.php:649
 msgid "Notice text"
 msgstr "Texto del aviso"
 
-#: includes/class-settings.php:641
+#: includes/class-settings.php:653
 msgid ""
-"Leave it empty to use the default text (shown greyed out in the box), in the"
-" language of the site. Basic HTML such as links is allowed."
+"Leave it empty to use the default text (shown greyed out in the box), in the "
+"language of the site. Basic HTML such as links is allowed."
 msgstr ""
 "Déjalo vacío para usar el texto por defecto (el que se ve en gris dentro de "
 "la caja), en el idioma de la web. Se admite HTML básico, como enlaces."
 
-#: includes/class-settings.php:646
+#: includes/class-settings.php:658
 msgid "Position"
 msgstr "Posición"
 
-#: includes/class-settings.php:650
+#: includes/class-settings.php:662
 msgid "At the end of the post"
 msgstr "Al final del post"
 
-#: includes/class-settings.php:651
+#: includes/class-settings.php:663
 msgid "At the beginning of the post"
 msgstr "Al principio del post"
 
-#: includes/class-settings.php:656
+#: includes/class-settings.php:668
 msgid "VozCaster credit"
 msgstr "Crédito de VozCaster"
 
-#: includes/class-settings.php:660
+#: includes/class-settings.php:672
 msgid ""
 "Show a \"Published with VozCaster\" line with a link under posts published "
 "from the bot"
@@ -860,112 +879,147 @@ msgstr ""
 "Mostrar una línea «Publicado con VozCaster» con enlace bajo los posts "
 "publicados desde el bot"
 
-#: includes/class-settings.php:662
+#: includes/class-settings.php:674
 msgid "Off by default. Turning it on helps VozCaster grow — thank you!"
 msgstr ""
 "Desactivado por defecto. Activarlo ayuda a que VozCaster crezca. ¡Gracias!"
 
-#: includes/class-settings.php:666
+#: includes/class-settings.php:678
 msgid "Save notice settings"
 msgstr "Guardar ajustes del aviso"
 
-#: includes/class-settings.php:672
-msgid "Intro &amp; Outro"
-msgstr "Intro y outro"
+#: includes/class-settings.php:684
+msgid "Intro, outro &amp; separator"
+msgstr "Intro, outro y sonido de corte"
 
-#: includes/class-settings.php:674
+#: includes/class-settings.php:686
 msgid ""
-"Upload your intro and outro audio files here. They can also be uploaded from"
-" the Telegram bot via the Intro/Outro menu."
-msgstr ""
-"Sube aquí tus archivos de audio de intro y outro. También se pueden subir "
-"desde el bot de Telegram en el menú Intro/Outro."
+"Upload your intro, outro and separator audio files here. They can also be "
+"uploaded from the Telegram bot via the Intro/Outro menu."
+msgstr "Sube aquí los audios de intro, outro y sonido de corte. También se pueden subir desde el bot de Telegram, en el menú Intro/Outro."
 
-#: includes/class-settings.php:678
+#: includes/class-settings.php:690
 msgid "Intro"
 msgstr "Intro"
 
-#: includes/class-settings.php:690
+#: includes/class-settings.php:702
 msgid "Delete the intro file?"
 msgstr "¿Borrar el archivo de intro?"
 
-#: includes/class-settings.php:691 includes/class-settings.php:732
+#: includes/class-settings.php:703 includes/class-settings.php:744
+#: includes/class-settings.php:786
 msgid "Delete"
 msgstr "Borrar"
 
-#: includes/class-settings.php:695
+#: includes/class-settings.php:707
 msgid "To replace the intro, upload a new file:"
 msgstr "Para reemplazar la intro, sube un nuevo archivo:"
 
-#: includes/class-settings.php:697
+#: includes/class-settings.php:709
 msgid "No intro loaded."
 msgstr "No hay intro cargada."
 
-#: includes/class-settings.php:703
+#: includes/class-settings.php:715
 msgid "Intro audio file"
 msgstr "Archivo de audio de la intro"
 
-#: includes/class-settings.php:705
+#: includes/class-settings.php:717
 msgid "Replace intro"
 msgstr "Reemplazar intro"
 
-#: includes/class-settings.php:705
+#: includes/class-settings.php:717
 msgid "Upload intro"
 msgstr "Subir intro"
 
-#: includes/class-settings.php:714 includes/class-settings.php:755
+#: includes/class-settings.php:726 includes/class-settings.php:767
+#: includes/class-settings.php:809
 msgid "Select from media library"
 msgstr "Seleccionar de la biblioteca multimedia"
 
-#: includes/class-settings.php:719
+#: includes/class-settings.php:731
 msgid "Outro"
 msgstr "Outro"
 
-#: includes/class-settings.php:731
+#: includes/class-settings.php:743
 msgid "Delete the outro file?"
 msgstr "¿Borrar el archivo de outro?"
 
-#: includes/class-settings.php:736
+#: includes/class-settings.php:748
 msgid "To replace the outro, upload a new file:"
 msgstr "Para reemplazar el outro, sube un nuevo archivo:"
 
-#: includes/class-settings.php:738
+#: includes/class-settings.php:750
 msgid "No outro loaded."
 msgstr "No hay outro cargado."
 
-#: includes/class-settings.php:744
+#: includes/class-settings.php:756
 msgid "Outro audio file"
 msgstr "Archivo de audio del outro"
 
-#: includes/class-settings.php:746
+#: includes/class-settings.php:758
 msgid "Replace outro"
 msgstr "Reemplazar outro"
 
-#: includes/class-settings.php:746
+#: includes/class-settings.php:758
 msgid "Upload outro"
 msgstr "Subir outro"
 
-#: includes/class-settings.php:764
+#: includes/class-settings.php:772
+msgid "Separator sound"
+msgstr "Sonido de corte"
+
+#: includes/class-settings.php:774
+msgid ""
+"Short sound played between the sections of an episode recorded in several "
+"audios (for example, interviews at an event). Without it, sections are "
+"joined with a one-second pause."
+msgstr "Sonido corto que suena entre las partes de un episodio grabado en varios audios (por ejemplo, entrevistas en un evento). Sin él, las partes se unen con una pausa de un segundo."
+
+#: includes/class-settings.php:785
+msgid "Delete the separator sound?"
+msgstr "¿Eliminar el sonido de corte?"
+
+#: includes/class-settings.php:790
+msgid "To replace the separator sound, upload a new file:"
+msgstr "Para reemplazar el sonido de corte, sube un archivo nuevo:"
+
+#: includes/class-settings.php:792
+msgid "No separator sound loaded."
+msgstr "No hay sonido de corte cargado."
+
+#: includes/class-settings.php:798
+msgid "Separator sound file"
+msgstr "Archivo del sonido de corte"
+
+#: includes/class-settings.php:800
+msgid "Replace separator sound"
+msgstr "Reemplazar sonido de corte"
+
+#: includes/class-settings.php:800
+msgid "Upload separator sound"
+msgstr "Subir sonido de corte"
+
+#: includes/class-settings.php:818
 msgid "Audio mix settings (intro/outro)"
 msgstr "Ajustes de mezcla de audio (intro/outro)"
 
-#: includes/class-settings.php:766
+#: includes/class-settings.php:820
 msgid ""
 "Define how intro and outro music is mixed with the podcast audio. These are "
 "the default values and can be changed from the Telegram bot."
 msgstr ""
-"Define cómo se mezclan la intro y el outro con el audio del podcast. Son los"
-" valores por defecto y se pueden cambiar desde el bot de Telegram."
+"Define cómo se mezclan la intro y el outro con el audio del podcast. Son los "
+"valores por defecto y se pueden cambiar desde el bot de Telegram."
 
-#: includes/class-settings.php:775
+#: includes/class-settings.php:829
 msgid "Intro duck-in second"
 msgstr "Segundo de inicio del duck de la intro"
 
-#: includes/class-settings.php:782 includes/class-settings.php:838
+#: includes/class-settings.php:836 includes/class-settings.php:892
 msgid "seconds"
 msgstr "segundos"
 
-#: includes/class-settings.php:783
+#: includes/class-settings.php:837
 msgid ""
 "The intro plays at 100% until this second. From here it starts fading down "
 "and the podcast voice fades in."
@@ -973,11 +1027,11 @@ msgstr ""
 "La intro suena al 100% hasta este segundo. A partir de aquí empieza a bajar "
 "y la voz del podcast entra en fade-in."
 
-#: includes/class-settings.php:788
+#: includes/class-settings.php:842
 msgid "Intro volume under podcast"
 msgstr "Volumen de la intro bajo el podcast"
 
-#: includes/class-settings.php:796
+#: includes/class-settings.php:850
 msgid ""
 "Volume to which the intro fades during duck-in, before reaching 0. Example: "
 "30 = intro fades to 30% while the voice comes in."
@@ -985,15 +1039,15 @@ msgstr ""
 "Volumen al que baja la intro durante el duck, antes de llegar a 0. Ejemplo: "
 "30 = la intro baja al 30% mientras entra la voz."
 
-#: includes/class-settings.php:801
+#: includes/class-settings.php:855
 msgid "Second at which intro reaches 0"
 msgstr "Segundo en el que la intro llega a 0"
 
-#: includes/class-settings.php:809
+#: includes/class-settings.php:863
 msgid "seconds (empty = until the end of the intro file)"
 msgstr "segundos (vacío = hasta el final del archivo de intro)"
 
-#: includes/class-settings.php:810
+#: includes/class-settings.php:864
 msgid ""
 "Exact second at which the intro reaches silence. If left empty, the fade "
 "lasts until the end of the intro file."
@@ -1001,19 +1055,19 @@ msgstr ""
 "Segundo exacto en el que la intro llega al silencio. Si se deja vacío, el "
 "fade dura hasta el final del archivo de intro."
 
-#: includes/class-settings.php:815
+#: includes/class-settings.php:869
 msgid "Knee: seconds to reach duck volume"
 msgstr "Rodilla: segundos para llegar al volumen del duck"
 
-#: includes/class-settings.php:823
+#: includes/class-settings.php:877
 msgid "seconds after duck start (empty = linear)"
 msgstr "segundos después del inicio del duck (vacío = lineal)"
 
-#: includes/class-settings.php:825
+#: includes/class-settings.php:879
 msgid ""
 "Seconds after the duck start at which the intro has already dropped to the "
-"duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by"
-" a long gentle tail. The outro uses the exact mirror curve automatically. "
+"duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by "
+"a long gentle tail. The outro uses the exact mirror curve automatically. "
 "Leave empty for a linear fade."
 msgstr ""
 "Segundos después del inicio del duck en los que la intro ya ha bajado al % "
@@ -1021,11 +1075,11 @@ msgstr ""
 "cola larga y suave. El outro usa automáticamente la curva espejo exacta. "
 "Déjalo vacío para un fade lineal."
 
-#: includes/class-settings.php:831
+#: includes/class-settings.php:885
 msgid "Seconds before end for outro fade-in"
 msgstr "Segundos antes del final para el fade-in del outro"
 
-#: includes/class-settings.php:839
+#: includes/class-settings.php:893
 msgid ""
 "The outro starts playing in the background this many seconds before the "
 "podcast voice ends. When the voice ends, it rises to 100%."
@@ -1033,11 +1087,11 @@ msgstr ""
 "El outro empieza a sonar en segundo plano estos segundos antes de que "
 "termine la voz del podcast. Cuando la voz acaba, sube al 100%."
 
-#: includes/class-settings.php:844
+#: includes/class-settings.php:898
 msgid "Outro volume under podcast"
 msgstr "Volumen del outro bajo el podcast"
 
-#: includes/class-settings.php:852
+#: includes/class-settings.php:906
 msgid ""
 "Maximum volume of the outro while the podcast voice is still playing. When "
 "the voice ends, the outro rises to 100%."
@@ -1045,15 +1099,15 @@ msgstr ""
 "Volumen máximo del outro mientras la voz del podcast sigue sonando. Cuando "
 "la voz acaba, el outro sube al 100%."
 
-#: includes/class-settings.php:856
+#: includes/class-settings.php:910
 msgid "Save mix settings"
 msgstr "Guardar ajustes de mezcla"
 
-#: includes/class-settings.php:862
+#: includes/class-settings.php:916
 msgid "Who can publish from the bot"
 msgstr "Quién puede publicar desde el bot"
 
-#: includes/class-settings.php:864
+#: includes/class-settings.php:918
 msgid ""
 "Users with the following roles are authorized to publish from the Telegram "
 "bot, in every podcast of this site. They connect with their usual WordPress "
@@ -1063,43 +1117,43 @@ msgstr ""
 "el bot de Telegram, en todos los podcasts de esta web. Se conectan con su "
 "cuenta de WordPress de siempre; ninguna contraseña pasa por Telegram."
 
-#: includes/class-settings.php:871
+#: includes/class-settings.php:925
 msgid "Authorized roles"
 msgstr "Perfiles autorizados"
 
-#: includes/class-settings.php:884
+#: includes/class-settings.php:938
 msgid "always authorized"
 msgstr "siempre autorizado"
 
-#: includes/class-settings.php:890
+#: includes/class-settings.php:944
 msgid ""
 "By default, every role that can publish posts (Author or above). A custom "
-"role checked here can publish from the bot even if it cannot publish from "
-"wp-admin."
+"role checked here can publish from the bot even if it cannot publish from wp-"
+"admin."
 msgstr ""
 "Por defecto, todos los perfiles que pueden publicar entradas (Autor o "
 "superior). Un perfil propio marcado aquí puede publicar desde el bot aunque "
 "no pueda publicar desde wp-admin."
 
-#: includes/class-settings.php:895
+#: includes/class-settings.php:949
 msgid "Review before publishing"
 msgstr "Revisar antes de publicar"
 
-#: includes/class-settings.php:899
+#: includes/class-settings.php:953
 msgid ""
 "Episodes sent by users whose role cannot publish posts in WordPress (for "
-"example a custom role checked above) are saved as \"Pending review\" instead"
-" of being published, and the site administrator gets an email to approve "
+"example a custom role checked above) are saved as \"Pending review\" instead "
+"of being published, and the site administrator gets an email to approve "
 "them. Authors and above keep publishing directly."
 msgstr ""
 "Los episodios que envían usuarios cuyo perfil no puede publicar entradas en "
 "WordPress (por ejemplo, un perfil propio marcado arriba) se guardan como "
-"«Pendiente de revisión» en lugar de publicarse, y el administrador de la web"
-" recibe un correo para aprobarlos. Los autores y superiores siguen "
-"publicando directamente."
+"«Pendiente de revisión» en lugar de publicarse, y el administrador de la web "
+"recibe un correo para aprobarlos. Los autores y superiores siguen publicando "
+"directamente."
 
 #. translators: %s: the [vozcaster_connect] shortcode.
-#: includes/class-settings.php:905
+#: includes/class-settings.php:959
 #, php-format
 msgid ""
 "Tip: add the %s shortcode to any page so these users can connect the bot "
@@ -1108,83 +1162,93 @@ msgstr ""
 "Consejo: añade el shortcode %s a cualquier página para que estos usuarios "
 "conecten el bot sin entrar en wp-admin."
 
-#: includes/class-settings.php:910
+#: includes/class-settings.php:964
 msgid "Save access settings"
 msgstr "Guardar ajustes de acceso"
 
-#: includes/class-settings.php:913
+#: includes/class-settings.php:967
 msgid "Connected users"
 msgstr "Usuarios conectados"
 
-#: includes/class-settings.php:915
+#: includes/class-settings.php:969
 msgid ""
 "Each authorized user connects their own account from VozCaster → Connect."
 msgstr ""
 "Cada usuario autorizado conecta su propia cuenta desde VozCaster → Conectar."
 
-#: includes/class-settings.php:916
+#: includes/class-settings.php:970
 msgid "Connect your account"
 msgstr "Conectar tu cuenta"
 
-#: includes/class-settings.php:919
+#: includes/class-settings.php:973
 msgid "Nobody has connected the bot to this site yet."
 msgstr "Todavía nadie ha conectado el bot a esta web."
 
-#: includes/class-settings.php:924
+#: includes/class-settings.php:978
 msgid "Username"
 msgstr "Usuario"
 
-#: includes/class-settings.php:925
+#: includes/class-settings.php:979
 msgid "Name"
 msgstr "Nombre"
 
-#: includes/class-settings.php:926
+#: includes/class-settings.php:980
 msgid "Role"
 msgstr "Rol"
 
-#: includes/class-settings.php:927
+#: includes/class-settings.php:981
 msgid "Bot status"
 msgstr "Estado del bot"
 
-#: includes/class-settings.php:945
+#: includes/class-settings.php:999
 msgid "Connected"
 msgstr "Conectado"
 
-#: includes/class-settings.php:947
+#: includes/class-settings.php:1001
 msgid "Role not authorized"
 msgstr "Perfil no autorizado"
 
-#: includes/class-settings.php:958
+#: includes/class-settings.php:1012
 msgid "Revoke access? The user will need to connect again."
 msgstr "¿Revocar el acceso? El usuario tendrá que volver a conectarse."
 
-#: includes/class-settings.php:959
+#: includes/class-settings.php:1013
 msgid "Revoke"
 msgstr "Revocar"
 
-#: includes/class-settings.php:972
+#: includes/class-settings.php:1026
 msgid "Recent published episodes"
 msgstr "Episodios publicados recientes"
 
-#: includes/class-settings.php:974
+#: includes/class-settings.php:1028
 msgid "No episodes have been published with the bot yet."
 msgstr "Aún no se ha publicado ningún episodio con el bot."
 
-#: includes/class-settings.php:979
+#: includes/class-settings.php:1033
 msgid "Date"
 msgstr "Fecha"
 
-#: includes/class-settings.php:983
+#: includes/class-settings.php:1037
 msgid "Link"
 msgstr "Enlace"
 
-#: includes/class-settings.php:995
+#: includes/class-settings.php:1049
 msgid "View"
 msgstr "Ver"
 
-#: includes/class-settings.php:1007
+#: includes/class-settings.php:1061
 msgid "Clear history"
 msgstr "Borrar historial"
+
+#~ msgid "Intro &amp; Outro"
+#~ msgstr "Intro y outro"
+
+#~ msgid ""
+#~ "Upload your intro and outro audio files here. They can also be uploaded "
+#~ "from the Telegram bot via the Intro/Outro menu."
+#~ msgstr ""
+#~ "Sube aquí tus archivos de audio de intro y outro. También se pueden subir "
+#~ "desde el bot de Telegram en el menú Intro/Outro."
 
 #~ msgid "Authorized roles updated."
 #~ msgstr "Perfiles autorizados actualizados."
@@ -1217,14 +1281,14 @@ msgstr "Borrar historial"
 #~ "have access to all podcasts with publish permission (backward "
 #~ "compatibility)."
 #~ msgstr ""
-#~ "Define a qué podcast puede acceder cada usuario desde el bot y con qué nivel"
-#~ " de permiso. Los usuarios sin permisos específicos configurados aquí tendrán"
-#~ " acceso a todos los podcasts con permiso de publicación (compatibilidad "
-#~ "hacia atrás)."
+#~ "Define a qué podcast puede acceder cada usuario desde el bot y con qué "
+#~ "nivel de permiso. Los usuarios sin permisos específicos configurados aquí "
+#~ "tendrán acceso a todos los podcasts con permiso de publicación "
+#~ "(compatibilidad hacia atrás)."
 
 #~ msgid ""
-#~ "Only one podcast is configured. Add more feeds in PowerPress to enable per-"
-#~ "podcast permissions."
+#~ "Only one podcast is configured. Add more feeds in PowerPress to enable "
+#~ "per-podcast permissions."
 #~ msgstr ""
 #~ "Solo hay un podcast configurado. Añade más feeds en PowerPress para "
 #~ "habilitar los permisos por podcast."
@@ -1252,9 +1316,9 @@ msgstr "Borrar historial"
 #~ msgstr "Usuarios autorizados para usar el bot"
 
 #~ msgid ""
-#~ "Check the WordPress users allowed to publish episodes from the Telegram bot."
-#~ " Checked users will be able to authenticate using their usual WordPress "
-#~ "username and password."
+#~ "Check the WordPress users allowed to publish episodes from the Telegram "
+#~ "bot. Checked users will be able to authenticate using their usual "
+#~ "WordPress username and password."
 #~ msgstr ""
 #~ "Marca los usuarios de WordPress autorizados a publicar episodios desde el "
 #~ "bot de Telegram. Los marcados podrán autenticarse con su usuario y "
@@ -1270,12 +1334,12 @@ msgstr "Borrar historial"
 #~ msgstr "Guardar cambios"
 
 #~ msgid ""
-#~ "it renumbers every following episode, restarts the in-season counter at E1, "
-#~ "and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, "
+#~ "it renumbers every following episode, restarts the in-season counter at "
+#~ "E1, and changes the <itunes:season> tag in the RSS feed (Apple Podcasts, "
 #~ "Spotify). Lowering the season also requires editing the latest published "
 #~ "episode in PowerPress."
 #~ msgstr ""
-#~ "renumera todos los episodios siguientes, reinicia el contador de episodio a "
-#~ "E1 y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
-#~ "Spotify). Para bajar la temporada hay que editar además el último episodio "
-#~ "publicado en PowerPress."
+#~ "renumera todos los episodios siguientes, reinicia el contador de episodio "
+#~ "a E1 y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
+#~ "Spotify). Para bajar la temporada hay que editar además el último "
+#~ "episodio publicado en PowerPress."

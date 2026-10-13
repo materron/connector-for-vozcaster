@@ -144,6 +144,24 @@ class VPConn_API {
 			]
 		);
 
+		// POST /media/separator — sound played between the sections of a multi-audio episode.
+		register_rest_route(
+			self::NAMESPACE,
+			'/media/separator',
+			[
+				[
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => [ $this, 'upload_separator' ],
+					'permission_callback' => [ $this, 'check_token_admin_permission' ],
+				],
+				[
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => [ $this, 'delete_separator' ],
+					'permission_callback' => [ $this, 'check_token_admin_permission' ],
+				],
+			]
+		);
+
 		// POST /media/transcript
 		register_rest_route(
 			self::NAMESPACE,
@@ -413,7 +431,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator' ],
 			]
 		);
 	}
@@ -473,6 +491,7 @@ class VPConn_API {
 			[
 				'intro'  => VPConn_Media::get_intro_outro_info( 'intro' ),
 				'outro'  => VPConn_Media::get_intro_outro_info( 'outro' ),
+				'separator' => VPConn_Media::get_intro_outro_info( 'separator' ),
 				'config' => [
 					'intro_duck_start'  => (float) get_option( 'vpconn_intro_duck_start',  20 ),
 					'intro_duck_volume' => (float) get_option( 'vpconn_intro_duck_volume', 30 ) / 100,
@@ -692,6 +711,26 @@ class VPConn_API {
 			VPConn_Media::set_intro_outro_id( 'outro', $data['id'] );
 		}
 		return $result;
+	}
+
+	/**
+	 * POST /media/separator
+	 */
+	public function upload_separator( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$result = $this->handle_file_upload( $request, [ 'audio/mpeg', 'audio/mp3', 'audio/x-m4a', 'audio/ogg' ] );
+		if ( ! is_wp_error( $result ) ) {
+			$data = $result->get_data();
+			VPConn_Media::set_intro_outro_id( 'separator', $data['id'] );
+		}
+		return $result;
+	}
+
+	/**
+	 * DELETE /media/separator — forgets the separator (the file stays in the media library).
+	 */
+	public function delete_separator(): WP_REST_Response {
+		VPConn_Media::clear_intro_outro( 'separator' );
+		return new WP_REST_Response( [ 'deleted' => true ], 200 );
 	}
 
 	public function upload_transcript( WP_REST_Request $request ): WP_REST_Response|WP_Error {

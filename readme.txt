@@ -4,7 +4,7 @@ Tags: podcast, telegram, powerpress, automation, transcription
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.10.1
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 * **Receives audio** from the VozCaster bot and uploads it to your WordPress media library.
 * **Creates podcast episodes** using PowerPress, with episode and season numbering managed automatically.
 * **Supports multiple podcasts on the same site** — works with any PowerPress custom channels you have configured.
+* **Episodes in several audios**: record interviews or sections one by one and send them to the bot; they are joined into a single episode, with an optional separator sound between sections (VozCaster → Audio).
 * **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), fixed image style, category mapping.
 * **One-click connection from wp-admin**: press "Connect in Telegram" and confirm in the bot. No address to type, no second login.
 * **Role-based permissions**: Authors and above can publish from the bot by default; administrators can authorise custom roles too.
@@ -190,6 +191,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.11.0 =
+* New: **separator sound** (VozCaster → Audio). A short sound the bot plays between the sections of an episode recorded in several audios, such as interviews at an event. It can also be uploaded from the bot. New REST endpoint `POST/DELETE /media/separator`; `/media/intro-outro` now also reports it.
 
 = 1.10.1 =
 * Fix: strings added in recent versions (the AI content notice, the VozCaster pages, the connect shortcode) showed in English on sites using a language pack from translate.wordpress.org that did not have them yet. The translation shipped with the plugin now fills in whatever the language pack is missing.

@@ -3,15 +3,16 @@
 	'use strict';
 
 	/**
-	 * Opens the WordPress media picker to choose an intro/outro audio file,
+	 * Opens the WordPress media picker to choose an intro, outro or separator audio file,
 	 * then stores the chosen attachment ID and submits the matching form.
 	 *
-	 * @param {string} type Either "intro" or "outro".
+	 * @param {string} type "intro", "outro" or "separator".
 	 */
 	window.vpconnOpenMediaPicker = function ( type ) {
 		var titles = {
 			intro: vpconnAdmin.selectIntro,
-			outro: vpconnAdmin.selectOutro
+			outro: vpconnAdmin.selectOutro,
+			separator: vpconnAdmin.selectSeparator
 		};
 
 		var frame = wp.media( {
