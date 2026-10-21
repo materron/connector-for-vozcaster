@@ -194,6 +194,7 @@ Service URLs and policies:
 == Changelog ==
 
 = 1.12.0 =
+* Changed: default mixing times follow the length of your music — the intro plays alone for 20 s and drops to 30 % within 3 s, the outro mirrors it so its last 20 s play alone; music of 20 s or less plays whole. Saved settings are kept.
 * Changed: the image style example is now neutral («An orange cat wearing studio headphones») and its description explains that the element is woven into each cover.
 * New: **Connect in the app** button (VozCaster → Connect and the `[vozcaster_connect]` shortcode), next to Connect in Telegram. It opens the VozCaster web app, which records from the phone or computer and publishes here without Telegram. Same single-use code as the Telegram button.
 

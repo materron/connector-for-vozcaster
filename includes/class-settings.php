@@ -444,15 +444,15 @@ class VPConn_Settings {
 		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
 		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
 		$image_style     = (string) get_option( 'vpconn_image_style', '' );
-		$duck_start      = (float) get_option( 'vpconn_intro_duck_start',  20 );
-		$duck_vol        = (float) get_option( 'vpconn_intro_duck_volume', 30 );
-		$fade_end_raw    = get_option( 'vpconn_intro_fade_end', '' );
-		$fade_end        = '' !== $fade_end_raw ? (float) $fade_end_raw : '';
-		$knee_time_raw   = get_option( 'vpconn_intro_knee_time', '' );
-		// Mostrar como segundos relativos (desde duck_start) para que sea intuitivo
-		$knee_delay      = '' !== $knee_time_raw ? max( 0, (float) $knee_time_raw - $duck_start ) : '';
-		$outro_start     = (float) get_option( 'vpconn_outro_fade_start',  17 );
-		$outro_vol       = (float) get_option( 'vpconn_outro_duck_volume', 35 );
+		// Saved values, or the defaults for this site's music (see VPConn_Media::mix_settings).
+		$mix             = VPConn_Media::mix_settings();
+		$duck_start      = $mix['intro_duck_start'];
+		$duck_vol        = $mix['intro_duck_volume'];
+		$fade_end        = null !== $mix['intro_fade_end'] ? $mix['intro_fade_end'] : '';
+		// Shown as seconds after duck_start, which is easier to understand.
+		$knee_delay      = null !== $mix['intro_knee_time'] ? max( 0, $mix['intro_knee_time'] - $duck_start ) : '';
+		$outro_start     = $mix['outro_fade_start'];
+		$outro_vol       = $mix['outro_duck_volume'];
 
 		?>
 		<div class="wrap">
