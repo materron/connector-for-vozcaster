@@ -804,8 +804,8 @@ msgid "Style text"
 msgstr "Texto del estilo"
 
 #: includes/class-settings.php:615
-msgid "e.g. Attractive woman in her 30s, seasonal clothing"
-msgstr "p. ej. Mujer atractiva en sus 30, ropa de temporada"
+msgid "e.g. An orange cat wearing studio headphones"
+msgstr "p. ej. Un gato naranja con auriculares de estudio"
 
 #: includes/class-settings.php:618
 msgid ""

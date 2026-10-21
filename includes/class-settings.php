@@ -612,10 +612,10 @@ class VPConn_Settings {
 								name="image_style"
 								value="<?php echo esc_attr( $image_style ); ?>"
 								style="width:100%; max-width:600px;"
-								placeholder="<?php esc_attr_e( 'e.g. Attractive woman in her 30s, seasonal clothing', 'connector-for-vozcaster' ); ?>"
+								placeholder="<?php esc_attr_e( 'e.g. An orange cat wearing studio headphones', 'connector-for-vozcaster' ); ?>"
 							>
 							<p class="description">
-								<?php esc_html_e( 'Added at the front of every image prompt for this podcast. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
+								<?php esc_html_e( 'An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
 							</p>
 						</td>
 					</tr>

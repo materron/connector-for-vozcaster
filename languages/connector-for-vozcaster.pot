@@ -663,11 +663,11 @@ msgid "Style text"
 msgstr ""
 
 #: includes/class-settings.php:615
-msgid "e.g. Attractive woman in her 30s, seasonal clothing"
+msgid "e.g. An orange cat wearing studio headphones"
 msgstr ""
 
 #: includes/class-settings.php:618
-msgid "Added at the front of every image prompt for this podcast. Leave empty to disable."
+msgid "An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable."
 msgstr ""
 
 #: includes/class-settings.php:623
