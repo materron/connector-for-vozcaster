@@ -148,7 +148,8 @@ The following data is transmitted:
 2. **From your WordPress site to the bot (only when a user connects)**
    - When a user presses **Connect in Telegram** in wp-admin, the browser opens a `t.me` link to the bot containing a single-use code and your site's address. The bot then calls this plugin to read who is connecting (username, display name, podcast name) and, after the user confirms, to redeem the code for a token.
    - When a user connects with `/conectar` instead, the browser is redirected to your WordPress login; after login, this plugin issues a token and returns it to the bot.
-   - The plugin itself makes no outgoing requests; the "Connect in Telegram" button only opens Telegram in the user's browser.
+   - When a user presses **Connect in the app**, the browser opens the VozCaster web app (https://app.vozcaster.com, operated by the plugin author) with the same single-use code and your site's address in the link. The app hands them to the VozCaster service, which redeems the code exactly as the bot does. Recordings made in the app are sent to the VozCaster service for processing, as with Telegram.
+   - The plugin itself makes no outgoing requests; the "Connect in Telegram" and "Connect in the app" buttons only open Telegram or the app in the user's browser.
 
 3. **From the bot's server to Telegram's servers**
    - User-sent voice messages and audio files pass through Telegram's infrastructure as part of normal bot communication. See Telegram's Privacy Policy: https://telegram.org/privacy
@@ -191,6 +192,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.12.0 =
+* New: **Connect in the app** button (VozCaster → Connect and the `[vozcaster_connect]` shortcode), next to Connect in Telegram. It opens the VozCaster web app, which records from the phone or computer and publishes here without Telegram. Same single-use code as the Telegram button.
 
 = 1.11.0 =
 * New: **separator sound** (VozCaster → Audio). A short sound the bot plays between the sections of an episode recorded in several audios, such as interviews at an event. It can also be uploaded from the bot. New REST endpoint `POST/DELETE /media/separator`; `/media/intro-outro` now also reports it.

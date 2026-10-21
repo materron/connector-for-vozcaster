@@ -47,6 +47,15 @@ class VPConn_Pairing {
 		return ltrim( (string) get_option( 'vpconn_bot_username', 'VozCasterBot' ), '@' );
 	}
 
+	/**
+	 * Address of the VozCaster web app ("Connect in the app"). Filterable and
+	 * overridable with the vpconn_app_url option (test installs).
+	 */
+	public static function get_app_url(): string {
+		$url = (string) get_option( 'vpconn_app_url', 'https://app.vozcaster.com' );
+		return untrailingslashit( (string) apply_filters( 'vpconn_app_url', esc_url_raw( $url ) ) );
+	}
+
 	public static function get_page_url(): string {
 		return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
 	}
@@ -150,21 +159,28 @@ class VPConn_Pairing {
 							<tr>
 								<td style="vertical-align:middle;"><strong><?php echo esc_html( $feed['name'] ); ?></strong></td>
 								<td style="text-align:right;">
-									<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0;">
-										<?php wp_nonce_field( 'vpconn_pair' ); ?>
-										<input type="hidden" name="action" value="vpconn_pair">
-										<input type="hidden" name="feed" value="<?php echo esc_attr( $feed['slug'] ); ?>">
-										<button type="submit" class="button button-primary">
-											<?php esc_html_e( 'Connect in Telegram', 'connector-for-vozcaster' ); ?>
-										</button>
-									</form>
+									<?php foreach ( [ 'app', 'telegram' ] as $target ) : ?>
+										<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0 0 0 6px;display:inline-block;">
+											<?php wp_nonce_field( 'vpconn_pair' ); ?>
+											<input type="hidden" name="action" value="vpconn_pair">
+											<input type="hidden" name="target" value="<?php echo esc_attr( $target ); ?>">
+											<input type="hidden" name="feed" value="<?php echo esc_attr( $feed['slug'] ); ?>">
+											<button type="submit" class="button <?php echo 'app' === $target ? 'button-primary' : ''; ?>">
+												<?php
+												'app' === $target
+													? esc_html_e( 'Connect in the app', 'connector-for-vozcaster' )
+													: esc_html_e( 'Connect in Telegram', 'connector-for-vozcaster' );
+												?>
+											</button>
+										</form>
+									<?php endforeach; ?>
 								</td>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
 				</table>
 				<p class="description" style="max-width:640px;">
-					<?php esc_html_e( 'Telegram opens with the bot. Press Start and confirm the connection there. The link works once and expires in 15 minutes.', 'connector-for-vozcaster' ); ?>
+					<?php esc_html_e( 'The app opens in a new tab, ready to record from your phone or computer; you can add it to your home screen. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes.', 'connector-for-vozcaster' ); ?>
 				</p>
 			<?php else : ?>
 				<p style="max-width:640px;">
@@ -236,25 +252,30 @@ class VPConn_Pairing {
 		}
 
 		foreach ( $feeds as $feed ) {
-			?>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0 0 12px;">
-				<?php wp_nonce_field( 'vpconn_pair' ); ?>
-				<input type="hidden" name="action" value="vpconn_pair">
-				<input type="hidden" name="feed" value="<?php echo esc_attr( $feed['slug'] ); ?>">
-				<button type="submit" class="wp-element-button button">
-					<?php
-					echo esc_html(
-						count( $feeds ) > 1
-							/* translators: %s: podcast name. */
-							? sprintf( __( 'Connect «%s» in Telegram', 'connector-for-vozcaster' ), $feed['name'] )
-							: __( 'Connect in Telegram', 'connector-for-vozcaster' )
-					);
-					?>
-				</button>
-			</form>
-			<?php
+			foreach ( [ 'app', 'telegram' ] as $target ) {
+				if ( 'app' === $target ) {
+					$label = count( $feeds ) > 1
+						/* translators: %s: podcast name. */
+						? sprintf( __( 'Connect «%s» in the app', 'connector-for-vozcaster' ), $feed['name'] )
+						: __( 'Connect in the app', 'connector-for-vozcaster' );
+				} else {
+					$label = count( $feeds ) > 1
+						/* translators: %s: podcast name. */
+						? sprintf( __( 'Connect «%s» in Telegram', 'connector-for-vozcaster' ), $feed['name'] )
+						: __( 'Connect in Telegram', 'connector-for-vozcaster' );
+				}
+				?>
+				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0 8px 12px 0;display:inline-block;">
+					<?php wp_nonce_field( 'vpconn_pair' ); ?>
+					<input type="hidden" name="action" value="vpconn_pair">
+					<input type="hidden" name="target" value="<?php echo esc_attr( $target ); ?>">
+					<input type="hidden" name="feed" value="<?php echo esc_attr( $feed['slug'] ); ?>">
+					<button type="submit" class="wp-element-button button"><?php echo esc_html( $label ); ?></button>
+				</form>
+				<?php
+			}
 		}
-		echo '<p><small>' . esc_html__( 'Telegram opens with the bot. Press Start and confirm the connection there. The link works once and expires in 15 minutes.', 'connector-for-vozcaster' ) . '</small></p>';
+		echo '<p><small>' . esc_html__( 'The app opens in a new tab, ready to record from your phone or computer. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes.', 'connector-for-vozcaster' ) . '</small></p>';
 		echo '</div>';
 		return (string) ob_get_clean();
 	}
@@ -286,6 +307,22 @@ class VPConn_Pairing {
 			],
 			self::CODE_TTL
 		);
+
+		$target = sanitize_key( wp_unslash( $_POST['target'] ?? 'telegram' ) );
+		if ( 'app' === $target ) {
+			// The app hands the same code to VozCaster, which redeems it like the bot does.
+			$app_url  = self::get_app_url();
+			$app_host = (string) wp_parse_url( $app_url, PHP_URL_HOST );
+			add_filter(
+				'allowed_redirect_hosts',
+				static function ( array $hosts ) use ( $app_host ): array {
+					$hosts[] = $app_host;
+					return $hosts;
+				}
+			);
+			wp_safe_redirect( $app_url . '/#pair=' . $code . $host );
+			exit;
+		}
 
 		add_filter(
 			'allowed_redirect_hosts',
