@@ -431,7 +431,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing' ],
 			]
 		);
 	}
@@ -485,21 +485,12 @@ class VPConn_API {
 	 * definida en Ajustes → VozPress Connector.
 	 */
 	public function media_intro_outro_status(): WP_REST_Response {
-		$fade_end_raw  = get_option( 'vpconn_intro_fade_end', '' );
-		$knee_time_raw = get_option( 'vpconn_intro_knee_time', '' );
 		$response      = new WP_REST_Response(
 			[
 				'intro'  => VPConn_Media::get_intro_outro_info( 'intro' ),
 				'outro'  => VPConn_Media::get_intro_outro_info( 'outro' ),
 				'separator' => VPConn_Media::get_intro_outro_info( 'separator' ),
-				'config' => [
-					'intro_duck_start'  => (float) get_option( 'vpconn_intro_duck_start',  20 ),
-					'intro_duck_volume' => (float) get_option( 'vpconn_intro_duck_volume', 30 ) / 100,
-					'intro_fade_end'    => '' !== $fade_end_raw  ? (float) $fade_end_raw  : null,
-					'intro_knee_time'   => '' !== $knee_time_raw ? (float) $knee_time_raw : null,
-					'outro_fade_start'  => (float) get_option( 'vpconn_outro_fade_start',  17 ),
-					'outro_duck_volume' => (float) get_option( 'vpconn_outro_duck_volume', 35 ) / 100,
-				],
+				'config' => VPConn_Media::mix_config(),
 			]
 		);
 		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate' );
@@ -545,7 +536,7 @@ class VPConn_API {
 			}
 		}
 		if ( isset( $body['outro_fade_start'] ) ) {
-			update_option( 'vpconn_outro_fade_start', max( 1, (float) $body['outro_fade_start'] ) );
+			update_option( 'vpconn_outro_fade_start', max( 0, (float) $body['outro_fade_start'] ) );
 		}
 		if ( isset( $body['outro_duck_volume'] ) ) {
 			$pct = (float) $body['outro_duck_volume'];
@@ -556,18 +547,9 @@ class VPConn_API {
 		}
 
 		// Devolver la configuración actualizada
-		$fade_end_raw  = get_option( 'vpconn_intro_fade_end', '' );
-		$knee_time_raw = get_option( 'vpconn_intro_knee_time', '' );
 		return new WP_REST_Response( [
 			'updated' => true,
-			'config'  => [
-				'intro_duck_start'  => (float) get_option( 'vpconn_intro_duck_start',  20 ),
-				'intro_duck_volume' => (float) get_option( 'vpconn_intro_duck_volume', 30 ) / 100,
-				'intro_fade_end'    => '' !== $fade_end_raw  ? (float) $fade_end_raw  : null,
-				'intro_knee_time'   => '' !== $knee_time_raw ? (float) $knee_time_raw : null,
-				'outro_fade_start'  => (float) get_option( 'vpconn_outro_fade_start',  17 ),
-				'outro_duck_volume' => (float) get_option( 'vpconn_outro_duck_volume', 35 ) / 100,
-			],
+			'config'  => VPConn_Media::mix_config(),
 		] );
 	}
 
@@ -577,22 +559,14 @@ class VPConn_API {
 	// -------------------------------------------------------------------------
 
 	private function _read_all_settings(): array {
-		$fade_end_raw  = get_option( 'vpconn_intro_fade_end', '' );
-		$knee_time_raw = get_option( 'vpconn_intro_knee_time', '' );
 		return [
 			'title_prefix'            => (string) get_option( 'vpconn_title_prefix', '' ),
 			'title_include_season'    => (bool) get_option( 'vpconn_title_include_season', false ),
 			'current_season'          => (int) get_option( 'vpconn_current_season', 0 ),
 			'episode_numbering_mode'  => (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' ),
-			'intro_duck_start'        => (float) get_option( 'vpconn_intro_duck_start',  20 ),
-			'intro_duck_volume'       => (float) get_option( 'vpconn_intro_duck_volume', 30 ) / 100,
-			'intro_fade_end'          => '' !== $fade_end_raw  ? (float) $fade_end_raw  : null,
-			'intro_knee_time'         => '' !== $knee_time_raw ? (float) $knee_time_raw : null,
-			'outro_fade_start'        => (float) get_option( 'vpconn_outro_fade_start',  17 ),
-			'outro_duck_volume'       => (float) get_option( 'vpconn_outro_duck_volume', 35 ) / 100,
 			'post_footer'             => (string) get_option( 'vpconn_post_footer', '' ),
 			'image_style'             => (string) get_option( 'vpconn_image_style', '' ),
-		];
+		] + VPConn_Media::mix_config();
 	}
 
 	/**

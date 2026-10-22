@@ -804,16 +804,16 @@ msgid "Style text"
 msgstr "Texto del estilo"
 
 #: includes/class-settings.php:615
-msgid "e.g. Attractive woman in her 30s, seasonal clothing"
-msgstr "p. ej. Mujer atractiva en sus 30, ropa de temporada"
+msgid "e.g. An orange cat wearing studio headphones"
+msgstr "p. ej. Un gato naranja con auriculares de estudio"
 
 #: includes/class-settings.php:618
 msgid ""
-"Added at the front of every image prompt for this podcast. Leave empty to "
-"disable."
+"An element that appears in every cover of this podcast, woven into the scene "
+"of each episode. Leave empty to disable."
 msgstr ""
-"Se añade al principio de cada prompt de imagen de este podcast. Déjalo vacío "
-"para desactivarlo."
+"Un elemento que aparece en todas las portadas de este podcast, integrado en "
+"la escena de cada episodio. Déjalo vacío para desactivarlo."
 
 #: includes/class-settings.php:623
 msgid "Save image style"

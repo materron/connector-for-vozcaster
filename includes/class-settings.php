@@ -160,7 +160,7 @@ class VPConn_Settings {
 					// Guardar como segundo absoluto: duck_start + knee_delay
 					update_option( 'vpconn_intro_knee_time', $duck_start + $knee_delay );
 				}
-				update_option( 'vpconn_outro_fade_start',  max( 1, $outro_start ) );
+				update_option( 'vpconn_outro_fade_start',  max( 0, $outro_start ) );
 				update_option( 'vpconn_outro_duck_volume', min( 100, max( 1, $outro_vol ) ) );
 
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'mix_config_saved' ], self::back_url() ) );
@@ -444,15 +444,15 @@ class VPConn_Settings {
 		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
 		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
 		$image_style     = (string) get_option( 'vpconn_image_style', '' );
-		$duck_start      = (float) get_option( 'vpconn_intro_duck_start',  20 );
-		$duck_vol        = (float) get_option( 'vpconn_intro_duck_volume', 30 );
-		$fade_end_raw    = get_option( 'vpconn_intro_fade_end', '' );
-		$fade_end        = '' !== $fade_end_raw ? (float) $fade_end_raw : '';
-		$knee_time_raw   = get_option( 'vpconn_intro_knee_time', '' );
-		// Mostrar como segundos relativos (desde duck_start) para que sea intuitivo
-		$knee_delay      = '' !== $knee_time_raw ? max( 0, (float) $knee_time_raw - $duck_start ) : '';
-		$outro_start     = (float) get_option( 'vpconn_outro_fade_start',  17 );
-		$outro_vol       = (float) get_option( 'vpconn_outro_duck_volume', 35 );
+		// Saved values, or the defaults for this site's music (see VPConn_Media::mix_settings).
+		$mix             = VPConn_Media::mix_settings();
+		$duck_start      = $mix['intro_duck_start'];
+		$duck_vol        = $mix['intro_duck_volume'];
+		$fade_end        = null !== $mix['intro_fade_end'] ? $mix['intro_fade_end'] : '';
+		// Shown as seconds after duck_start, which is easier to understand.
+		$knee_delay      = null !== $mix['intro_knee_time'] ? max( 0, $mix['intro_knee_time'] - $duck_start ) : '';
+		$outro_start     = $mix['outro_fade_start'];
+		$outro_vol       = $mix['outro_duck_volume'];
 
 		?>
 		<div class="wrap">
@@ -612,10 +612,10 @@ class VPConn_Settings {
 								name="image_style"
 								value="<?php echo esc_attr( $image_style ); ?>"
 								style="width:100%; max-width:600px;"
-								placeholder="<?php esc_attr_e( 'e.g. Attractive woman in her 30s, seasonal clothing', 'connector-for-vozcaster' ); ?>"
+								placeholder="<?php esc_attr_e( 'e.g. An orange cat wearing studio headphones', 'connector-for-vozcaster' ); ?>"
 							>
 							<p class="description">
-								<?php esc_html_e( 'Added at the front of every image prompt for this podcast. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
+								<?php esc_html_e( 'An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable.', 'connector-for-vozcaster' ); ?>
 							</p>
 						</td>
 					</tr>
@@ -888,7 +888,7 @@ class VPConn_Settings {
 							<input
 								type="number" id="outro_fade_start" name="outro_fade_start"
 								value="<?php echo esc_attr( $outro_start ); ?>"
-								min="1" step="any" style="width:80px;"
+								min="0" step="any" style="width:80px;"
 							> <?php esc_html_e( 'seconds', 'connector-for-vozcaster' ); ?>
 							<p class="description"><?php esc_html_e( 'The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%.', 'connector-for-vozcaster' ); ?></p>
 						</td>
