@@ -1,6 +1,6 @@
 === Connector for VozCaster ===
 Contributors: materron
-Tags: podcast, telegram, powerpress, automation, transcription
+Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
@@ -8,13 +8,33 @@ Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Connect your WordPress to the VozCaster Telegram bot to publish podcast episodes from voice notes, directly into PowerPress.
+You talk, VozCaster does the rest: it cleans your audio, writes the post, makes the cover and publishes the episode on your WordPress.
 
 == Description ==
 
-**VozCaster** is a Telegram bot that turns voice notes into fully published podcast episodes on your WordPress site. This plugin — **Connector for VozCaster** — is the WordPress side of the system: it receives episodes from the bot and publishes them using [PowerPress](https://wordpress.org/plugins/powerpress/).
+**You talk, VozCaster does the rest.**
 
-You send a voice note to the bot, and a published draft (or live episode) appears on your site with audio, title, content and featured image. No editing, no manual file uploads, no opening the WordPress dashboard.
+Recording an episode takes minutes. Producing it takes hours: cleaning the audio, levelling the voice, adding the intro and outro, writing a title and show notes, making a cover, uploading it all to WordPress, filling in PowerPress, numbering the episode… VozCaster does that work for you. You record, on your phone or your computer, and a few clicks later the episode is on your site, ready to review or publish.
+
+**Connector for VozCaster** is the WordPress side. It receives the finished episode from the VozCaster service and publishes it with [PowerPress](https://wordpress.org/plugins/powerpress/), on your own site and in your own media library.
+
+= What VozCaster does for you =
+
+* **The sound**: trims silences, removes noise, levels the voice and mixes your intro and outro, with the music fading under the voice. The same, every time.
+* **Several audios, one episode**: record an interview or a show in parts and VozCaster joins them, with an optional separator sound between them.
+* **The words** (Pro): transcribes what you said and writes a title, an excerpt and a full article from it, in the language you speak.
+* **The cover** (Pro): generates a featured image from what the episode is about, with the element you choose for your show, if you set one.
+* **The publishing**: uploads the audio, creates the post with PowerPress, numbers the episode and the season, and sets the featured image and the Apple Podcasts artwork. Draft or live: you decide.
+* **The platforms**: checks that your feed has everything Spotify, Apple Podcasts and the rest ask for, and walks you through submitting it to each one.
+* **Blog posts too** (Pro): dictate or jot down an idea and get a written post, without audio.
+
+= Record wherever suits you =
+
+* **The VozCaster app** (app.vozcaster.com): records from the phone or the computer browser and can be installed like any app. You connect it with one button in wp-admin, with no account to create.
+* **Telegram**: send a voice note or an audio file to the VozCaster bot.
+* **An audio file** you already recorded somewhere else, uploaded from the app or sent to the bot.
+
+Whichever you use, the result is the same: the finished episode on your WordPress.
 
 = See it in action =
 
@@ -24,51 +44,54 @@ https://www.youtube.com/watch?v=WexfifEie7M
 
 Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=WexfifEie7M).
 
-= What it does =
+= Your podcast stays yours =
 
-* **Receives audio** from the VozCaster bot and uploads it to your WordPress media library.
-* **Creates podcast episodes** using PowerPress, with episode and season numbering managed automatically.
-* **Supports multiple podcasts on the same site** — works with any PowerPress custom channels you have configured.
-* **Episodes in several audios**: record interviews or sections one by one and send them to the bot; they are joined into a single episode, with an optional separator sound between sections (VozCaster → Audio).
-* **Per-podcast settings**: title prefix, intro/outro audio, post footer (signature), fixed image style, category mapping.
-* **One-click connection from wp-admin**: press "Connect in Telegram" and confirm in the bot. No address to type, no second login.
-* **Role-based permissions**: Authors and above can publish from the bot by default; administrators can authorise custom roles too.
-* **Podcast data from Telegram**: artwork, Apple Podcasts category, owner, language and explicit flag, written straight into PowerPress, with a checklist of what platforms need before you submit.
-* **Distribute to platforms**: Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer, ordered by importance, with submit links and a status for each one.
-* **Connect from any page**: the `[vozcaster_connect]` shortcode shows the "Connect in Telegram" button on the front end, so people can connect without opening wp-admin.
-* **Optional review**: episodes from roles that cannot publish posts can be held as "Pending review", with an email to the site administrator.
+* **It lives alongside what you already have**: each episode is one more PowerPress episode. Your settings, your feed and your earlier episodes are not touched.
+* **Episode by episode**: publish one with VozCaster and the next one by hand, and switch whenever you like.
+* **No lock-in**: the audio, the posts and the feed are in your WordPress. Stop using VozCaster and your podcast keeps working exactly the same.
+
+= What the plugin adds to WordPress =
+
+* A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
+* **Per-podcast settings**: title prefix, season, intro, outro and separator sound with their mixing times, post signature, a fixed element for the covers, and category mapping.
+* **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
+* **Permissions by role**: Authors and above can publish with VozCaster by default, and administrators can authorise custom roles as well.
+* **Podcast details** (artwork, Apple Podcasts category, owner, language, explicit flag) written straight into PowerPress, with a checklist of what platforms need.
+* **Distribute**: Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer, ordered by importance, with submit links and a status for each one.
+* The `[vozcaster_connect]` **shortcode**, to show the connect buttons on any page, so people can connect without opening wp-admin.
+* **Optional review**: episodes from roles that cannot publish posts can be held as "Pending review", with an email to the administrator.
 * **AI content notice**: posts whose text was written by AI show a short, customisable notice (on by default, can be turned off).
-* **Token-based authentication** so the bot never sees your WordPress password.
+* **Token-based authentication**: VozCaster never sees your WordPress password.
 
 = Free and Pro =
 
-This plugin is free and open source, and basic publishing through the bot is free too — no card, no invitation. The audio is always processed for you: silence trimming, basic noise reduction and intro/outro mixing.
+This plugin is free and open source, and basic publishing is free too: no card, no invitation. The audio is always produced for you: silence trimming, basic noise reduction and intro/outro mixing.
 
-The paid **Pro** and **Studio** plans add the full AI workflow: automatic transcription (Whisper), a complete article written from what you said, a generated featured image, and advanced noise reduction (DeepFilter) — so the published episode arrives with title, content and cover already done, sounding its best. Pro includes 30 AI episodes per month, Studio 100. See [plans and pricing](https://vozcaster.com/pricing.html).
+The paid **Pro** and **Studio** plans add the AI part: automatic transcription (Whisper), a complete article written from what you said, a generated featured image and advanced noise reduction (DeepFilter). The episode arrives with its title, text and cover already done, sounding its best. Pro includes 30 AI episodes per month, Studio 100. See [plans and pricing](https://vozcaster.com/pricing.html).
 
 = Languages =
 
-The bot conversation is currently in Spanish. Episode content is generated in the language you record in — the transcription detects it automatically.
+The VozCaster app and bot speak Spanish and English. The episode text is written in the language you record in: the transcription detects it automatically.
 
 = How it works =
 
 1. Install and activate PowerPress and this plugin on your WordPress site.
-2. Open the new **VozCaster** menu in wp-admin and press **Connect in Telegram**. Telegram opens with the bot: press Start and confirm.
-3. Send a voice note or audio file to the bot. The episode appears on your site, ready to review or publish.
+2. Open the new **VozCaster** menu in wp-admin and press **Connect in the app** (or **Connect in Telegram**).
+3. Record, or upload an audio. VozCaster produces it and the episode appears on your site, ready to review or publish.
 
-If your site's address cannot be passed to the bot automatically (for example, WordPress installed in a subfolder), the same page tells you to send `/conectar` to the bot and paste the address instead.
+If your site's address cannot be passed on automatically (for example, WordPress installed in a subfolder), the same page tells you to send `/conectar` to the bot and paste the address instead.
 
 = Requirements =
 
 * WordPress with the [PowerPress](https://wordpress.org/plugins/powerpress/) plugin installed and activated.
-* A Telegram account.
+* A phone or a computer with a web browser for the VozCaster app, or a Telegram account.
 * A WordPress user with an authorised role: Author, Editor or Administrator by default, or any custom role the administrator authorises in **VozCaster → Access**.
 
 == Installation ==
 
 1. Upload the `connector-for-vozcaster` folder to `/wp-content/plugins/`, or install via **Plugins → Add New → Upload Plugin**.
 2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Open the **VozCaster** menu and press **Connect in Telegram**, then confirm in the bot.
+3. Open the **VozCaster** menu and press **Connect in the app** or **Connect in Telegram**, then confirm.
 4. Optional: administrators find the settings in the same menu — **Episodes** (titles, signature, image style, AI notice), **Audio** (intro/outro), **Access** (roles and connected users) and **History**.
 
 == Frequently Asked Questions ==
@@ -79,49 +102,53 @@ Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register
 
 = Do I need a paid account to use it? =
 
-This plugin is free and open source. The VozCaster bot it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription. See https://vozcaster.com/pricing.html for the current plans.
+This plugin is free and open source. The VozCaster service it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription. See https://vozcaster.com/pricing.html for the current plans.
 
 = Where is my audio stored? =
 
-Permanently, only in your own WordPress media library. The bot processes the audio on a private server operated by the author (located in Spain) and deletes the temporary files after publishing.
+Permanently, only in your own WordPress media library. VozCaster processes the audio on a private server operated by the author (located in Spain) and deletes the temporary files after publishing.
 
-= Does the bot send my audio to third-party AI services? =
+= Does VozCaster send my audio to third-party AI services? =
 
-Your **audio is never sent to a third-party AI service**. Transcription runs on a local Whisper model on the bot's server, so the audio file itself stays on that server (and on Telegram, which carries your message).
+Your **audio is never sent to a third-party AI service**. Transcription runs on a local Whisper model on VozCaster's server, so the audio file itself stays on that server (and on Telegram, if you record there).
 
-To draft the episode **title, description and content**, the bot sends the transcribed *text* to Anthropic's Claude API. If you ask the bot to generate a cover image, the *image prompt* is sent to OpenAI's image API. These providers receive text only, and only when you request content or image generation. See the "External Services" section below for the providers and their privacy policies.
+To draft the episode **title, description and content**, VozCaster sends the transcribed *text* to Anthropic's Claude API. If you ask it to generate a cover image, the *image prompt* is sent to OpenAI's image API. These providers receive text only, and only when you request content or image generation. See the "External Services" section below for the providers and their privacy policies.
 
-= Can I connect more than one WordPress site to the bot? =
+= Do I need Telegram? =
 
-Yes. Each site needs its own installation of this plugin and its own connection from Telegram (`/conectar` for each site).
+No. The VozCaster app (app.vozcaster.com) records, produces and publishes your episodes from the phone or the computer browser. Telegram is just another way in, if you prefer it.
+
+= Can I connect more than one WordPress site? =
+
+Yes. Each site needs its own installation of this plugin and its own connection: press the connect button on each site.
 
 = Can a single WordPress site host more than one podcast? =
 
-Yes. The plugin works with PowerPress's multi-podcast (custom channels) configuration. From Telegram you switch between podcasts with `/feed`.
+Yes. The plugin works with PowerPress's multi-podcast (custom channels) configuration. You switch between podcasts with `/feed` in Telegram.
 
-= Who can publish from the bot? =
+= Who can publish with VozCaster? =
 
-Anyone whose role is authorised in **VozCaster → Access**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role — users with it can then publish from the bot even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected the bot and lets you revoke access.
+Anyone whose role is authorised in **VozCaster → Access**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role: users with it can then publish with VozCaster even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected and lets you revoke access.
 
 = Can people publish without access to wp-admin, for example the teachers of a school? =
 
-Yes. Create a role for them (for example "Podcast teachers", a copy of Subscriber made with any role editor plugin) and check it in **VozCaster → Access**. Then add the `[vozcaster_connect]` shortcode to a page: once logged in, they see a "Connect in Telegram" button there and never need to open wp-admin. Avoid authorising the whole Subscriber role if anyone can register on your site.
+Yes. Create a role for them (for example "Podcast teachers", a copy of Subscriber made with any role editor plugin) and check it in **VozCaster → Access**. Then add the `[vozcaster_connect]` shortcode to a page: once logged in, they see the connect buttons there and never need to open wp-admin. Avoid authorising the whole Subscriber role if anyone can register on your site.
 
 = Can I review episodes before they go live? =
 
-Yes. Turn on **Review before publishing** in **VozCaster → Access**. Episodes sent by users whose role cannot publish posts in WordPress are saved as "Pending review" and the site administrator gets an email with a link to approve them; the bot tells the sender that the episode is waiting for review. Authors and above keep publishing directly.
+Yes. Turn on **Review before publishing** in **VozCaster → Access**. Episodes sent by users whose role cannot publish posts in WordPress are saved as "Pending review" and the site administrator gets an email with a link to approve them; VozCaster tells the sender that the episode is waiting for review. Authors and above keep publishing directly.
 
 = Why do some posts show a notice about AI? =
 
-When the bot writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **VozCaster → Episodes**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
+When VozCaster writes the text of a post with AI, the plugin shows a short notice with it so readers know. It is on by default, and you can change its text and position or turn it off in **VozCaster → Episodes**, or hide it on a single post from the editor. The notice is added when the post is displayed, so changes apply to all posts at once.
 
 = How do I get my podcast on Spotify, Apple Podcasts and the rest? =
 
-Go to **VozCaster → Distribute** in wp-admin, or send `/difundir` to the bot. First it checks that the feed has everything platforms ask for (title, description, square artwork of 1400–3000 px, category, author, owner email and at least one episode). Then it lists the platforms by importance, each with its submit link, a link to find your podcast there and a status you can mark: not submitted, submitted or live. You only submit once: after that every platform picks up new episodes by itself. The bot also checks Apple Podcasts on its own and marks it as live when your feed appears there.
+Go to **VozCaster → Distribute** in wp-admin, or send `/difundir` to the bot. First it checks that the feed has everything platforms ask for (title, description, square artwork of 1400–3000 px, category, author, owner email and at least one episode). Then it lists the platforms by importance, each with its submit link, a link to find your podcast there and a status you can mark: not submitted, submitted or live. You only submit once: after that every platform picks up new episodes by itself. VozCaster also checks Apple Podcasts on its own and marks it as live when your feed appears there.
 
-= Can I change the podcast artwork, category or owner from the bot? =
+= Can I change the podcast artwork, category or owner without opening PowerPress? =
 
-Yes, with `/podcast` (site administrators only). It writes into the same PowerPress settings, so you can keep editing them in PowerPress too. The artwork is cropped to a square and resized to 3000 px if needed.
+Yes, with `/podcast` in Telegram (site administrators only). It writes into the same PowerPress settings, so you can keep editing them in PowerPress too. The artwork is cropped to a square and resized to 3000 px if needed.
 
 = Does the plugin add links to my site? =
 
@@ -133,12 +160,12 @@ For documentation, see the [VozCaster manual](https://vozcaster.com/manual). For
 
 == External Services ==
 
-This plugin requires an external service to function: the **VozCaster bot**, a Telegram bot operated by the plugin author (Miguel Ángel Terrón Bote). The plugin is the WordPress-side component; the bot performs audio processing and orchestrates publication.
+This plugin requires an external service to function: **VozCaster**, operated by the plugin author (Miguel Ángel Terrón Bote), which you use through its web app (https://app.vozcaster.com) or its Telegram bot. The plugin is the WordPress-side component; the VozCaster service performs audio processing and orchestrates publication.
 
 The following data is transmitted:
 
 1. **From the bot to your WordPress site, via this plugin's REST API**
-   - Audio files received by the bot (sent by you via Telegram).
+   - Audio files you recorded in the VozCaster app or sent to the bot via Telegram.
    - Optional featured images.
    - Episode metadata: title, description, content, episode number, season, feed slug.
    - An authentication token issued to your WordPress user during the connection flow.
