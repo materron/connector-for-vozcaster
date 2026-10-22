@@ -121,13 +121,12 @@ class VPConn_AI_Notice {
 
 	private static function credit_html(): string {
 		$web = str_starts_with( get_locale(), 'es' ) ? 'https://vozcaster.com' : 'https://vozcaster.com/en/';
-		$bot = 'https://t.me/' . ltrim( (string) get_option( 'vpconn_bot_username', 'VozCasterBot' ), '@' );
 
 		return sprintf(
-			/* translators: 1: link to the VozCaster website, 2: link to the Telegram bot. */
-			esc_html__( 'Published with %1$s, the Telegram bot that turns your voice into a published podcast episode. %2$s.', 'connector-for-vozcaster' ),
+			/* translators: 1: link to the VozCaster website, 2: "Try it free" link to the same website. */
+			esc_html__( 'Published with %1$s: you talk, VozCaster does the rest. %2$s.', 'connector-for-vozcaster' ),
 			'<a href="' . esc_url( $web ) . '">VozCaster</a>',
-			'<a href="' . esc_url( $bot ) . '">' . esc_html__( 'Try it free', 'connector-for-vozcaster' ) . '</a>'
+			'<a href="' . esc_url( $web ) . '">' . esc_html__( 'Try it free', 'connector-for-vozcaster' ) . '</a>'
 		);
 	}
 

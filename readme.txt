@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.12.0
+Stable tag: 1.12.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,6 +219,11 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.12.1 =
+* Changed: the texts in wp-admin (VozCaster → Connect, the settings pages and the plugin description) now present VozCaster as what it is: you talk, VozCaster does the production and publishes here, from the VozCaster app or from Telegram.
+* Changed: the optional "Published with VozCaster" credit links to vozcaster.com instead of the Telegram bot.
+* Fix: the image style description still said the text was prepended verbatim to the cover prompt; it is a recurring element woven into each cover.
 
 = 1.12.0 =
 * Changed: default mixing times follow the length of your music — the intro plays alone for 20 s and drops to 30 % within 3 s, the outro mirrors it so its last 20 s play alone; music of 20 s or less plays whole. Saved settings are kept. The outro can now start 0 s before the end of the voice (whole, after it).
