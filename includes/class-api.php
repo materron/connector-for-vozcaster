@@ -536,7 +536,7 @@ class VPConn_API {
 			}
 		}
 		if ( isset( $body['outro_fade_start'] ) ) {
-			update_option( 'vpconn_outro_fade_start', max( 1, (float) $body['outro_fade_start'] ) );
+			update_option( 'vpconn_outro_fade_start', max( 0, (float) $body['outro_fade_start'] ) );
 		}
 		if ( isset( $body['outro_duck_volume'] ) ) {
 			$pct = (float) $body['outro_duck_volume'];

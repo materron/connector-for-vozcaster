@@ -160,7 +160,7 @@ class VPConn_Settings {
 					// Guardar como segundo absoluto: duck_start + knee_delay
 					update_option( 'vpconn_intro_knee_time', $duck_start + $knee_delay );
 				}
-				update_option( 'vpconn_outro_fade_start',  max( 1, $outro_start ) );
+				update_option( 'vpconn_outro_fade_start',  max( 0, $outro_start ) );
 				update_option( 'vpconn_outro_duck_volume', min( 100, max( 1, $outro_vol ) ) );
 
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'mix_config_saved' ], self::back_url() ) );
@@ -888,7 +888,7 @@ class VPConn_Settings {
 							<input
 								type="number" id="outro_fade_start" name="outro_fade_start"
 								value="<?php echo esc_attr( $outro_start ); ?>"
-								min="1" step="any" style="width:80px;"
+								min="0" step="any" style="width:80px;"
 							> <?php esc_html_e( 'seconds', 'connector-for-vozcaster' ); ?>
 							<p class="description"><?php esc_html_e( 'The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%.', 'connector-for-vozcaster' ); ?></p>
 						</td>

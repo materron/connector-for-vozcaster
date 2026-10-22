@@ -92,7 +92,7 @@ class VPConn_Media {
 			'intro_duck_volume' => (float) get_option( 'vpconn_intro_duck_volume', self::MIX_DUCK_PCT ),
 			'intro_fade_end'    => '' !== $fade_end_raw ? (float) $fade_end_raw : null,
 			'intro_knee_time'   => $knee,
-			'outro_fade_start'  => (float) get_option( 'vpconn_outro_fade_start', null !== $outro_len ? max( 1.0, $outro_len - self::MIX_SOLO_S ) : 17.0 ),
+			'outro_fade_start'  => (float) get_option( 'vpconn_outro_fade_start', null !== $outro_len ? max( 0.0, $outro_len - self::MIX_SOLO_S ) : 17.0 ),
 			'outro_duck_volume' => (float) get_option( 'vpconn_outro_duck_volume', self::MIX_DUCK_PCT ),
 		];
 	}
