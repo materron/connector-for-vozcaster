@@ -137,7 +137,7 @@ class VPConn_Pairing {
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Connect with VozCaster', 'connector-for-vozcaster' ); ?></h1>
 			<p style="max-width:640px;">
-				<?php esc_html_e( 'VozCaster is a Telegram bot that turns your voice notes into published podcast episodes on this site. Connect your account once and publish from Telegram.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'You talk, VozCaster does the rest: it cleans your audio, writes the post, makes the cover and publishes the episode on this site. Connect your account once, then record in the VozCaster app or in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<?php if ( ! $pp_active ) : ?>

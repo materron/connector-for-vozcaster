@@ -469,7 +469,7 @@ class VPConn_Settings {
 			<?php /* ----- Episode titles ----- */ ?>
 			<h2><?php esc_html_e( 'Episode titles', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Define the prefix prepended to the number and title of each episode. Can also be changed from the Telegram bot with /settings.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">
@@ -562,7 +562,7 @@ class VPConn_Settings {
 			<?php /* ----- Post footer ----- */ ?>
 			<h2><?php esc_html_e( 'Post footer (signature)', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'HTML or Gutenberg block markup appended automatically to every post published by the bot. You can also edit it from the Telegram bot with /firma.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">
@@ -594,7 +594,7 @@ class VPConn_Settings {
 			<?php /* ----- Image style ----- */ ?>
 			<h2><?php esc_html_e( 'Image style', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">
@@ -683,7 +683,7 @@ class VPConn_Settings {
 			<?php /* ----- Intro & Outro ----- */ ?>
 			<h2><?php esc_html_e( 'Intro, outro &amp; separator', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Upload your intro, outro and separator audio files here. They can also be uploaded from the Telegram bot via the Intro/Outro menu.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu).', 'connector-for-vozcaster' ); ?>
 			</p>
 			<table class="form-table" role="presentation">
 				<tr>
@@ -817,7 +817,7 @@ class VPConn_Settings {
 			<?php /* ----- Audio mix settings ----- */ ?>
 			<h2><?php esc_html_e( 'Audio mix settings (intro/outro)', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from the Telegram bot.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">
@@ -915,7 +915,7 @@ class VPConn_Settings {
 			<?php /* ----- Who can publish from the bot ----- */ ?>
 			<h2><?php esc_html_e( 'Who can publish from the bot', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
-				<?php esc_html_e( 'Users with the following roles are authorized to publish from the Telegram bot, in every podcast of this site. They connect with their usual WordPress account; no password goes through Telegram.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Users with the following roles are authorized to publish with VozCaster (the app or the Telegram bot), in every podcast of this site. They connect with their usual WordPress account; their password never goes through VozCaster.', 'connector-for-vozcaster' ); ?>
 			</p>
 
 			<form method="post" action="">

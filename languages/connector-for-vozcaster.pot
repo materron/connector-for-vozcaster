@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.11.0\n"
+"Project-Id-Version: Connector for VozCaster 1.12.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-13T09:42:59+00:00\n"
+"POT-Creation-Date: 2026-10-22T15:46:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: connector-for-vozcaster\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #. Description of the plugin
 #: connector-for-vozcaster.php
-msgid "Connect your WordPress to the VozCaster Telegram bot — publish podcast episodes from voice notes directly into PowerPress."
+msgid "You talk, VozCaster does the rest: it produces your podcast episodes and publishes them here with PowerPress, from the VozCaster app or Telegram."
 msgstr ""
 
 #. Author of the plugin
@@ -43,41 +43,41 @@ msgstr ""
 msgid "The content of this post was generated automatically with artificial intelligence from the audio transcript. It may contain errors or inaccuracies."
 msgstr ""
 
-#. translators: 1: link to the VozCaster website, 2: link to the Telegram bot.
-#: includes/class-ai-notice.php:128
+#. translators: 1: link to the VozCaster website, 2: "Try it free" link to the same website.
+#: includes/class-ai-notice.php:127
 #, php-format
-msgid "Published with %1$s, the Telegram bot that turns your voice into a published podcast episode. %2$s."
+msgid "Published with %1$s: you talk, VozCaster does the rest. %2$s."
 msgstr ""
 
-#: includes/class-ai-notice.php:130
+#: includes/class-ai-notice.php:129
 msgid "Try it free"
 msgstr ""
 
-#: includes/class-ai-notice.php:144
-#: includes/class-pairing.php:99
+#: includes/class-ai-notice.php:143
+#: includes/class-pairing.php:108
 #: includes/class-settings.php:75
 #: includes/class-settings.php:76
 msgid "VozCaster"
 msgstr ""
 
-#: includes/class-ai-notice.php:156
+#: includes/class-ai-notice.php:155
 msgid "This post was written with AI from the audio of the episode."
 msgstr ""
 
-#: includes/class-ai-notice.php:159
+#: includes/class-ai-notice.php:158
 msgid "Hide the AI notice on this post"
 msgstr ""
 
-#: includes/class-ai-notice.php:162
+#: includes/class-ai-notice.php:161
 msgid "The AI notice is turned off for the whole site in VozCaster → Episodes."
 msgstr ""
 
-#: includes/class-api.php:1349
+#: includes/class-api.php:1323
 msgid "No file received."
 msgstr ""
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1386
+#: includes/class-api.php:1360
 #, php-format
 msgid "File type not allowed: %s"
 msgstr ""
@@ -310,91 +310,105 @@ msgstr ""
 msgid "The VozCaster bot checks Apple Podcasts by itself and marks it as live when your feed appears there. Use /difundir in the bot to see this list on your phone."
 msgstr ""
 
-#: includes/class-pairing.php:98
-#: includes/class-pairing.php:108
-#: includes/class-pairing.php:129
-#: includes/class-pairing.php:329
+#: includes/class-pairing.php:107
+#: includes/class-pairing.php:117
+#: includes/class-pairing.php:138
+#: includes/class-pairing.php:366
 msgid "Connect with VozCaster"
 msgstr ""
 
-#: includes/class-pairing.php:109
+#: includes/class-pairing.php:118
 msgid "Connect"
 msgstr ""
 
-#: includes/class-pairing.php:131
-msgid "VozCaster is a Telegram bot that turns your voice notes into published podcast episodes on this site. Connect your account once and publish from Telegram."
+#: includes/class-pairing.php:140
+msgid "You talk, VozCaster does the rest: it cleans your audio, writes the post, makes the cover and publishes the episode on this site. Connect your account once, then record in the VozCaster app or in Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:136
+#: includes/class-pairing.php:145
 msgid "PowerPress is not active. Install and activate it before connecting, so episodes reach your podcast feed."
 msgstr ""
 
-#: includes/class-pairing.php:142
+#: includes/class-pairing.php:151
 msgid "Your account is already connected to the bot. Connecting again replaces the previous connection, and with several podcasts it switches the one you publish to."
 msgstr ""
 
-#: includes/class-pairing.php:158
-#: includes/class-pairing.php:250
+#: includes/class-pairing.php:171
+#: includes/class-pairing.php:260
+msgid "Connect in the app"
+msgstr ""
+
+#: includes/class-pairing.php:172
+#: includes/class-pairing.php:265
 msgid "Connect in Telegram"
 msgstr ""
 
-#: includes/class-pairing.php:167
-#: includes/class-pairing.php:257
-msgid "Telegram opens with the bot. Press Start and confirm the connection there. The link works once and expires in 15 minutes."
+#: includes/class-pairing.php:183
+msgid "The app opens in a new tab, ready to record from your phone or computer; you can add it to your home screen. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
 msgstr ""
 
-#: includes/class-pairing.php:171
+#: includes/class-pairing.php:187
 msgid "The address of this site cannot be passed to the bot automatically. Open the bot, send /conectar and paste this address:"
 msgstr ""
 
-#: includes/class-pairing.php:176
-#: includes/class-pairing.php:232
+#: includes/class-pairing.php:192
+#: includes/class-pairing.php:248
 msgid "Open the bot in Telegram"
 msgstr ""
 
-#: includes/class-pairing.php:202
+#: includes/class-pairing.php:218
 msgid "Log in with your account on this site to connect it with the VozCaster bot and publish podcast episodes from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:204
+#: includes/class-pairing.php:220
 msgid "Log in"
 msgstr ""
 
-#: includes/class-pairing.php:212
+#: includes/class-pairing.php:228
 msgid "Your account is not authorized to publish from VozCaster yet. Ask the site administrator for access."
 msgstr ""
 
-#: includes/class-pairing.php:223
+#: includes/class-pairing.php:239
 msgid "Your account is already connected to the bot."
 msgstr ""
 
-#: includes/class-pairing.php:223
+#: includes/class-pairing.php:239
 msgid "Connecting again replaces the previous connection."
 msgstr ""
 
-#: includes/class-pairing.php:229
+#: includes/class-pairing.php:245
 msgid "Open the bot, send /conectar and paste this address:"
 msgstr ""
 
 #. translators: %s: podcast name.
-#: includes/class-pairing.php:249
+#: includes/class-pairing.php:259
+#, php-format
+msgid "Connect «%s» in the app"
+msgstr ""
+
+#. translators: %s: podcast name.
+#: includes/class-pairing.php:264
 #, php-format
 msgid "Connect «%s» in Telegram"
 msgstr ""
 
-#: includes/class-pairing.php:270
+#: includes/class-pairing.php:278
+msgid "The app opens in a new tab, ready to record from your phone or computer. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
+msgstr ""
+
+#: includes/class-pairing.php:291
 msgid "Your role is not authorized to publish from VozCaster."
 msgstr ""
 
-#: includes/class-pairing.php:325
+#: includes/class-pairing.php:362
 msgid "Publish your podcast from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:326
+#: includes/class-pairing.php:363
 msgid "Connect your account with the VozCaster bot in one click."
 msgstr ""
 
-#: includes/class-pairing.php:330
+#: includes/class-pairing.php:367
 msgid "Dismiss"
 msgstr ""
 
@@ -557,7 +571,7 @@ msgid "Episode titles"
 msgstr ""
 
 #: includes/class-settings.php:472
-msgid "Define the prefix prepended to the number and title of each episode. Can also be changed from the Telegram bot with /settings."
+msgid "Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram."
 msgstr ""
 
 #: includes/class-settings.php:481
@@ -635,7 +649,7 @@ msgid "Post footer (signature)"
 msgstr ""
 
 #: includes/class-settings.php:565
-msgid "HTML or Gutenberg block markup appended automatically to every post published by the bot. You can also edit it from the Telegram bot with /firma."
+msgid "HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram."
 msgstr ""
 
 #: includes/class-settings.php:574
@@ -655,7 +669,7 @@ msgid "Image style"
 msgstr ""
 
 #: includes/class-settings.php:597
-msgid "Fixed text prepended verbatim to the front of every AI-generated cover image prompt for this podcast (e.g. a recurring subject or look you always want). You can also edit it from the Telegram bot with /estilo."
+msgid "A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram."
 msgstr ""
 
 #: includes/class-settings.php:606
@@ -731,7 +745,7 @@ msgid "Intro, outro &amp; separator"
 msgstr ""
 
 #: includes/class-settings.php:686
-msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from the Telegram bot via the Intro/Outro menu."
+msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu)."
 msgstr ""
 
 #: includes/class-settings.php:690
@@ -839,7 +853,7 @@ msgid "Audio mix settings (intro/outro)"
 msgstr ""
 
 #: includes/class-settings.php:820
-msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from the Telegram bot."
+msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster."
 msgstr ""
 
 #: includes/class-settings.php:829
@@ -912,7 +926,7 @@ msgid "Who can publish from the bot"
 msgstr ""
 
 #: includes/class-settings.php:918
-msgid "Users with the following roles are authorized to publish from the Telegram bot, in every podcast of this site. They connect with their usual WordPress account; no password goes through Telegram."
+msgid "Users with the following roles are authorized to publish with VozCaster (the app or the Telegram bot), in every podcast of this site. They connect with their usual WordPress account; their password never goes through VozCaster."
 msgstr ""
 
 #: includes/class-settings.php:925
