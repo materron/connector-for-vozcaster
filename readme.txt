@@ -116,7 +116,7 @@ To draft the episode **title, description and content**, VozCaster sends the tra
 
 = Do I need Telegram? =
 
-No. The VozCaster app (app.vozcaster.com) records, produces and publishes your episodes from the phone or the computer browser. Telegram is just another way in, if you prefer it.
+No. The VozCaster app (app.vozcaster.com) does everything the bot does, from the phone or the computer browser: record, produce and publish episodes, write blog posts, edit the podcast details and submit the feed to platforms. Telegram is just another way in, if you prefer it.
 
 = Can I connect more than one WordPress site? =
 
@@ -124,7 +124,7 @@ Yes. Each site needs its own installation of this plugin and its own connection:
 
 = Can a single WordPress site host more than one podcast? =
 
-Yes. The plugin works with PowerPress's multi-podcast (custom channels) configuration. You switch between podcasts with `/feed` in Telegram.
+Yes. The plugin works with PowerPress's multi-podcast (custom channels) configuration. You switch between podcasts in the app's site settings, or with `/feed` in Telegram.
 
 = Who can publish with VozCaster? =
 
@@ -144,11 +144,11 @@ When VozCaster writes the text of a post with AI, the plugin shows a short notic
 
 = How do I get my podcast on Spotify, Apple Podcasts and the rest? =
 
-Go to **VozCaster → Distribute** in wp-admin, or send `/difundir` to the bot. First it checks that the feed has everything platforms ask for (title, description, square artwork of 1400–3000 px, category, author, owner email and at least one episode). Then it lists the platforms by importance, each with its submit link, a link to find your podcast there and a status you can mark: not submitted, submitted or live. You only submit once: after that every platform picks up new episodes by itself. VozCaster also checks Apple Podcasts on its own and marks it as live when your feed appears there.
+Go to **VozCaster → Distribute** in wp-admin, open **Distribute to platforms** in the app, or send `/difundir` to the bot. First it checks that the feed has everything platforms ask for (title, description, square artwork of 1400–3000 px, category, author, owner email and at least one episode). Then it lists the platforms by importance, each with its submit link, a link to find your podcast there and a status you can mark: not submitted, submitted or live. You only submit once: after that every platform picks up new episodes by itself. VozCaster also checks Apple Podcasts on its own and marks it as live when your feed appears there.
 
 = Can I change the podcast artwork, category or owner without opening PowerPress? =
 
-Yes, with `/podcast` in Telegram (site administrators only). It writes into the same PowerPress settings, so you can keep editing them in PowerPress too. The artwork is cropped to a square and resized to 3000 px if needed.
+Yes, in **Podcast details** in the app or with `/podcast` in Telegram (site administrators only). It writes into the same PowerPress settings, so you can keep editing them in PowerPress too. The artwork is cropped to a square and resized to 3000 px if needed.
 
 = Does the plugin add links to my site? =
 
