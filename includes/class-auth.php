@@ -218,7 +218,9 @@ class VPConn_Auth {
 	 * Llamado desde el endpoint REST GET /auth/iniciar.
 	 */
 	public static function initiate( string $state, int $telegram_id ): void {
-		if ( ! preg_match( self::STATE_PATTERN, $state ) || $telegram_id <= 0 ) {
+		// Accounts created in the VozCaster app have negative ids (they never
+		// clash with a Telegram one); 0 is the only invalid id.
+		if ( ! preg_match( self::STATE_PATTERN, $state ) || 0 === $telegram_id ) {
 			status_header( 400 );
 			wp_die(
 				esc_html__( 'Invalid parameters.', 'connector-for-vozcaster' ),

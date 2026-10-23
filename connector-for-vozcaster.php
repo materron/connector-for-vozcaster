@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: You talk, VozCaster does the rest: it produces your podcast episodes and publishes them here with PowerPress, from the VozCaster app or Telegram.
- * Version:     1.12.1
+ * Version:     1.12.2
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.12.1' );
+define( 'VPCONN_VERSION', '1.12.2' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
