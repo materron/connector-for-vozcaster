@@ -268,7 +268,14 @@ class VPConn_API {
 						'required' => false,
 						'type'     => 'string',
 						'default'  => 'draft',
-						'enum'     => [ 'draft', 'publish', 'pending' ],
+						'enum'     => [ 'draft', 'publish', 'pending', 'future' ],
+					],
+					// With status "future": when to publish, in the site's time zone (Y-m-d H:i).
+					'date'            => [
+						'required'          => false,
+						'type'              => 'string',
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
 					],
 					'feed_slug'            => [
 						'required'          => false,
@@ -431,7 +438,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule' ],
 			]
 		);
 	}
@@ -892,6 +899,17 @@ class VPConn_API {
 		// With review on, roles that cannot publish posts land as "pending".
 		$status               = VPConn_Review::effective_status( (string) $request->get_param( 'status' ) );
 		$held_for_review      = $status !== $request->get_param( 'status' );
+		$scheduled_at         = null;
+		if ( 'future' === $status ) {
+			$scheduled_at = date_create_immutable( (string) $request->get_param( 'date' ), wp_timezone() );
+			if ( ! $scheduled_at || $scheduled_at->getTimestamp() <= time() ) {
+				return new WP_Error(
+					'vpconn_bad_date',
+					__( 'The scheduled date must be in the future.', 'connector-for-vozcaster' ),
+					[ 'status' => 400 ]
+				);
+			}
+		}
 		$transcript_url       = $request->get_param( 'transcript_url' );
 		$feed_slug            = $request->get_param( 'feed_slug' ) ?: 'podcast';
 		// category_slug is the WordPress category to assign to the post.
@@ -930,6 +948,12 @@ class VPConn_API {
 			'post_status'  => $status,
 			'post_type'    => 'post',
 		];
+
+		if ( $scheduled_at ) {
+			// WordPress publishes it by itself at that time.
+			$post_data['post_date']     = $scheduled_at->format( 'Y-m-d H:i:s' );
+			$post_data['post_date_gmt'] = get_gmt_from_date( $post_data['post_date'] );
+		}
 
 		if ( $author_id > 0 ) {
 			$post_data['post_author'] = $author_id;

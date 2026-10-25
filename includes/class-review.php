@@ -29,7 +29,7 @@ class VPConn_Review {
 	 * Status the post is really saved with, for the current user.
 	 */
 	public static function effective_status( string $requested ): string {
-		if ( 'publish' === $requested && self::is_enabled() && ! current_user_can( 'publish_posts' ) ) {
+		if ( in_array( $requested, [ 'publish', 'future' ], true ) && self::is_enabled() && ! current_user_can( 'publish_posts' ) ) {
 			return 'pending';
 		}
 		return $requested;

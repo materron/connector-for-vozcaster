@@ -1030,3 +1030,6 @@ msgstr ""
 #: includes/class-settings.php:1061
 msgid "Clear history"
 msgstr ""
+
+msgid "The scheduled date must be in the future."
+msgstr ""

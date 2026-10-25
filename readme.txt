@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.12.2
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -219,6 +219,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.13.0 =
+* New: episodes can be scheduled from the VozCaster app — WordPress publishes them by itself at the chosen date and time. With "Review before publishing" on, roles that cannot publish still send them to review.
 
 = 1.12.2 =
 * Fix: signing in to WordPress from the VozCaster app (typing your site's address) was refused for app accounts not linked to Telegram.
