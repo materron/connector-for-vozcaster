@@ -328,13 +328,17 @@ class VPConn_Relay {
 		wp_register_style( 'vpconn-pickup', VPCONN_URL . 'assets/css/pickup.css', [], VPCONN_VERSION );
 		wp_register_script( 'vpconn-pickup', VPCONN_URL . 'assets/js/pickup.js', [], VPCONN_VERSION, true );
 
-		$items   = is_wp_error( $info ) ? [] : (array) ( $info['items'] ?? [] );
-		$titles  = [];
-		$publish = false;
+		$items     = is_wp_error( $info ) ? [] : (array) ( $info['items'] ?? [] );
+		$titles    = [];
+		$publish   = false; // An episode or post is waiting.
+		$goes_live = false; // ...and it will be published (now or scheduled), not kept as a draft.
 		foreach ( $items as $item ) {
 			if ( in_array( $item['kind'] ?? '', [ 'episode', 'post' ], true ) ) {
 				$publish  = true;
 				$titles[] = (string) ( $item['summary'] ?? '' );
+				if ( in_array( $item['status'] ?? '', [ 'publish', 'future' ], true ) ) {
+					$goes_live = true;
+				}
 			}
 		}
 		wp_localize_script(
@@ -385,9 +389,9 @@ class VPConn_Relay {
 					echo esc_html(
 						1 === count( $titles )
 							/* translators: %s: episode or post title. */
-							? sprintf( __( '«%s» is ready to be published', 'connector-for-vozcaster' ), $titles[0] )
+							? sprintf( __( '«%s» is ready for your site', 'connector-for-vozcaster' ), $titles[0] )
 							/* translators: %d: number of episodes or posts. */
-							: sprintf( __( '%d episodes are ready to be published', 'connector-for-vozcaster' ), count( $titles ) )
+							: sprintf( __( '%d episodes are ready for your site', 'connector-for-vozcaster' ), count( $titles ) )
 					);
 					?>
 				</h1>
@@ -397,7 +401,15 @@ class VPConn_Relay {
 			<p class="vpconn-why"><?php esc_html_e( 'We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot.', 'connector-for-vozcaster' ); ?></p>
 			<p>
 				<button type="button" class="vpconn-go" id="vpconn-go">
-					<?php $publish ? esc_html_e( 'Publish now', 'connector-for-vozcaster' ) : esc_html_e( 'Apply now', 'connector-for-vozcaster' ); ?>
+					<?php
+					if ( $goes_live ) {
+						esc_html_e( 'Publish now', 'connector-for-vozcaster' );
+					} elseif ( $publish ) {
+						esc_html_e( 'Save it on my site', 'connector-for-vozcaster' );
+					} else {
+						esc_html_e( 'Apply now', 'connector-for-vozcaster' );
+					}
+					?>
 				</button>
 			</p>
 			<div id="vpconn-progress" class="vpconn-progress" hidden>

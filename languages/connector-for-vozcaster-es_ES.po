@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.12.1\n"
+"Project-Id-Version: Connector for VozCaster 1.14.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
 "vozcaster\n"
 "POT-Creation-Date: 2026-10-22T15:46:51+00:00\n"
@@ -1253,3 +1253,101 @@ msgstr "Borrar historial"
 
 msgid "The scheduled date must be in the future."
 msgstr "La fecha programada tiene que ser futura."
+
+#: includes/class-relay.php
+msgid "Collecting from VozCaster…"
+msgstr "Recogiendo de VozCaster…"
+
+#: includes/class-relay.php
+msgid "Bringing the audio…"
+msgstr "Trayendo el audio…"
+
+#: includes/class-relay.php
+msgid "Updating VozCaster with your site settings…"
+msgstr "Actualizando VozCaster con los ajustes de tu web…"
+
+#: includes/class-relay.php
+msgid "Done. Everything VozCaster had waiting is now on your site."
+msgstr "Hecho. Todo lo que VozCaster tenía esperando ya está en tu web."
+
+#: includes/class-relay.php
+msgid "Published:"
+msgstr "Publicado:"
+
+#: includes/class-relay.php
+msgid "Saved as a draft:"
+msgstr "Guardado como borrador:"
+
+#: includes/class-relay.php
+msgid "Scheduled:"
+msgstr "Programado:"
+
+#: includes/class-relay.php
+msgid "Sent for review."
+msgstr "Enviado a revisión."
+
+#: includes/class-relay.php
+msgid "Something failed:"
+msgstr "Algo ha fallado:"
+
+#: includes/class-relay.php
+msgid "Try again"
+msgstr "Volver a intentarlo"
+
+#. translators: %s: site name.
+#: includes/class-relay.php
+#, php-format
+msgid "VozCaster — %s"
+msgstr "VozCaster — %s"
+
+#: includes/class-relay.php
+msgid "This link is no longer valid"
+msgstr "Este enlace ya no sirve"
+
+#: includes/class-relay.php
+msgid "It was already used, or it expired. If something is still waiting, VozCaster will send you a new link."
+msgstr "Ya se usó o ha caducado. Si queda algo esperando, VozCaster te enviará un enlace nuevo."
+
+#: includes/class-relay.php
+msgid "Nothing is waiting"
+msgstr "No hay nada esperando"
+
+#: includes/class-relay.php
+msgid "Your site already has everything VozCaster had for it."
+msgstr "Tu web ya tiene todo lo que VozCaster tenía para ella."
+
+#. translators: %s: episode or post title.
+#: includes/class-relay.php
+#, php-format
+msgid "«%s» is ready for your site"
+msgstr "«%s» está listo para tu web"
+
+#. translators: %d: number of episodes or posts.
+#: includes/class-relay.php
+#, php-format
+msgid "%d episodes are ready for your site"
+msgstr "%d episodios están listos para tu web"
+
+#: includes/class-relay.php
+msgid "Your changes in VozCaster are ready to be applied"
+msgstr "Tus cambios en VozCaster están listos para aplicarse"
+
+#: includes/class-relay.php
+msgid "We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot."
+msgstr "Lo recogemos desde aquí porque tu hosting bloquea las conexiones directas de VozCaster: tu navegador puede llegar a tu web, VozCaster no."
+
+#: includes/class-relay.php
+msgid "Publish now"
+msgstr "Publicar ahora"
+
+#: includes/class-relay.php
+msgid "Save it on my site"
+msgstr "Guardarlo en mi web"
+
+#: includes/class-relay.php
+msgid "Apply now"
+msgstr "Aplicar ahora"
+
+#: includes/class-relay.php
+msgid "To skip this step next time, ask your hosting to let VozCaster reach /wp-json/vozpress/ on your site."
+msgstr "Para ahorrarte este paso la próxima vez, pide a tu hosting que deje a VozCaster llegar a /wp-json/vozpress/ de tu web."

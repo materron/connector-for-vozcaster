@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.12.1\n"
+"Project-Id-Version: Connector for VozCaster 1.14.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1032,4 +1032,102 @@ msgid "Clear history"
 msgstr ""
 
 msgid "The scheduled date must be in the future."
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Collecting from VozCaster…"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Bringing the audio…"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Updating VozCaster with your site settings…"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Done. Everything VozCaster had waiting is now on your site."
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Published:"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Saved as a draft:"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Scheduled:"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Sent for review."
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Something failed:"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Try again"
+msgstr ""
+
+#. translators: %s: site name.
+#: includes/class-relay.php
+#, php-format
+msgid "VozCaster — %s"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "This link is no longer valid"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "It was already used, or it expired. If something is still waiting, VozCaster will send you a new link."
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Nothing is waiting"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Your site already has everything VozCaster had for it."
+msgstr ""
+
+#. translators: %s: episode or post title.
+#: includes/class-relay.php
+#, php-format
+msgid "«%s» is ready for your site"
+msgstr ""
+
+#. translators: %d: number of episodes or posts.
+#: includes/class-relay.php
+#, php-format
+msgid "%d episodes are ready for your site"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Your changes in VozCaster are ready to be applied"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot."
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Publish now"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Save it on my site"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "Apply now"
+msgstr ""
+
+#: includes/class-relay.php
+msgid "To skip this step next time, ask your hosting to let VozCaster reach /wp-json/vozpress/ on your site."
 msgstr ""
