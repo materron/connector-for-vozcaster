@@ -322,7 +322,8 @@ class VPConn_Relay {
 		nocache_headers();
 		header( 'X-Robots-Tag: noindex, nofollow', true );
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-			define( 'DONOTCACHEPAGE', true ); // Page caches must never keep this page.
+			// Read by page cache plugins (WP Super Cache, W3TC, FlyingPress…): never keep this page.
+			define( 'DONOTCACHEPAGE', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 		}
 
 		wp_register_style( 'vpconn-pickup', VPCONN_URL . 'assets/css/pickup.css', [], VPCONN_VERSION );
