@@ -1,0 +1,121 @@
+/* The pickup page (?vozcaster_pickup=…): standalone, without the theme. */
+:root {
+	--vpconn-ink: #1d1b33;
+	--vpconn-muted: #5b5873;
+	--vpconn-bg: #fdf7ef;
+	--vpconn-card: #ffffff;
+	--vpconn-brand: #2e276b;
+	--vpconn-accent: #f7ad55;
+	--vpconn-line: #e8e1d6;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--vpconn-ink: #f2f0fa;
+		--vpconn-muted: #b9b5cf;
+		--vpconn-bg: #15132a;
+		--vpconn-card: #1f1c3a;
+		--vpconn-brand: #b8b0ff;
+		--vpconn-line: #34305a;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body.vpconn-pickup {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 16px;
+	background: var(--vpconn-bg);
+	color: var(--vpconn-ink);
+	font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.vpconn-card {
+	width: 100%;
+	max-width: 520px;
+	background: var(--vpconn-card);
+	border: 1px solid var(--vpconn-line);
+	border-radius: 16px;
+	padding: 28px 24px;
+}
+
+.vpconn-brand {
+	margin: 0 0 12px;
+	color: var(--vpconn-brand);
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.vpconn-card h1 {
+	margin: 0 0 12px;
+	font-size: 23px;
+	line-height: 1.25;
+}
+
+.vpconn-why,
+.vpconn-hint {
+	color: var(--vpconn-muted);
+}
+
+.vpconn-hint {
+	font-size: 14px;
+	margin-top: 24px;
+}
+
+.vpconn-go {
+	appearance: none;
+	border: 0;
+	border-radius: 10px;
+	padding: 14px 22px;
+	width: 100%;
+	background: var(--vpconn-accent);
+	color: #2e276b;
+	font: inherit;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.vpconn-go:disabled {
+	opacity: 0.6;
+	cursor: default;
+}
+
+.vpconn-bar {
+	height: 8px;
+	border-radius: 4px;
+	background: var(--vpconn-line);
+	overflow: hidden;
+}
+
+.vpconn-bar span {
+	display: block;
+	height: 100%;
+	width: 5%;
+	background: var(--vpconn-accent);
+	transition: width 0.3s;
+}
+
+.vpconn-results {
+	list-style: none;
+	padding: 0;
+	margin: 16px 0 0;
+}
+
+.vpconn-results li {
+	margin: 8px 0;
+	word-break: break-word;
+}
+
+.vpconn-results a {
+	color: var(--vpconn-brand);
+}
+
+.vpconn-bad {
+	color: #b3261e;
+}

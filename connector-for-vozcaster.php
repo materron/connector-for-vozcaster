@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: You talk, VozCaster does the rest: it produces your podcast episodes and publishes them here with PowerPress, from the VozCaster app or Telegram.
- * Version:     1.13.0
+ * Version:     1.14.0
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.13.0' );
+define( 'VPCONN_VERSION', '1.14.0' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
@@ -32,6 +32,7 @@ require_once VPCONN_DIR . 'includes/class-pairing.php';
 require_once VPCONN_DIR . 'includes/class-podcast-info.php';
 require_once VPCONN_DIR . 'includes/class-distribution.php';
 require_once VPCONN_DIR . 'includes/class-review.php';
+require_once VPCONN_DIR . 'includes/class-relay.php';
 
 register_activation_hook( __FILE__, 'vpconn_activate' );
 register_deactivation_hook( __FILE__, 'vpconn_deactivate' );
@@ -105,6 +106,7 @@ function vpconn_init(): void {
 	$pairing  = new VPConn_Pairing();
 	$podcast  = new VPConn_Podcast_Info();
 	$distrib  = new VPConn_Distribution();
+	$relay    = new VPConn_Relay();
 
 	$auth->register_hooks();
 	$api->register_hooks();
@@ -113,4 +115,5 @@ function vpconn_init(): void {
 	$pairing->register_hooks();
 	$podcast->register_hooks();
 	$distrib->register_hooks();
+	$relay->register_hooks();
 }
