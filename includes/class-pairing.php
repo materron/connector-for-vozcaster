@@ -307,6 +307,8 @@ class VPConn_Pairing {
 			],
 			self::CODE_TTL
 		);
+		// So the connection also works when this site's hosting blocks VozCaster.
+		VPConn_Relay::register_pairing( $code, $user_id, self::describe( wp_get_current_user(), $feed ) );
 
 		$target = sanitize_key( wp_unslash( $_POST['target'] ?? 'telegram' ) );
 		if ( 'app' === $target ) {
@@ -479,6 +481,8 @@ class VPConn_Pairing {
 		}
 		// Single use: drop the code before handing out the token.
 		delete_transient( self::TRANSIENT . $code );
+		// Redeemed directly: the copy registered with VozCaster is never used.
+		VPConn_Relay::forget_pending_code( $resolved['user']->ID, $code );
 
 		$data          = self::describe( $resolved['user'], $resolved['feed'] );
 		$data['token'] = VPConn_Auth::generate_user_token( $resolved['user']->ID );

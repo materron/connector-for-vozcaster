@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,6 +100,10 @@ If your site's address cannot be passed on automatically (for example, WordPress
 
 Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register episode metadata, enclosures, season and episode numbers.
 
+= My hosting blocks VozCaster ("checking your browser"). Does it still work? =
+
+Yes, since 1.14.0. Some hostings answer any request that is not a browser with a "checking your browser" page, so VozCaster cannot reach your site. Connect with the "Connect in Telegram" or "Connect in the app" button in wp-admin (VozCaster → Connect): it works even then. When you publish, VozCaster sends you a link to your own site; open it, press the button, and your site collects the episode from your browser. To skip that extra step, ask your hosting to allow requests to `/wp-json/vozpress/` on your site.
+
 = Do I need a paid account to use it? =
 
 This plugin is free and open source. The VozCaster service it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription. See https://vozcaster.com/pricing.html for the current plans.
@@ -176,7 +180,7 @@ The following data is transmitted:
    - When a user presses **Connect in Telegram** in wp-admin, the browser opens a `t.me` link to the bot containing a single-use code and your site's address. The bot then calls this plugin to read who is connecting (username, display name, podcast name) and, after the user confirms, to redeem the code for a token.
    - When a user connects with `/conectar` instead, the browser is redirected to your WordPress login; after login, this plugin issues a token and returns it to the bot.
    - When a user presses **Connect in the app**, the browser opens the VozCaster web app (https://app.vozcaster.com, operated by the plugin author) with the same single-use code and your site's address in the link. The app hands them to the VozCaster service, which redeems the code exactly as the bot does. Recordings made in the app are sent to the VozCaster service for processing, as with Telegram.
-   - The plugin itself makes no outgoing requests; the "Connect in Telegram" and "Connect in the app" buttons only open Telegram or the app in the user's browser.
+   - When a user presses either button, the plugin also sends the VozCaster service (https://app.vozcaster.com) the same single-use code, a new token for that user, who is connecting (username, display name, podcast name) and a copy of the plugin settings the service uses (title format, season, intro/outro and their mix, podcast details, platform status). If the service then cannot reach your site — some hostings block any request that is not a browser — it uses this copy to complete the connection; otherwise it discards it. If the service cannot reach your site, the plugin also sends it the intro, outro and separator audio files.
 
 3. **From the bot's server to Telegram's servers**
    - User-sent voice messages and audio files pass through Telegram's infrastructure as part of normal bot communication. See Telegram's Privacy Policy: https://telegram.org/privacy
@@ -188,6 +192,10 @@ The following data is transmitted:
    - To draft the episode title, description and content, the bot sends the transcribed *text* of your recording to **Anthropic (Claude)**.
    - If you request a cover image, the bot sends a *text prompt* to **OpenAI** to generate the image.
    - Only text is sent, and only when content or image generation is requested. Your audio file is **never** transmitted to these providers.
+
+6. **From your WordPress site to the VozCaster service (only for sites whose hosting blocks VozCaster)**
+   - When the service cannot reach your site, it keeps the episode (audio, cover, transcript, title and text) or the settings change and sends the user a single-use link to your site. When the user opens that link and confirms, your site downloads those files and data from https://app.vozcaster.com, publishes them through this plugin's own endpoints, reports the result to the service, and sends it an updated copy of the settings listed above (and the intro/outro files if they changed).
+   - Nothing is sent unless a connected user opens that link and confirms.
 
 Audio is transcribed locally with a Whisper model on the bot's server; other audio processing (DeepFilter noise reduction, ffmpeg, and an Ollama model used only as a local fallback) also runs locally. The audio file itself is not sent to any third-party AI service.
 
@@ -219,6 +227,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.14.0 =
+* New: VozCaster works with sites whose hosting blocks it. Some hostings answer any request that does not come from a browser with a "checking your browser" page, so VozCaster could not reach the plugin. Now pressing "Connect" also registers the connection with VozCaster, which uses it only if it cannot reach your site. On those sites, episodes and setting changes wait in VozCaster until you open the link it sends you: your site collects them from your browser and publishes as usual. Sites that VozCaster can reach work exactly as before.
 
 = 1.13.0 =
 * New: episodes can be scheduled from the VozCaster app — WordPress publishes them by itself at the chosen date and time. With "Review before publishing" on, roles that cannot publish still send them to review.

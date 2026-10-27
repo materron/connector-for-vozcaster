@@ -82,7 +82,10 @@ class VPConn_Auth {
 			]
 		);
 		if ( empty( $ids ) ) {
-			return false;
+			// A connection made through VozCaster's copy (hosting blocking it)
+			// becomes real the first time its token is used.
+			$promoted = VPConn_Relay::promote_pending_token( $token );
+			return $promoted && self::is_user_allowed( $promoted ) ? $promoted : false;
 		}
 		$user_id = (int) $ids[0];
 		return self::is_user_allowed( $user_id ) ? $user_id : false;
