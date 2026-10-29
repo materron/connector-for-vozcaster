@@ -1075,7 +1075,7 @@ class VPConn_API {
 				// Who VozCaster should tell that the episode waits for them.
 				'review'         => $held_for_review ? array_intersect_key(
 					VPConn_Review::describe( get_post( $post_id ) ),
-					array_flip( [ 'feed_name', 'class_name', 'reviewer_logins' ] )
+					array_flip( [ 'id', 'title', 'audio_url', 'author_name', 'feed_name', 'class_name', 'reviewer_logins' ] )
 				) : null,
 			],
 			201
