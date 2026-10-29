@@ -25,6 +25,7 @@ class VPConn_Review {
 	const META_REQUESTED  = 'vpconn_review_requested';
 	const META_COMMENT    = 'vpconn_review_comment';
 	const META_REVIEWED   = 'vpconn_reviewed_by';
+	const META_SENT       = 'vpconn_review_sent';
 	const ACTION          = 'vpconn_review';
 	const PAGE_SLUG       = 'vozcaster-review';
 
@@ -62,6 +63,7 @@ class VPConn_Review {
 		update_post_meta( $post_id, self::META_FEED, $feed );
 		update_post_meta( $post_id, self::META_CLASS, $class_id );
 		update_post_meta( $post_id, self::META_REQUESTED, $requested );
+		update_post_meta( $post_id, self::META_SENT, time() );
 		self::notify( $post_id );
 	}
 
@@ -147,7 +149,8 @@ class VPConn_Review {
 			return new WP_Error( 'vpconn_review_forbidden', __( 'You cannot review this episode.', 'connector-for-vozcaster' ), [ 'status' => 403 ] );
 		}
 		$post      = get_post( $post_id );
-		$scheduled = 'future' === get_post_meta( $post_id, self::META_REQUESTED, true ) && strtotime( $post->post_date_gmt . ' UTC' ) > time();
+		// Pending posts have no GMT date in WordPress: read the local one.
+		$scheduled = 'future' === get_post_meta( $post_id, self::META_REQUESTED, true ) && (int) get_post_timestamp( $post ) > time();
 		$update    = [ 'ID' => $post_id ];
 		if ( $scheduled ) {
 			$update['post_status'] = 'future';
@@ -217,8 +220,18 @@ class VPConn_Review {
 			'reviewer_name'   => $reviewer ? $reviewer->display_name : '',
 			'reviewer_logins' => array_values( array_filter( array_map( static fn( $id ) => get_userdata( $id )->user_login ?? '', self::reviewers_for( $post->ID ) ) ) ),
 			'comment'         => (string) get_post_meta( $post->ID, self::META_COMMENT, true ),
-			'sent'            => get_post_time( 'c', true, $post ),
+			'sent'            => wp_date( 'c', self::sent_at( $post ) ),
+			'scheduled_for'   => 'future' === get_post_meta( $post->ID, self::META_REQUESTED, true ) ? wp_date( 'c', (int) get_post_timestamp( $post ) ) : '',
 		];
+	}
+
+	/**
+	 * When the episode was sent. Not its date: a scheduled one carries the
+	 * future date (WordPress copies it into the modified date too), and
+	 * pending posts have no GMT date at all.
+	 */
+	public static function sent_at( WP_Post $post ): int {
+		return (int) get_post_meta( $post->ID, self::META_SENT, true ) ?: (int) get_post_timestamp( $post, 'modified' );
 	}
 
 	/** The episode's audio, from PowerPress's enclosure. */
@@ -327,7 +340,7 @@ class VPConn_Review {
 						esc_html__( 'By %1$s · %2$s · sent %3$s ago', 'connector-for-vozcaster' ),
 						esc_html( $info['author_name'] ),
 						esc_html( $where ),
-						esc_html( human_time_diff( (int) get_post_time( 'U', true, $post ) ) )
+						esc_html( human_time_diff( self::sent_at( $post ) ) )
 					);
 					?>
 					<?php if ( $mine ) : ?>

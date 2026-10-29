@@ -928,7 +928,8 @@ class VPConn_API {
 		$feed                 = VPConn_Access::find_feed( $feed_slug );
 		$class                = $feed ? VPConn_Classes::get_class( (int) $request->get_param( 'class_id' ), $feed ) : null;
 		$scheduled_at         = null;
-		if ( 'future' === $status ) {
+		// Held for review or not, a scheduled episode keeps its date.
+		if ( 'future' === $requested_status ) {
 			$scheduled_at = date_create_immutable( (string) $request->get_param( 'date' ), wp_timezone() );
 			if ( ! $scheduled_at || $scheduled_at->getTimestamp() <= time() ) {
 				return new WP_Error(
