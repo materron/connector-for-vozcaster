@@ -283,6 +283,11 @@ class VPConn_API {
 						'default'           => 'podcast',
 						'sanitize_callback' => 'sanitize_key',
 					],
+					'class_id'             => [
+						'required' => false,
+						'type'     => 'integer',
+						'default'  => 0,
+					],
 					'category_slug'        => [
 						'required'          => false,
 						'type'              => 'string',
@@ -416,11 +421,20 @@ class VPConn_API {
 	 * usuario autorizado.
 	 */
 	public function get_feeds(): WP_REST_Response {
-		// Since 1.8.0 there are no per-feed permissions: any authorized user can
-		// publish in every feed. `can_publish` is kept for older bot versions.
-		$feeds = array_map(
-			fn( $f ) => array_merge( $f, [ 'can_publish' => true ] ),
-			VPConn_Settings::get_powerpress_feeds()
+		// Only the podcasts this user may send to (VozCaster → Access), with
+		// what they may do there and the podcast's classes. `can_publish` is
+		// what bot versions before 1.15.0 read.
+		$user_id = get_current_user_id();
+		$feeds   = array_map(
+			static fn( $f ) => array_merge(
+				$f,
+				[
+					'can_publish' => VPConn_Access::DIRECT === $f['access'],
+					'classes'     => VPConn_Classes::describe_for_feed( $f ),
+					'last_class'  => VPConn_Classes::last_class( $user_id, $f ),
+				]
+			),
+			VPConn_Access::feeds_for_user( $user_id )
 		);
 
 		$response = new WP_REST_Response( [ 'feeds' => $feeds ] );
@@ -438,7 +452,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks' ],
 			]
 		);
 	}
@@ -896,9 +910,23 @@ class VPConn_API {
 		$featured_media       = (int) $request->get_param( 'featured_media' );
 		$podcast_audio_id     = (int) $request->get_param( 'podcast_audio_id' );
 		$telegram_id          = (int) $request->get_param( 'telegram_id' );
-		// With review on, roles that cannot publish posts land as "pending".
-		$status               = VPConn_Review::effective_status( (string) $request->get_param( 'status' ) );
-		$held_for_review      = $status !== $request->get_param( 'status' );
+		$feed_slug            = $request->get_param( 'feed_slug' ) ?: 'podcast';
+		// What this user may do in this podcast (VozCaster → Access): nothing,
+		// publish directly, or send it for review ("pending").
+		$level                = VPConn_Access::user_level( get_current_user_id(), $feed_slug );
+		if ( '' === $level ) {
+			return new WP_Error(
+				'vpconn_feed_forbidden',
+				__( 'You are not allowed to publish in this podcast.', 'connector-for-vozcaster' ),
+				[ 'status' => 403 ]
+			);
+		}
+		$requested_status     = (string) $request->get_param( 'status' );
+		$status               = VPConn_Review::effective_status( $requested_status, $feed_slug );
+		$held_for_review      = $status !== $requested_status;
+		// Optional class inside the podcast (VozCaster → Classes).
+		$feed                 = VPConn_Access::find_feed( $feed_slug );
+		$class                = $feed ? VPConn_Classes::get_class( (int) $request->get_param( 'class_id' ), $feed ) : null;
 		$scheduled_at         = null;
 		if ( 'future' === $status ) {
 			$scheduled_at = date_create_immutable( (string) $request->get_param( 'date' ), wp_timezone() );
@@ -911,7 +939,6 @@ class VPConn_API {
 			}
 		}
 		$transcript_url       = $request->get_param( 'transcript_url' );
-		$feed_slug            = $request->get_param( 'feed_slug' ) ?: 'podcast';
 		// category_slug is the WordPress category to assign to the post.
 		// When provided (new bot versions), it is used directly instead of
 		// deducing the category from feed_slug. Falls back to feed_slug for
@@ -970,9 +997,14 @@ class VPConn_API {
 		// rather than feed_slug, so sites with non-standard category slugs
 		// (e.g. Enteratec's 'el-consultorio-de-enteratec') work correctly.
 		$this->assign_podcast_category( $post_id, $category_slug );
+		if ( $class ) {
+			// Also in its class; the podcast's feed includes it either way.
+			wp_set_post_terms( $post_id, [ $class->term_id ], 'category', true );
+			VPConn_Classes::remember_class( get_current_user_id(), $feed, $class->term_id );
+		}
 
 		if ( $held_for_review ) {
-			VPConn_Review::notify( (int) $post_id );
+			VPConn_Review::hold( (int) $post_id, $feed_slug, $class ? $class->term_id : 0, $requested_status );
 		}
 
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
@@ -1038,6 +1070,12 @@ class VPConn_API {
 				'status'         => $status,
 				'episode_number' => $episode_number,
 				'season_number'  => $season_number,
+				'class_name'     => $class ? $class->name : '',
+				// Who VozCaster should tell that the episode waits for them.
+				'review'         => $held_for_review ? array_intersect_key(
+					VPConn_Review::describe( get_post( $post_id ) ),
+					array_flip( [ 'feed_name', 'class_name', 'reviewer_logins' ] )
+				) : null,
 			],
 			201
 		);
@@ -1054,8 +1092,14 @@ class VPConn_API {
 		$content        = $request->get_param( 'content' );
 		$excerpt        = $request->get_param( 'excerpt' );
 		$featured_media = (int) $request->get_param( 'featured_media' );
-		$status         = VPConn_Review::effective_status( (string) $request->get_param( 'status' ) );
-		$held           = $status !== $request->get_param( 'status' );
+		// A post without audio belongs to no podcast: it may be published
+		// directly only by someone who publishes directly somewhere, and is
+		// held for review for someone who only sends for review.
+		$requested      = (string) $request->get_param( 'status' );
+		$feeds          = VPConn_Access::feeds_for_user( get_current_user_id() );
+		$direct         = array_filter( $feeds, static fn( $f ) => VPConn_Access::DIRECT === $f['access'] );
+		$status         = ( ! $direct && in_array( $requested, [ 'publish', 'future' ], true ) ) ? 'pending' : $requested;
+		$held           = $status !== $requested;
 
 		$author_id = get_current_user_id();
 
@@ -1085,7 +1129,7 @@ class VPConn_API {
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
 
 		if ( $held ) {
-			VPConn_Review::notify( (int) $post_id );
+			VPConn_Review::hold( (int) $post_id, (string) ( $feeds[0]['slug'] ?? 'podcast' ), 0, $requested );
 		}
 
 		return new WP_REST_Response(

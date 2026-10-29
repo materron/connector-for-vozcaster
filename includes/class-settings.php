@@ -166,13 +166,6 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'mix_config_saved' ], self::back_url() ) );
 				exit;
 
-			case 'save_authorized_roles':
-				$roles = isset( $_POST['authorized_roles'] ) ? array_map( 'sanitize_key', (array) wp_unslash( $_POST['authorized_roles'] ) ) : [];
-				VPConn_Auth::set_authorized_roles( $roles );
-				VPConn_Review::set_enabled( ! empty( $_POST['review_mode'] ) );
-				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'roles_saved' ], self::back_url() ) );
-				exit;
-
 			case 'save_ai_notice':
 				VPConn_AI_Notice::save_settings(
 					! empty( $_POST['ai_notice_enabled'] ),
@@ -425,7 +418,6 @@ class VPConn_Settings {
 		}
 
 		$role_names      = wp_roles()->get_names();
-		$auth_roles      = VPConn_Auth::get_authorized_roles();
 		$connected_ids   = VPConn_Auth::get_connected_user_ids();
 		$notice_enabled  = VPConn_AI_Notice::is_enabled();
 		$notice_text     = VPConn_AI_Notice::get_custom_text();
@@ -912,57 +904,12 @@ class VPConn_Settings {
 
 			<?php elseif ( 'access' === $tab ) : ?>
 
-			<?php /* ----- Who can publish from the bot ----- */ ?>
-			<h2><?php esc_html_e( 'Who can publish from the bot', 'connector-for-vozcaster' ); ?></h2>
+			<?php /* ----- Who can publish, in which podcast ----- */ ?>
+			<h2><?php esc_html_e( 'Who can publish, in which podcast', 'connector-for-vozcaster' ); ?></h2>
+			<?php echo VPConn_Access::render( self::get_page_url( 'access' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside. ?>
 			<p class="description">
-				<?php esc_html_e( 'Users with the following roles are authorized to publish with VozCaster (the app or the Telegram bot), in every podcast of this site. They connect with their usual WordPress account; their password never goes through VozCaster.', 'connector-for-vozcaster' ); ?>
+				<?php esc_html_e( 'Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin.', 'connector-for-vozcaster' ); ?>
 			</p>
-
-			<form method="post" action="">
-				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				<input type="hidden" name="vpconn_action" value="save_authorized_roles">
-				<fieldset style="margin-top:12px;">
-					<legend class="screen-reader-text"><?php esc_html_e( 'Authorized roles', 'connector-for-vozcaster' ); ?></legend>
-					<?php foreach ( $role_names as $role_slug => $role_name ) : ?>
-						<?php $is_admin_role = ( 'administrator' === $role_slug ); ?>
-						<label style="display:block;margin-bottom:6px;">
-							<input
-								type="checkbox"
-								name="authorized_roles[]"
-								value="<?php echo esc_attr( $role_slug ); ?>"
-								<?php checked( in_array( $role_slug, $auth_roles, true ) ); ?>
-								<?php disabled( $is_admin_role ); ?>
-							>
-							<?php echo esc_html( translate_user_role( $role_name ) ); ?>
-							<?php if ( $is_admin_role ) : ?>
-								<span class="description">— <?php esc_html_e( 'always authorized', 'connector-for-vozcaster' ); ?></span>
-							<?php endif; ?>
-						</label>
-					<?php endforeach; ?>
-				</fieldset>
-				<p class="description">
-					<?php esc_html_e( 'By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin.', 'connector-for-vozcaster' ); ?>
-				</p>
-				<p style="margin-top:16px;">
-					<label>
-						<input type="checkbox" name="review_mode" value="1" <?php checked( VPConn_Review::is_enabled() ); ?>>
-						<strong><?php esc_html_e( 'Review before publishing', 'connector-for-vozcaster' ); ?></strong>
-					</label>
-				</p>
-				<p class="description">
-					<?php esc_html_e( 'Episodes sent by users whose role cannot publish posts in WordPress (for example a custom role checked above) are saved as "Pending review" instead of being published, and the site administrator gets an email to approve them. Authors and above keep publishing directly.', 'connector-for-vozcaster' ); ?>
-				</p>
-				<p class="description">
-					<?php
-					printf(
-						/* translators: %s: the [vozcaster_connect] shortcode. */
-						esc_html__( 'Tip: add the %s shortcode to any page so these users can connect the bot without opening wp-admin.', 'connector-for-vozcaster' ),
-						'<code>[vozcaster_connect]</code>'
-					);
-					?>
-				</p>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save access settings', 'connector-for-vozcaster' ); ?></button></p>
-			</form>
 
 			<h3><?php esc_html_e( 'Connected users', 'connector-for-vozcaster' ); ?></h3>
 			<p class="description">

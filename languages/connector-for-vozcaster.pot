@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.14.0\n"
+"Project-Id-Version: Connector for VozCaster 1.15.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-22T15:46:51+00:00\n"
+"POT-Creation-Date: 2026-10-29T11:43:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: connector-for-vozcaster\n"
@@ -37,6 +37,43 @@ msgstr ""
 #. Author URI of the plugin
 #: connector-for-vozcaster.php
 msgid "https://potencia.pro"
+msgstr ""
+
+#: includes/class-access.php:200
+msgid "Only the people who manage VozCaster on this site can change who publishes."
+msgstr ""
+
+#: includes/class-access.php:207
+msgid "—"
+msgstr ""
+
+#: includes/class-access.php:208
+msgid "Publishes"
+msgstr ""
+
+#: includes/class-access.php:209
+msgid "With review"
+msgstr ""
+
+#: includes/class-access.php:215
+msgid "Choose, for each role and podcast, whether its users publish directly, send their episodes for review, or cannot use that podcast. Whoever publishes directly in a podcast reviews what is sent to it and can create classes in it. Users connect with their usual WordPress account; their password never goes through VozCaster."
+msgstr ""
+
+#: includes/class-access.php:224
+#: includes/class-settings.php:927
+msgid "Role"
+msgstr ""
+
+#: includes/class-access.php:228
+msgid "Manages VozCaster"
+msgstr ""
+
+#: includes/class-access.php:267
+msgid "Administrators always publish everywhere. \"Manages VozCaster\" lets a role change this table and the classes of every podcast, without being a WordPress administrator; only administrators can change that column."
+msgstr ""
+
+#: includes/class-access.php:268
+msgid "Save access settings"
 msgstr ""
 
 #: includes/class-ai-notice.php:60
@@ -72,86 +109,169 @@ msgstr ""
 msgid "The AI notice is turned off for the whole site in VozCaster → Episodes."
 msgstr ""
 
-#: includes/class-api.php:1323
+#: includes/class-api.php:920
+msgid "You are not allowed to publish in this podcast."
+msgstr ""
+
+#: includes/class-api.php:936
+msgid "The scheduled date must be in the future."
+msgstr ""
+
+#: includes/class-api.php:1391
 msgid "No file received."
 msgstr ""
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1360
+#: includes/class-api.php:1428
 #, php-format
 msgid "File type not allowed: %s"
 msgstr ""
 
-#: includes/class-auth.php:224
+#: includes/class-auth.php:229
 msgid "Invalid parameters."
 msgstr ""
 
-#: includes/class-auth.php:225
+#: includes/class-auth.php:230
 msgid "Error"
 msgstr ""
 
-#: includes/class-auth.php:264
+#: includes/class-auth.php:269
 msgid "Link expired"
 msgstr ""
 
-#: includes/class-auth.php:265
+#: includes/class-auth.php:270
 msgid "This authorization link has expired (10 minutes)."
 msgstr ""
 
 #. translators: %s: the /conectar bot command, wrapped in a <code> tag.
-#: includes/class-auth.php:268
+#: includes/class-auth.php:273
 #, php-format
 msgid "Go back to the bot and use %s again."
 msgstr ""
 
-#: includes/class-auth.php:274
+#: includes/class-auth.php:279
 msgid "VozCaster — Link expired"
 msgstr ""
 
-#: includes/class-auth.php:281
+#: includes/class-auth.php:286
 msgid "Not authorized"
 msgstr ""
 
 #. translators: %s: the WordPress username, wrapped in a <strong> tag.
-#: includes/class-auth.php:284
+#: includes/class-auth.php:289
 #, php-format
 msgid "The role of %s is not authorized to publish from VozCaster."
 msgstr ""
 
 #. translators: %s: the plugin settings location, wrapped in an <em> tag.
-#: includes/class-auth.php:289
+#: includes/class-auth.php:294
 #, php-format
 msgid "Ask the administrator to authorize your role under %s."
 msgstr ""
 
-#: includes/class-auth.php:290
+#: includes/class-auth.php:295
 msgid "VozCaster → Access"
 msgstr ""
 
-#: includes/class-auth.php:295
+#: includes/class-auth.php:300
 msgid "VozCaster — Not authorized"
 msgstr ""
 
-#: includes/class-auth.php:315
+#: includes/class-auth.php:320
 msgid "Connected!"
 msgstr ""
 
 #. translators: %s: the user's display name, wrapped in a <strong> tag.
-#: includes/class-auth.php:318
+#: includes/class-auth.php:323
 #, php-format
 msgid "Hello, %s."
 msgstr ""
 
-#: includes/class-auth.php:321
+#: includes/class-auth.php:326
 msgid "You can now go back to the Telegram bot and continue."
 msgstr ""
 
-#: includes/class-auth.php:325
+#: includes/class-auth.php:330
 msgid "VozCaster — Connection completed"
 msgstr ""
 
-#: includes/class-auth.php:346
+#: includes/class-auth.php:351
 msgid "Back to the Telegram bot"
+msgstr ""
+
+#: includes/class-classes.php:125
+msgid "This podcast has no category, so it cannot have classes."
+msgstr ""
+
+#: includes/class-classes.php:129
+msgid "Give the class a name."
+msgstr ""
+
+#: includes/class-classes.php:194
+msgid "You do not publish directly in any podcast of this site, so you cannot manage classes."
+msgstr ""
+
+#: includes/class-classes.php:200
+msgid "A class groups the episodes of a group of students inside a podcast. They are published in the podcast as usual and also have their own page. What a student sends for review reaches the teachers of their class."
+msgstr ""
+
+#: includes/class-classes.php:208
+msgid "No classes yet."
+msgstr ""
+
+#: includes/class-classes.php:213
+msgid "Class"
+msgstr ""
+
+#: includes/class-classes.php:214
+#: includes/class-classes.php:293
+msgid "Reviewed by"
+msgstr ""
+
+#: includes/class-classes.php:215
+#: includes/class-settings.php:55
+msgid "Episodes"
+msgstr ""
+
+#: includes/class-classes.php:229
+msgid "archived"
+msgstr ""
+
+#: includes/class-classes.php:232
+msgid "Page"
+msgstr ""
+
+#: includes/class-classes.php:233
+msgid "Feed"
+msgstr ""
+
+#: includes/class-classes.php:239
+#: includes/class-distribution.php:347
+msgid "Save"
+msgstr ""
+
+#: includes/class-classes.php:242
+msgid "Nobody: reviews go to everyone who publishes in the podcast."
+msgstr ""
+
+#: includes/class-classes.php:250
+msgid "Restore"
+msgstr ""
+
+#: includes/class-classes.php:250
+msgid "Archive"
+msgstr ""
+
+#: includes/class-classes.php:264
+msgid "New class"
+msgstr ""
+
+#: includes/class-classes.php:265
+msgid "e.g. B1.1 or Mila’s students"
+msgstr ""
+
+#: includes/class-classes.php:268
+msgid "Create class"
 msgstr ""
 
 #: includes/class-distribution.php:43
@@ -216,7 +336,7 @@ msgid "Live"
 msgstr ""
 
 #: includes/class-distribution.php:276
-#: includes/class-settings.php:1034
+#: includes/class-settings.php:981
 msgid "Title"
 msgstr ""
 
@@ -233,7 +353,7 @@ msgid "Apple Podcasts category"
 msgstr ""
 
 #: includes/class-distribution.php:280
-#: includes/class-settings.php:1035
+#: includes/class-settings.php:982
 msgid "Author"
 msgstr ""
 
@@ -290,16 +410,12 @@ msgid "Find my podcast"
 msgstr ""
 
 #: includes/class-distribution.php:341
-#: includes/class-settings.php:1036
+#: includes/class-settings.php:983
 msgid "Status"
 msgstr ""
 
 #: includes/class-distribution.php:346
 msgid "Link to the podcast page (optional)"
-msgstr ""
-
-#: includes/class-distribution.php:347
-msgid "Save"
 msgstr ""
 
 #: includes/class-distribution.php:349
@@ -310,10 +426,98 @@ msgstr ""
 msgid "The VozCaster bot checks Apple Podcasts by itself and marks it as live when your feed appears there. Use /difundir in the bot to see this list on your phone."
 msgstr ""
 
+#: includes/class-frontend.php:41
+#: includes/class-frontend.php:46
+msgid "VozCaster — Review"
+msgstr ""
+
+#: includes/class-frontend.php:42
+msgid "Review"
+msgstr ""
+
+#: includes/class-frontend.php:52
+#: includes/class-frontend.php:57
+msgid "VozCaster — Classes"
+msgstr ""
+
+#: includes/class-frontend.php:53
+msgid "Classes"
+msgstr ""
+
+#: includes/class-frontend.php:65
+#: includes/class-frontend.php:70
+#: includes/class-settings.php:391
+msgid "VozCaster — Access"
+msgstr ""
+
+#: includes/class-frontend.php:66
+#: includes/class-settings.php:57
+msgid "Access"
+msgstr ""
+
+#: includes/class-frontend.php:118
+msgid "My classes"
+msgstr ""
+
+#: includes/class-frontend.php:119
+msgid "Waiting for review"
+msgstr ""
+
+#: includes/class-frontend.php:120
+msgid "Who publishes in each podcast"
+msgstr ""
+
+#: includes/class-frontend.php:125
+msgid "Log in with your account on this site to use VozCaster."
+msgstr ""
+
+#: includes/class-frontend.php:127
+#: includes/class-pairing.php:220
+msgid "Log in"
+msgstr ""
+
+#: includes/class-frontend.php:173
+msgid "Class created."
+msgstr ""
+
+#: includes/class-frontend.php:174
+msgid "Class saved."
+msgstr ""
+
+#: includes/class-frontend.php:175
+msgid "The class could not be created. Check that its name is not already used in this podcast."
+msgstr ""
+
+#: includes/class-frontend.php:176
+msgid "Episode published."
+msgstr ""
+
+#: includes/class-frontend.php:177
+msgid "Episode approved: it will be published on its scheduled date."
+msgstr ""
+
+#: includes/class-frontend.php:178
+msgid "Episode returned to its author."
+msgstr ""
+
+#: includes/class-frontend.php:179
+#: includes/class-settings.php:328
+msgid "Access settings saved."
+msgstr ""
+
+#: includes/class-frontend.php:180
+msgid "That episode is no longer waiting for review."
+msgstr ""
+
+#: includes/class-frontend.php:181
+msgid "You are not allowed to do that."
+msgstr ""
+
 #: includes/class-pairing.php:107
 #: includes/class-pairing.php:117
 #: includes/class-pairing.php:138
-#: includes/class-pairing.php:366
+#: includes/class-pairing.php:372
+#: blocks/index.js:24
 msgid "Connect with VozCaster"
 msgstr ""
 
@@ -334,12 +538,12 @@ msgid "Your account is already connected to the bot. Connecting again replaces t
 msgstr ""
 
 #: includes/class-pairing.php:171
-#: includes/class-pairing.php:260
+#: includes/class-pairing.php:264
 msgid "Connect in the app"
 msgstr ""
 
 #: includes/class-pairing.php:172
-#: includes/class-pairing.php:265
+#: includes/class-pairing.php:269
 msgid "Connect in Telegram"
 msgstr ""
 
@@ -352,7 +556,7 @@ msgid "The address of this site cannot be passed to the bot automatically. Open 
 msgstr ""
 
 #: includes/class-pairing.php:192
-#: includes/class-pairing.php:248
+#: includes/class-pairing.php:252
 msgid "Open the bot in Telegram"
 msgstr ""
 
@@ -360,78 +564,255 @@ msgstr ""
 msgid "Log in with your account on this site to connect it with the VozCaster bot and publish podcast episodes from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:220
-msgid "Log in"
-msgstr ""
-
 #: includes/class-pairing.php:228
 msgid "Your account is not authorized to publish from VozCaster yet. Ask the site administrator for access."
 msgstr ""
 
-#: includes/class-pairing.php:239
+#: includes/class-pairing.php:238
+msgid "Your account cannot send episodes to any podcast of this site yet. Ask the site administrator for access."
+msgstr ""
+
+#: includes/class-pairing.php:243
 msgid "Your account is already connected to the bot."
 msgstr ""
 
-#: includes/class-pairing.php:239
+#: includes/class-pairing.php:243
 msgid "Connecting again replaces the previous connection."
 msgstr ""
 
-#: includes/class-pairing.php:245
+#: includes/class-pairing.php:249
 msgid "Open the bot, send /conectar and paste this address:"
 msgstr ""
 
 #. translators: %s: podcast name.
-#: includes/class-pairing.php:259
+#: includes/class-pairing.php:263
 #, php-format
 msgid "Connect «%s» in the app"
 msgstr ""
 
 #. translators: %s: podcast name.
-#: includes/class-pairing.php:264
+#: includes/class-pairing.php:268
 #, php-format
 msgid "Connect «%s» in Telegram"
 msgstr ""
 
-#: includes/class-pairing.php:278
+#: includes/class-pairing.php:282
 msgid "The app opens in a new tab, ready to record from your phone or computer. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
 msgstr ""
 
-#: includes/class-pairing.php:291
+#: includes/class-pairing.php:295
 msgid "Your role is not authorized to publish from VozCaster."
 msgstr ""
 
-#: includes/class-pairing.php:362
+#: includes/class-pairing.php:368
 msgid "Publish your podcast from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:363
+#: includes/class-pairing.php:369
 msgid "Connect your account with the VozCaster bot in one click."
 msgstr ""
 
-#: includes/class-pairing.php:367
+#: includes/class-pairing.php:373
 msgid "Dismiss"
 msgstr ""
 
+#: includes/class-relay.php:352
+msgid "Collecting from VozCaster…"
+msgstr ""
+
+#: includes/class-relay.php:353
+msgid "Bringing the audio…"
+msgstr ""
+
+#: includes/class-relay.php:354
+msgid "Updating VozCaster with your site settings…"
+msgstr ""
+
+#: includes/class-relay.php:355
+msgid "Done. Everything VozCaster had waiting is now on your site."
+msgstr ""
+
+#: includes/class-relay.php:356
+msgid "Published:"
+msgstr ""
+
+#: includes/class-relay.php:357
+msgid "Saved as a draft:"
+msgstr ""
+
+#: includes/class-relay.php:358
+msgid "Scheduled:"
+msgstr ""
+
+#: includes/class-relay.php:359
+msgid "Sent for review."
+msgstr ""
+
+#: includes/class-relay.php:360
+msgid "Something failed:"
+msgstr ""
+
+#: includes/class-relay.php:361
+msgid "Try again"
+msgstr ""
+
+#. translators: %s: site name.
+#: includes/class-relay.php:374
+#, php-format
+msgid "VozCaster — %s"
+msgstr ""
+
+#: includes/class-relay.php:381
+msgid "This link is no longer valid"
+msgstr ""
+
+#: includes/class-relay.php:382
+msgid "It was already used, or it expired. If something is still waiting, VozCaster will send you a new link."
+msgstr ""
+
+#: includes/class-relay.php:384
+msgid "Nothing is waiting"
+msgstr ""
+
+#: includes/class-relay.php:385
+msgid "Your site already has everything VozCaster had for it."
+msgstr ""
+
+#. translators: %s: episode or post title.
+#: includes/class-relay.php:393
+#, php-format
+msgid "«%s» is ready for your site"
+msgstr ""
+
+#. translators: %d: number of episodes or posts.
+#: includes/class-relay.php:395
+#, php-format
+msgid "%d episodes are ready for your site"
+msgstr ""
+
+#: includes/class-relay.php:400
+msgid "Your changes in VozCaster are ready to be applied"
+msgstr ""
+
+#: includes/class-relay.php:402
+msgid "We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot."
+msgstr ""
+
+#: includes/class-relay.php:407
+msgid "Publish now"
+msgstr ""
+
+#: includes/class-relay.php:409
+msgid "Save it on my site"
+msgstr ""
+
+#: includes/class-relay.php:411
+msgid "Apply now"
+msgstr ""
+
+#: includes/class-relay.php:421
+msgid "To skip this step next time, ask your hosting to let VozCaster reach /wp-json/vozpress/ on your site."
+msgstr ""
+
+#: includes/class-review.php:147
+#: includes/class-review.php:178
+msgid "You cannot review this episode."
+msgstr ""
+
 #. translators: 1: site name, 2: post title.
-#: includes/class-review.php:49
+#: includes/class-review.php:247
 #, php-format
 msgid "[%1$s] Podcast episode pending review: %2$s"
 msgstr ""
 
-#. translators: 1: author name, 2: post title, 3: link to edit the post.
-#: includes/class-review.php:55
+#. translators: 1: author name, 2: post title, 3: podcast (and class), 4: link to the review page.
+#: includes/class-review.php:253
 #, php-format
 msgid ""
-"%1$s has sent a new episode from the VozCaster bot and it is waiting for your review:\n"
+"%1$s has sent a new episode with VozCaster and it is waiting for your review:\n"
 "\n"
 "%2$s\n"
+"%3$s\n"
 "\n"
-"Review and publish it here:\n"
-"%3$s"
+"Listen to it and publish it or return it here:\n"
+"%4$s"
 msgstr ""
 
-#: includes/class-review.php:56
+#: includes/class-review.php:254
 msgid "A user"
+msgstr ""
+
+#. translators: 1: site name, 2: post title.
+#: includes/class-review.php:272
+#, php-format
+msgid "[%1$s] Your episode has been approved: %2$s"
+msgstr ""
+
+#. translators: %s: link to the episode.
+#: includes/class-review.php:279
+#, php-format
+msgid ""
+"Your episode is published:\n"
+"%s"
+msgstr ""
+
+#: includes/class-review.php:282
+msgid "Your episode has been approved and will be published on its scheduled date."
+msgstr ""
+
+#. translators: 1: site name, 2: post title.
+#: includes/class-review.php:286
+#, php-format
+msgid "[%1$s] Your episode needs changes: %2$s"
+msgstr ""
+
+#. translators: %s: the reviewer's comment.
+#: includes/class-review.php:292
+#, php-format
+msgid ""
+"Your episode has not been published yet. The reviewer says:\n"
+"\n"
+"%s\n"
+"\n"
+"Record it again and send it with VozCaster when it is ready."
+msgstr ""
+
+#: includes/class-review.php:306
+msgid "You do not publish directly in any podcast of this site, so you have nothing to review."
+msgstr ""
+
+#: includes/class-review.php:313
+msgid "Nothing waiting for review. 🎉"
+msgstr ""
+
+#. translators: 1: author name, 2: podcast (and class), 3: how long ago it was sent.
+#: includes/class-review.php:327
+#, php-format
+msgid "By %1$s · %2$s · sent %3$s ago"
+msgstr ""
+
+#: includes/class-review.php:334
+msgid "your class"
+msgstr ""
+
+#: includes/class-review.php:346
+msgid "Publish"
+msgstr ""
+
+#: includes/class-review.php:350
+msgid "Comment for the author"
+msgstr ""
+
+#: includes/class-review.php:351
+msgid "What should they change? (optional)"
+msgstr ""
+
+#: includes/class-review.php:352
+msgid "Return to the author"
+msgstr ""
+
+#: includes/class-review.php:355
+msgid "Edit in WordPress"
 msgstr ""
 
 #: includes/class-settings.php:40
@@ -450,684 +831,633 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: includes/class-settings.php:55
-msgid "Episodes"
-msgstr ""
-
 #: includes/class-settings.php:56
 msgid "Audio"
-msgstr ""
-
-#: includes/class-settings.php:57
-msgid "Access"
 msgstr ""
 
 #: includes/class-settings.php:58
 msgid "History"
 msgstr ""
 
-#: includes/class-settings.php:204
+#: includes/class-settings.php:197
 msgid "No file selected."
 msgstr ""
 
-#: includes/class-settings.php:303
+#: includes/class-settings.php:296
 msgid "Invalid attachment."
 msgstr ""
 
-#: includes/class-settings.php:333
+#: includes/class-settings.php:326
 msgid "Platform status saved."
 msgstr ""
 
-#: includes/class-settings.php:334
+#: includes/class-settings.php:327
 msgid "AI notice settings saved."
 msgstr ""
 
-#: includes/class-settings.php:335
-msgid "Access settings saved."
-msgstr ""
-
-#: includes/class-settings.php:336
+#: includes/class-settings.php:329
 msgid "Bot access revoked. The user will need to connect again."
 msgstr ""
 
-#: includes/class-settings.php:337
+#: includes/class-settings.php:330
 msgid "Intro file deleted."
 msgstr ""
 
-#: includes/class-settings.php:338
+#: includes/class-settings.php:331
 msgid "Outro file deleted."
 msgstr ""
 
-#: includes/class-settings.php:339
+#: includes/class-settings.php:332
 msgid "Intro file uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:340
+#: includes/class-settings.php:333
 msgid "Outro file uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:341
+#: includes/class-settings.php:334
 msgid "Error uploading intro file. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:342
+#: includes/class-settings.php:335
 msgid "Error uploading outro file. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:343
+#: includes/class-settings.php:336
 msgid "Separator sound deleted."
 msgstr ""
 
-#: includes/class-settings.php:344
+#: includes/class-settings.php:337
 msgid "Separator sound uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:345
+#: includes/class-settings.php:338
 msgid "Error uploading the separator sound. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:346
+#: includes/class-settings.php:339
 msgid "Episode history cleared."
 msgstr ""
 
-#: includes/class-settings.php:347
+#: includes/class-settings.php:340
 msgid "Mix settings saved."
 msgstr ""
 
-#: includes/class-settings.php:348
+#: includes/class-settings.php:341
 msgid "Title settings saved."
 msgstr ""
 
-#: includes/class-settings.php:349
+#: includes/class-settings.php:342
 msgid "Post footer saved."
 msgstr ""
 
-#: includes/class-settings.php:350
+#: includes/class-settings.php:343
 msgid "Image style saved."
 msgstr ""
 
-#: includes/class-settings.php:396
+#: includes/class-settings.php:389
 msgid "VozCaster — Episodes"
 msgstr ""
 
-#: includes/class-settings.php:397
+#: includes/class-settings.php:390
 msgid "VozCaster — Audio"
 msgstr ""
 
-#: includes/class-settings.php:398
-msgid "VozCaster — Access"
-msgstr ""
-
-#: includes/class-settings.php:399
+#: includes/class-settings.php:392
 msgid "VozCaster — History"
 msgstr ""
 
-#: includes/class-settings.php:463
+#: includes/class-settings.php:455
 msgid "PowerPress is not installed or not active. Episodes will be created without podcast data."
 msgstr ""
 
-#: includes/class-settings.php:470
+#: includes/class-settings.php:462
 msgid "Episode titles"
 msgstr ""
 
-#: includes/class-settings.php:472
+#: includes/class-settings.php:464
 msgid "Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:481
+#: includes/class-settings.php:473
 msgid "Title prefix"
 msgstr ""
 
-#: includes/class-settings.php:487
+#: includes/class-settings.php:479
 msgid "E.g.: Chapter, Episode, Ep."
 msgstr ""
 
-#: includes/class-settings.php:491
+#: includes/class-settings.php:483
 msgid "Empty = no prefix. With prefix and no season: «Chapter 15: Title». With season: «Chapter T2E15: Title»."
 msgstr ""
 
-#: includes/class-settings.php:496
+#: includes/class-settings.php:488
 msgid "Include season number"
 msgstr ""
 
-#: includes/class-settings.php:503
+#: includes/class-settings.php:495
 msgid "Include T2E15 in the title (if a prefix is defined)"
 msgstr ""
 
-#: includes/class-settings.php:509
+#: includes/class-settings.php:501
 msgid "Current season"
 msgstr ""
 
-#: includes/class-settings.php:516
+#: includes/class-settings.php:508
 msgid "auto"
 msgstr ""
 
 #. translators: %d: the season number currently stored.
-#: includes/class-settings.php:523
+#: includes/class-settings.php:515
 #, php-format
 msgid "Stored season: %d. Leave blank to keep it."
 msgstr ""
 
-#: includes/class-settings.php:525
+#: includes/class-settings.php:517
 msgid "Not set — the season is derived from the latest published episode."
 msgstr ""
 
-#: includes/class-settings.php:529
+#: includes/class-settings.php:521
 msgid "Changing this is a big change:"
 msgstr ""
 
-#: includes/class-settings.php:530
+#: includes/class-settings.php:522
 msgid "the next episode is numbered within the target season (E1 if it has no published episodes yet, otherwise it continues from the last one published in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, Spotify). Moving to a season below the latest published episode also requires editing that episode in PowerPress."
 msgstr ""
 
-#: includes/class-settings.php:536
+#: includes/class-settings.php:528
 msgid "Chapter numbering in title"
 msgstr ""
 
-#: includes/class-settings.php:543
+#: includes/class-settings.php:535
 msgid "Chapter within the season (resets at T1, T2…)"
 msgstr ""
 
-#: includes/class-settings.php:544
+#: includes/class-settings.php:536
 msgid "Example: «Chapter 5: Title» even if it is episode 37 overall."
 msgstr ""
 
-#: includes/class-settings.php:550
+#: includes/class-settings.php:542
 msgid "Global sequential number (inferred from the previous post title)"
 msgstr ""
 
-#: includes/class-settings.php:551
+#: includes/class-settings.php:543
 msgid "Example: «Chapter 38: Title». PowerPress still uses the chapter within the season internally."
 msgstr ""
 
-#: includes/class-settings.php:557
+#: includes/class-settings.php:549
 msgid "Save title settings"
 msgstr ""
 
-#: includes/class-settings.php:563
+#: includes/class-settings.php:555
 msgid "Post footer (signature)"
 msgstr ""
 
-#: includes/class-settings.php:565
+#: includes/class-settings.php:557
 msgid "HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:574
+#: includes/class-settings.php:566
 msgid "Footer content"
 msgstr ""
 
-#: includes/class-settings.php:584
+#: includes/class-settings.php:576
 msgid "Accepts raw HTML and Gutenberg block comments. Appended verbatim after the episode content. Leave empty to disable."
 msgstr ""
 
-#: includes/class-settings.php:589
+#: includes/class-settings.php:581
 msgid "Save footer"
 msgstr ""
 
-#: includes/class-settings.php:595
+#: includes/class-settings.php:587
 msgid "Image style"
 msgstr ""
 
-#: includes/class-settings.php:597
+#: includes/class-settings.php:589
 msgid "A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:606
+#: includes/class-settings.php:598
 msgid "Style text"
 msgstr ""
 
-#: includes/class-settings.php:615
+#: includes/class-settings.php:607
 msgid "e.g. An orange cat wearing studio headphones"
 msgstr ""
 
-#: includes/class-settings.php:618
+#: includes/class-settings.php:610
 msgid "An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable."
 msgstr ""
 
-#: includes/class-settings.php:623
+#: includes/class-settings.php:615
 msgid "Save image style"
 msgstr ""
 
-#: includes/class-settings.php:629
+#: includes/class-settings.php:621
 msgid "AI content notice"
 msgstr ""
 
-#: includes/class-settings.php:631
+#: includes/class-settings.php:623
 msgid "When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor."
 msgstr ""
 
-#: includes/class-settings.php:639
+#: includes/class-settings.php:631
 msgid "Show the AI notice"
 msgstr ""
 
-#: includes/class-settings.php:643
+#: includes/class-settings.php:635
 msgid "Show it on posts whose text was written by AI"
 msgstr ""
 
-#: includes/class-settings.php:649
+#: includes/class-settings.php:641
 msgid "Notice text"
 msgstr ""
 
-#: includes/class-settings.php:653
+#: includes/class-settings.php:645
 msgid "Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed."
 msgstr ""
 
-#: includes/class-settings.php:658
+#: includes/class-settings.php:650
 msgid "Position"
 msgstr ""
 
-#: includes/class-settings.php:662
+#: includes/class-settings.php:654
 msgid "At the end of the post"
 msgstr ""
 
-#: includes/class-settings.php:663
+#: includes/class-settings.php:655
 msgid "At the beginning of the post"
 msgstr ""
 
-#: includes/class-settings.php:668
+#: includes/class-settings.php:660
 msgid "VozCaster credit"
 msgstr ""
 
-#: includes/class-settings.php:672
+#: includes/class-settings.php:664
 msgid "Show a \"Published with VozCaster\" line with a link under posts published from the bot"
 msgstr ""
 
-#: includes/class-settings.php:674
+#: includes/class-settings.php:666
 msgid "Off by default. Turning it on helps VozCaster grow — thank you!"
 msgstr ""
 
-#: includes/class-settings.php:678
+#: includes/class-settings.php:670
 msgid "Save notice settings"
 msgstr ""
 
-#: includes/class-settings.php:684
+#: includes/class-settings.php:676
 msgid "Intro, outro &amp; separator"
 msgstr ""
 
-#: includes/class-settings.php:686
+#: includes/class-settings.php:678
 msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu)."
 msgstr ""
 
-#: includes/class-settings.php:690
+#: includes/class-settings.php:682
 msgid "Intro"
 msgstr ""
 
-#: includes/class-settings.php:702
+#: includes/class-settings.php:694
 msgid "Delete the intro file?"
 msgstr ""
 
-#: includes/class-settings.php:703
-#: includes/class-settings.php:744
-#: includes/class-settings.php:786
+#: includes/class-settings.php:695
+#: includes/class-settings.php:736
+#: includes/class-settings.php:778
 msgid "Delete"
 msgstr ""
 
-#: includes/class-settings.php:707
+#: includes/class-settings.php:699
 msgid "To replace the intro, upload a new file:"
 msgstr ""
 
-#: includes/class-settings.php:709
+#: includes/class-settings.php:701
 msgid "No intro loaded."
 msgstr ""
 
-#: includes/class-settings.php:715
+#: includes/class-settings.php:707
 msgid "Intro audio file"
 msgstr ""
 
-#: includes/class-settings.php:717
+#: includes/class-settings.php:709
 msgid "Replace intro"
 msgstr ""
 
-#: includes/class-settings.php:717
+#: includes/class-settings.php:709
 msgid "Upload intro"
 msgstr ""
 
-#: includes/class-settings.php:726
-#: includes/class-settings.php:767
-#: includes/class-settings.php:809
+#: includes/class-settings.php:718
+#: includes/class-settings.php:759
+#: includes/class-settings.php:801
 msgid "Select from media library"
 msgstr ""
 
-#: includes/class-settings.php:731
+#: includes/class-settings.php:723
 msgid "Outro"
 msgstr ""
 
-#: includes/class-settings.php:743
+#: includes/class-settings.php:735
 msgid "Delete the outro file?"
 msgstr ""
 
-#: includes/class-settings.php:748
+#: includes/class-settings.php:740
 msgid "To replace the outro, upload a new file:"
 msgstr ""
 
-#: includes/class-settings.php:750
+#: includes/class-settings.php:742
 msgid "No outro loaded."
 msgstr ""
 
-#: includes/class-settings.php:756
+#: includes/class-settings.php:748
 msgid "Outro audio file"
 msgstr ""
 
-#: includes/class-settings.php:758
+#: includes/class-settings.php:750
 msgid "Replace outro"
 msgstr ""
 
-#: includes/class-settings.php:758
+#: includes/class-settings.php:750
 msgid "Upload outro"
 msgstr ""
 
-#: includes/class-settings.php:772
+#: includes/class-settings.php:764
 msgid "Separator sound"
 msgstr ""
 
-#: includes/class-settings.php:774
+#: includes/class-settings.php:766
 msgid "Short sound played between the sections of an episode recorded in several audios (for example, interviews at an event). Without it, sections are joined with a one-second pause."
 msgstr ""
 
-#: includes/class-settings.php:785
+#: includes/class-settings.php:777
 msgid "Delete the separator sound?"
 msgstr ""
 
-#: includes/class-settings.php:790
+#: includes/class-settings.php:782
 msgid "To replace the separator sound, upload a new file:"
 msgstr ""
 
-#: includes/class-settings.php:792
+#: includes/class-settings.php:784
 msgid "No separator sound loaded."
 msgstr ""
 
-#: includes/class-settings.php:798
+#: includes/class-settings.php:790
 msgid "Separator sound file"
 msgstr ""
 
-#: includes/class-settings.php:800
+#: includes/class-settings.php:792
 msgid "Replace separator sound"
 msgstr ""
 
-#: includes/class-settings.php:800
+#: includes/class-settings.php:792
 msgid "Upload separator sound"
 msgstr ""
 
-#: includes/class-settings.php:818
+#: includes/class-settings.php:810
 msgid "Audio mix settings (intro/outro)"
 msgstr ""
 
-#: includes/class-settings.php:820
+#: includes/class-settings.php:812
 msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster."
 msgstr ""
 
-#: includes/class-settings.php:829
+#: includes/class-settings.php:821
 msgid "Intro duck-in second"
 msgstr ""
 
-#: includes/class-settings.php:836
-#: includes/class-settings.php:892
+#: includes/class-settings.php:828
+#: includes/class-settings.php:884
 msgid "seconds"
 msgstr ""
 
-#: includes/class-settings.php:837
+#: includes/class-settings.php:829
 msgid "The intro plays at 100% until this second. From here it starts fading down and the podcast voice fades in."
 msgstr ""
 
-#: includes/class-settings.php:842
+#: includes/class-settings.php:834
 msgid "Intro volume under podcast"
 msgstr ""
 
-#: includes/class-settings.php:850
+#: includes/class-settings.php:842
 msgid "Volume to which the intro fades during duck-in, before reaching 0. Example: 30 = intro fades to 30% while the voice comes in."
 msgstr ""
 
-#: includes/class-settings.php:855
+#: includes/class-settings.php:847
 msgid "Second at which intro reaches 0"
 msgstr ""
 
-#: includes/class-settings.php:863
+#: includes/class-settings.php:855
 msgid "seconds (empty = until the end of the intro file)"
 msgstr ""
 
-#: includes/class-settings.php:864
+#: includes/class-settings.php:856
 msgid "Exact second at which the intro reaches silence. If left empty, the fade lasts until the end of the intro file."
 msgstr ""
 
-#: includes/class-settings.php:869
+#: includes/class-settings.php:861
 msgid "Knee: seconds to reach duck volume"
 msgstr ""
 
-#: includes/class-settings.php:877
+#: includes/class-settings.php:869
 msgid "seconds after duck start (empty = linear)"
 msgstr ""
 
-#: includes/class-settings.php:879
+#: includes/class-settings.php:871
 msgid "Seconds after the duck start at which the intro has already dropped to the duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by a long gentle tail. The outro uses the exact mirror curve automatically. Leave empty for a linear fade."
 msgstr ""
 
-#: includes/class-settings.php:885
+#: includes/class-settings.php:877
 msgid "Seconds before end for outro fade-in"
 msgstr ""
 
-#: includes/class-settings.php:893
+#: includes/class-settings.php:885
 msgid "The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%."
 msgstr ""
 
-#: includes/class-settings.php:898
+#: includes/class-settings.php:890
 msgid "Outro volume under podcast"
 msgstr ""
 
-#: includes/class-settings.php:906
+#: includes/class-settings.php:898
 msgid "Maximum volume of the outro while the podcast voice is still playing. When the voice ends, the outro rises to 100%."
 msgstr ""
 
-#: includes/class-settings.php:910
+#: includes/class-settings.php:902
 msgid "Save mix settings"
 msgstr ""
 
-#: includes/class-settings.php:916
-msgid "Who can publish from the bot"
+#: includes/class-settings.php:908
+msgid "Who can publish, in which podcast"
 msgstr ""
 
-#: includes/class-settings.php:918
-msgid "Users with the following roles are authorized to publish with VozCaster (the app or the Telegram bot), in every podcast of this site. They connect with their usual WordPress account; their password never goes through VozCaster."
+#: includes/class-settings.php:911
+msgid "Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin."
 msgstr ""
 
-#: includes/class-settings.php:925
-msgid "Authorized roles"
-msgstr ""
-
-#: includes/class-settings.php:938
-msgid "always authorized"
-msgstr ""
-
-#: includes/class-settings.php:944
-msgid "By default, every role that can publish posts (Author or above). A custom role checked here can publish from the bot even if it cannot publish from wp-admin."
-msgstr ""
-
-#: includes/class-settings.php:949
-msgid "Review before publishing"
-msgstr ""
-
-#: includes/class-settings.php:953
-msgid "Episodes sent by users whose role cannot publish posts in WordPress (for example a custom role checked above) are saved as \"Pending review\" instead of being published, and the site administrator gets an email to approve them. Authors and above keep publishing directly."
-msgstr ""
-
-#. translators: %s: the [vozcaster_connect] shortcode.
-#: includes/class-settings.php:959
-#, php-format
-msgid "Tip: add the %s shortcode to any page so these users can connect the bot without opening wp-admin."
-msgstr ""
-
-#: includes/class-settings.php:964
-msgid "Save access settings"
-msgstr ""
-
-#: includes/class-settings.php:967
+#: includes/class-settings.php:914
 msgid "Connected users"
 msgstr ""
 
-#: includes/class-settings.php:969
+#: includes/class-settings.php:916
 msgid "Each authorized user connects their own account from VozCaster → Connect."
 msgstr ""
 
-#: includes/class-settings.php:970
+#: includes/class-settings.php:917
 msgid "Connect your account"
 msgstr ""
 
-#: includes/class-settings.php:973
+#: includes/class-settings.php:920
 msgid "Nobody has connected the bot to this site yet."
 msgstr ""
 
-#: includes/class-settings.php:978
+#: includes/class-settings.php:925
 msgid "Username"
 msgstr ""
 
-#: includes/class-settings.php:979
+#: includes/class-settings.php:926
 msgid "Name"
 msgstr ""
 
-#: includes/class-settings.php:980
-msgid "Role"
-msgstr ""
-
-#: includes/class-settings.php:981
+#: includes/class-settings.php:928
 msgid "Bot status"
 msgstr ""
 
-#: includes/class-settings.php:999
+#: includes/class-settings.php:946
 msgid "Connected"
 msgstr ""
 
-#: includes/class-settings.php:1001
+#: includes/class-settings.php:948
 msgid "Role not authorized"
 msgstr ""
 
-#: includes/class-settings.php:1012
+#: includes/class-settings.php:959
 msgid "Revoke access? The user will need to connect again."
 msgstr ""
 
-#: includes/class-settings.php:1013
+#: includes/class-settings.php:960
 msgid "Revoke"
 msgstr ""
 
-#: includes/class-settings.php:1026
+#: includes/class-settings.php:973
 msgid "Recent published episodes"
 msgstr ""
 
-#: includes/class-settings.php:1028
+#: includes/class-settings.php:975
 msgid "No episodes have been published with the bot yet."
 msgstr ""
 
-#: includes/class-settings.php:1033
+#: includes/class-settings.php:980
 msgid "Date"
 msgstr ""
 
-#: includes/class-settings.php:1037
+#: includes/class-settings.php:984
 msgid "Link"
 msgstr ""
 
-#: includes/class-settings.php:1049
+#: includes/class-settings.php:996
 msgid "View"
 msgstr ""
 
-#: includes/class-settings.php:1061
+#: includes/class-settings.php:1008
 msgid "Clear history"
 msgstr ""
 
-msgid "The scheduled date must be in the future."
+#: blocks/index.js:17
+msgid "Each logged-in user sees the buttons to connect their account to the VozCaster app or Telegram, for the podcasts they may publish in."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Collecting from VozCaster…"
+#: blocks/index.js:18
+msgid "Teachers see the classes of their podcasts here, create new ones and choose who reviews each class."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Bringing the audio…"
+#: blocks/index.js:19
+msgid "Reviewers see the episodes waiting for them here, listen to them and publish them or return them with a comment."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Updating VozCaster with your site settings…"
+#: blocks/index.js:20
+msgid "The people who manage VozCaster choose here who publishes in each podcast and who needs a review."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Done. Everything VozCaster had waiting is now on your site."
+#: blocks/index.js:25
+msgid "VozCaster classes"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Published:"
+#: blocks/index.js:26
+msgid "VozCaster review"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Saved as a draft:"
+#: blocks/index.js:27
+msgid "VozCaster access"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Scheduled:"
+#: blocks/index.js:37
+msgid "Visitors who are not logged in are asked to log in."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Sent for review."
+#: blocks/index.js:42
+msgid "All their podcasts"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Something failed:"
+#: blocks/index.js:55
+msgid "Podcast"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Try again"
+#: blocks/index.js:57
+msgid "Show the buttons for"
 msgstr ""
 
-#. translators: %s: site name.
-#: includes/class-relay.php
-#, php-format
-msgid "VozCaster — %s"
+#: blocks/access/block.json
+msgctxt "block title"
+msgid "VozCaster access"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "This link is no longer valid"
+#: blocks/access/block.json
+msgctxt "block description"
+msgid "Lets the people who manage VozCaster choose who publishes in each podcast and who needs a review."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "It was already used, or it expired. If something is still waiting, VozCaster will send you a new link."
+#: blocks/access/block.json
+#: blocks/classes/block.json
+#: blocks/connect/block.json
+#: blocks/review/block.json
+msgctxt "block keyword"
+msgid "podcast"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Nothing is waiting"
+#: blocks/access/block.json
+#: blocks/classes/block.json
+#: blocks/connect/block.json
+#: blocks/review/block.json
+msgctxt "block keyword"
+msgid "vozcaster"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Your site already has everything VozCaster had for it."
+#: blocks/classes/block.json
+msgctxt "block title"
+msgid "VozCaster classes"
 msgstr ""
 
-#. translators: %s: episode or post title.
-#: includes/class-relay.php
-#, php-format
-msgid "«%s» is ready for your site"
+#: blocks/classes/block.json
+msgctxt "block description"
+msgid "Lets teachers create the classes of their podcasts and choose who reviews each one."
 msgstr ""
 
-#. translators: %d: number of episodes or posts.
-#: includes/class-relay.php
-#, php-format
-msgid "%d episodes are ready for your site"
+#: blocks/connect/block.json
+msgctxt "block title"
+msgid "Connect with VozCaster"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Your changes in VozCaster are ready to be applied"
+#: blocks/connect/block.json
+msgctxt "block description"
+msgid "Lets each logged-in user connect their account to the VozCaster app or Telegram bot."
 msgstr ""
 
-#: includes/class-relay.php
-msgid "We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot."
+#: blocks/review/block.json
+msgctxt "block title"
+msgid "VozCaster review"
 msgstr ""
 
-#: includes/class-relay.php
-msgid "Publish now"
-msgstr ""
-
-#: includes/class-relay.php
-msgid "Save it on my site"
-msgstr ""
-
-#: includes/class-relay.php
-msgid "Apply now"
-msgstr ""
-
-#: includes/class-relay.php
-msgid "To skip this step next time, ask your hosting to let VozCaster reach /wp-json/vozpress/ on your site."
+#: blocks/review/block.json
+msgctxt "block description"
+msgid "Lists the episodes waiting for the logged-in user's review, to listen to them and publish or return them."
 msgstr ""

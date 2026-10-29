@@ -1,0 +1,27 @@
+/* VozCaster blocks and their wp-admin pages. Kept plain so the theme's
+   own styles (buttons, tables, fonts) do most of the work. */
+.vpconn-block { margin-block: 1.5em; }
+.vpconn-block table.vpconn-table { width: 100%; border-collapse: collapse; }
+.vpconn-block .vpconn-table th,
+.vpconn-block .vpconn-table td { padding: .5em .6em; border-bottom: 1px solid rgba(0,0,0,.12); text-align: left; vertical-align: top; }
+.vpconn-scroll { overflow-x: auto; }
+.vpconn-access-table select { max-width: 9.5em; }
+.vpconn-inline-form { display: inline-flex; flex-wrap: wrap; gap: .4em; align-items: flex-start; margin: 0; }
+.vpconn-create-form { display: flex; flex-wrap: wrap; gap: .6em; align-items: flex-end; margin: .8em 0 2em; }
+.vpconn-create-form label { display: flex; flex-direction: column; gap: .2em; }
+.vpconn-reviewers { min-width: 12em; }
+.vpconn-muted { opacity: .75; font-size: .92em; }
+.vpconn-badge { display: inline-block; padding: 0 .5em; border-radius: 1em; background: #f7ad55; color: #2e276b; font-size: .8em; font-weight: 600; vertical-align: middle; }
+.vpconn-archived { opacity: .6; }
+.vpconn-feed-title { margin-top: 1.6em; }
+.vpconn-review-item { border: 1px solid rgba(0,0,0,.14); border-radius: 8px; padding: 1em 1.1em; margin-bottom: 1em; }
+.vpconn-review-item.vpconn-mine { border-left: 4px solid #f7ad55; }
+.vpconn-review-title { margin: 0 0 .3em; }
+.vpconn-audio { width: 100%; margin: .5em 0; }
+.vpconn-review-actions { display: flex; flex-wrap: wrap; gap: .8em; align-items: flex-start; }
+.vpconn-return-form { display: flex; flex-wrap: wrap; gap: .4em; align-items: flex-start; flex: 1 1 18em; }
+.vpconn-return-form textarea { flex: 1 1 14em; min-height: 2.6em; }
+.vpconn-notice { padding: .6em .9em; border-left: 4px solid #46b450; background: rgba(70,180,80,.08); margin-bottom: 1em; }
+.vpconn-notice p { margin: 0; }
+.vpconn-notice-error { border-left-color: #dc3232; background: rgba(220,50,50,.08); }
+.vpconn-notice-warning { border-left-color: #f7ad55; background: rgba(247,173,85,.12); }
