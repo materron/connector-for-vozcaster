@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "vozcaster/connect",
+	"title": "Connect with VozCaster",
+	"category": "widgets",
+	"icon": "microphone",
+	"description": "Lets each logged-in user connect their account to the VozCaster app or Telegram bot.",
+	"keywords": [
+		"podcast",
+		"vozcaster"
+	],
+	"textdomain": "connector-for-vozcaster",
+	"attributes": {
+		"feed": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		]
+	},
+	"editorScript": "vpconn-blocks",
+	"style": "vpconn-blocks",
+	"render": "file:./render.php"
+}

@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.14.0
+Stable tag: 1.15.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,11 +55,12 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 * A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
 * **Per-podcast settings**: title prefix, season, intro, outro and separator sound with their mixing times, post signature, a fixed element for the covers, and category mapping.
 * **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
-* **Permissions by role**: Authors and above can publish with VozCaster by default, and administrators can authorise custom roles as well.
+* **Who publishes where**: a table of roles × podcasts where each cell is "publishes", "with review" or no access, so a school's English teachers publish only in the English podcast and the general one, and its students send theirs for review.
+* **Classes**: groups inside a podcast (B1.1, "Mila's students"…), created by the teachers themselves, each with its own page, its own feed and the teachers who review it. Their episodes are published in the podcast as usual; at the end of the year a class is archived, never deleted.
+* **Review**: what is sent for review reaches the teachers of its class, by email and in VozCaster. They listen to it and publish it, or return it to its author with a comment.
 * **Podcast details** (artwork, Apple Podcasts category, owner, language, explicit flag) written straight into PowerPress, with a checklist of what platforms need.
 * **Distribute**: Spotify, Apple Podcasts, YouTube Music, iVoox, Amazon Music, Podcast Index, Pocket Casts, Castbox and Deezer, ordered by importance, with submit links and a status for each one.
-* The `[vozcaster_connect]` **shortcode**, to show the connect buttons on any page, so people can connect without opening wp-admin.
-* **Optional review**: episodes from roles that cannot publish posts can be held as "Pending review", with an email to the administrator.
+* **Blocks** to do all of it from a page of the site, without wp-admin: connect, classes, review and access. Each person sees only their part, so one "Send an episode" page can hold them all. The `[vozcaster_connect]` shortcode still works.
 * **AI content notice**: posts whose text was written by AI show a short, customisable notice (on by default, can be turned off).
 * **Token-based authentication**: VozCaster never sees your WordPress password.
 
@@ -132,15 +133,19 @@ Yes. The plugin works with PowerPress's multi-podcast (custom channels) configur
 
 = Who can publish with VozCaster? =
 
-Anyone whose role is authorised in **VozCaster → Access**. By default that is every role that can publish posts (Author, Editor, Administrator). Administrators can also authorise a custom role: users with it can then publish with VozCaster even if they cannot publish from wp-admin. Every authorised user can publish to every podcast on the site. The same screen lists who has connected and lets you revoke access.
+Until you save the table in **VozCaster → Access**, every role that can publish posts (Author, Editor, Administrator) publishes in every podcast, as in earlier versions. Once you save it, the table decides: for each role and podcast, "publishes", "with review" or no access. Administrators always publish everywhere, and the roles you mark as "Manages VozCaster" (for example a school's coordinators) can change the table and the classes without being WordPress administrators. The same screen lists who has connected and lets you revoke access.
 
 = Can people publish without access to wp-admin, for example the teachers of a school? =
 
-Yes. Create a role for them (for example "Podcast teachers", a copy of Subscriber made with any role editor plugin) and check it in **VozCaster → Access**. Then add the `[vozcaster_connect]` shortcode to a page: once logged in, they see the connect buttons there and never need to open wp-admin. Avoid authorising the whole Subscriber role if anyone can register on your site.
+Yes. Create a role for them (for example "English teachers", a copy of Subscriber made with any role editor plugin) and give it access in **VozCaster → Access**. Then add the VozCaster blocks to a page: once logged in, each person sees there the buttons to connect, the episodes waiting for their review and their classes, and never needs to open wp-admin. Avoid giving access to the whole Subscriber role if anyone can register on your site.
 
 = Can I review episodes before they go live? =
 
-Yes. Turn on **Review before publishing** in **VozCaster → Access**. Episodes sent by users whose role cannot publish posts in WordPress are saved as "Pending review" and the site administrator gets an email with a link to approve them; VozCaster tells the sender that the episode is waiting for review. Authors and above keep publishing directly.
+Yes. Set the role to "with review" for that podcast in **VozCaster → Access**. Its episodes are saved as "Pending review" and reach whoever publishes directly in the podcast, or only the teachers of the class they were sent to. They get an email and see it in **VozCaster → Review** (or the review block, or VozCaster itself), listen to it, and publish it or return it to its author with a comment. VozCaster tells the sender what happened.
+
+= What is a class? =
+
+A sub-category of a podcast, for a group of students: "B1.1", "A2 evening", "Mila's students". Anyone who publishes directly in the podcast can create classes in **VozCaster → Classes** or with the classes block, and choose who reviews each one. When a student sends an episode they pick their class (VozCaster remembers it), and only that class's teachers are asked to review it. The episode is published in the podcast's feed as usual, and the class also gets its own page and feed. At the end of the year, archive the class: its episodes stay where they are.
 
 = Why do some posts show a notice about AI? =
 
@@ -227,6 +232,13 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.15.0 =
+* New: who publishes where. VozCaster → Access is now a table of roles × podcasts: each cell publishes directly, sends for review, or has no access. Sites keep working exactly as before until the table is saved.
+* New: classes inside a podcast, created by the teachers, each with its own page, feed and reviewers. Their episodes still go to the podcast's feed.
+* New: review by class. Pending episodes reach the teachers of their class (or everyone who publishes in the podcast), by email and in VozCaster; they publish them or return them with a comment, and the author is told.
+* New: VozCaster → Review and VozCaster → Classes for the people who review, and blocks to do everything from a page of the site: connect, classes, review and access.
+* New: roles marked "Manages VozCaster" can change the access table and the classes without being administrators.
 
 = 1.14.0 =
 * New: VozCaster works with sites whose hosting blocks it. Some hostings answer any request that does not come from a browser with a "checking your browser" page, so VozCaster could not reach the plugin. Now pressing "Connect" also registers the connection with VozCaster, which uses it only if it cannot reach your site. On those sites, episodes and setting changes wait in VozCaster until you open the link it sends you: your site collects them from your browser and publishes as usual. Sites that VozCaster can reach work exactly as before.

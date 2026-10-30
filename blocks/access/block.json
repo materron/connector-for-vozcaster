@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "vozcaster/access",
+	"title": "VozCaster access",
+	"category": "widgets",
+	"icon": "microphone",
+	"description": "Lets the people who manage VozCaster choose who publishes in each podcast and who needs a review.",
+	"keywords": [
+		"podcast",
+		"vozcaster"
+	],
+	"textdomain": "connector-for-vozcaster",
+	"attributes": {},
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		]
+	},
+	"editorScript": "vpconn-blocks",
+	"style": "vpconn-blocks",
+	"render": "file:./render.php"
+}

@@ -129,7 +129,7 @@ class VPConn_Pairing {
 		}
 
 		$host       = self::get_encoded_host();
-		$feeds      = VPConn_Settings::get_powerpress_feeds();
+		$feeds      = VPConn_Access::feeds_for_user( $user_id );
 		$connected  = VPConn_Auth::has_token( $user_id );
 		$bot_url    = 'https://t.me/' . self::get_bot_username();
 		$pp_active  = defined( 'POWERPRESS_VERSION' ) || function_exists( 'powerpress_get_settings' );
@@ -229,10 +229,14 @@ class VPConn_Pairing {
 			return (string) ob_get_clean();
 		}
 
-		$feeds = VPConn_Settings::get_powerpress_feeds();
+		$feeds = VPConn_Access::feeds_for_user( $user_id );
 		if ( '' !== $atts['feed'] ) {
 			$only  = sanitize_key( $atts['feed'] );
 			$feeds = array_values( array_filter( $feeds, static fn( $f ) => $f['slug'] === $only ) ) ?: $feeds;
+		}
+		if ( ! $feeds ) {
+			echo '<p>' . esc_html__( 'Your account cannot send episodes to any podcast of this site yet. Ask the site administrator for access.', 'connector-for-vozcaster' ) . '</p></div>';
+			return (string) ob_get_clean();
 		}
 
 		if ( VPConn_Auth::has_token( $user_id ) ) {
@@ -293,7 +297,7 @@ class VPConn_Pairing {
 
 		$feed = self::find_feed( sanitize_key( wp_unslash( $_POST['feed'] ?? '' ) ) );
 		$host = self::get_encoded_host();
-		if ( ! $feed || null === $host ) {
+		if ( ! $feed || null === $host || '' === VPConn_Access::user_level( $user_id, $feed['slug'] ) ) {
 			wp_safe_redirect( self::get_page_url() );
 			exit;
 		}
@@ -444,7 +448,14 @@ class VPConn_Pairing {
 		if ( ! $user || ! VPConn_Auth::is_user_allowed( $user->ID ) ) {
 			return new WP_Error( 'vpconn_pair_not_allowed', 'User not authorized.', [ 'status' => 403 ] );
 		}
-		$feed = self::find_feed( (string) ( $data['feed'] ?? '' ) ) ?? VPConn_Settings::get_powerpress_feeds()[0];
+		$allowed = VPConn_Access::feeds_for_user( $user->ID );
+		$feed    = self::find_feed( (string) ( $data['feed'] ?? '' ) );
+		if ( ! $feed || '' === VPConn_Access::user_level( $user->ID, $feed['slug'] ) ) {
+			$feed = $allowed[0] ?? null;
+		}
+		if ( ! $feed ) {
+			return new WP_Error( 'vpconn_pair_not_allowed', 'User not authorized.', [ 'status' => 403 ] );
+		}
 		return [
 			'user' => $user,
 			'feed' => $feed,
