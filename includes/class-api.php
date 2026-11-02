@@ -1035,7 +1035,8 @@ class VPConn_API {
 				$clean_title,
 				$episode_no_powerpress,
 				$season_number,
-				(string) $episode_image_url
+				(string) $episode_image_url,
+				$feed_slug
 			);
 		}
 
@@ -1204,9 +1205,11 @@ class VPConn_API {
 	private function get_next_episode_info( string $feed_slug = 'podcast' ): array {
 		$mode = (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' );
 
-		// All published posts in the feed's category that have a non-empty
-		// enclosure meta (i.e., real podcast episodes with audio).
-		$cat        = get_term_by( 'slug', $feed_slug, 'category' );
+		// All published posts in the feed that have a non-empty enclosure meta
+		// (i.e., real podcast episodes with audio): a custom channel's own meta,
+		// or "enclosure" within the feed's category.
+		$meta_key   = VPConn_Settings::enclosure_meta_key( $feed_slug );
+		$cat        = 'enclosure' === $meta_key ? get_term_by( 'slug', $feed_slug, 'category' ) : false;
 		// Pending (held for review) and scheduled episodes count too, so two
 		// episodes waiting for approval never get the same number.
 		$query_args = [
@@ -1224,7 +1227,7 @@ class VPConn_API {
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query'     => [
 				[
-					'key'     => 'enclosure',
+					'key'     => $meta_key,
 					'value'   => '',
 					'compare' => '!=',
 				],
@@ -1241,7 +1244,7 @@ class VPConn_API {
 
 		// Step 1: most recent podcast post with season+episode_no in serialized data.
 		foreach ( $podcast_posts as $p ) {
-			$enclosure = get_post_meta( $p->ID, 'enclosure', true );
+			$enclosure = get_post_meta( $p->ID, $meta_key, true );
 			if ( ! $enclosure ) {
 				continue;
 			}
@@ -1496,7 +1499,8 @@ class VPConn_API {
 		string $episode_title = '',
 		int $episode_number = 0,
 		int $season_number = 1,
-		string $episode_image_url = ''
+		string $episode_image_url = '',
+		string $feed_slug = 'podcast'
 	): void {
 		$file_size = 0;
 		$file_path = get_attached_file( $audio_id );
@@ -1536,7 +1540,9 @@ class VPConn_API {
 
 		// Formato real de PowerPress: url\nbytes\nmime\nSERIALIZED
 		$enclosure_data = $audio_url . "\n" . $file_size . "\naudio/mpeg\n" . serialize( $extra );
-		update_post_meta( $post_id, 'enclosure', $enclosure_data );
+		// A custom channel keeps its audio in its own meta; written to
+		// "enclosure" the episode would land in the main feed instead.
+		update_post_meta( $post_id, VPConn_Settings::enclosure_meta_key( $feed_slug ), $enclosure_data );
 
 		// Attachment ID para referencia interna de VozPress.
 		update_post_meta( $post_id, '_vpconn_audio_id', $audio_id );

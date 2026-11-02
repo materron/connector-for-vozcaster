@@ -1073,6 +1073,20 @@ class VPConn_Settings {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Post meta where PowerPress keeps an episode's audio for a feed: custom
+	 * channels read `_{slug}:enclosure`; the main feed and category feeds
+	 * read `enclosure`.
+	 */
+	public static function enclosure_meta_key( string $feed_slug ): string {
+		$general = get_option( 'powerpress_general', [] );
+		$custom  = is_array( $general ) && is_array( $general['custom_feeds'] ?? null ) ? $general['custom_feeds'] : [];
+		if ( 'podcast' !== $feed_slug && '' !== $feed_slug && isset( $custom[ $feed_slug ] ) ) {
+			return '_' . $feed_slug . ':enclosure';
+		}
+		return 'enclosure';
+	}
+
+	/**
 	 * Returns the list of feeds configured in PowerPress.
 	 *
 	 * PowerPress stores custom channels in `powerpress_general.custom_feeds`
