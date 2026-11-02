@@ -200,7 +200,9 @@ class VPConn_Access {
 			return '<p>' . esc_html__( 'Only the people who manage VozCaster on this site can change who publishes.', 'connector-for-vozcaster' ) . '</p>';
 		}
 		$is_admin = user_can( $user_id, 'manage_options' );
-		$feeds    = VPConn_Settings::get_powerpress_feeds();
+		// The podcasts this manager publishes in: all of them, unless a site
+		// hides one with the vpconn_user_feed_level filter.
+		$feeds    = self::feeds_for_user( $user_id );
 		$roles    = wp_roles()->get_names();
 		$managers = self::get_manager_roles();
 		$labels   = [
