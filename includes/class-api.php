@@ -1036,21 +1036,9 @@ class VPConn_API {
 				$episode_no_powerpress,
 				$season_number,
 				(string) $episode_image_url,
-				$feed_slug
+				$feed_slug,
+				(string) $transcript_url
 			);
-		}
-
-		// Transcripción VTT para PowerPress.
-		// Se añade al meta 'powerpress_feed' que PowerPress lee en el metabox.
-		if ( ! empty( $transcript_url ) ) {
-			$feed_data = get_post_meta( $post_id, 'powerpress_feed', true );
-			if ( ! is_array( $feed_data ) ) {
-				$feed_data = [];
-			}
-			$feed_data['pci_transcript']          = 1;
-			$feed_data['pci_transcript_url']      = $transcript_url;
-			$feed_data['pci_transcript_language'] = 'es';
-			update_post_meta( $post_id, 'powerpress_feed', $feed_data );
 		}
 
 		// Registrar en el log.
@@ -1500,7 +1488,8 @@ class VPConn_API {
 		int $episode_number = 0,
 		int $season_number = 1,
 		string $episode_image_url = '',
-		string $feed_slug = 'podcast'
+		string $feed_slug = 'podcast',
+		string $transcript_url = ''
 	): void {
 		$file_size = 0;
 		$file_path = get_attached_file( $audio_id );
@@ -1536,6 +1525,22 @@ class VPConn_API {
 		if ( $episode_title ) {
 			// PowerPress usa 'episode_title' → <itunes:title> en el RSS feed.
 			$extra['episode_title'] = $episode_title;
+		}
+
+		if ( $transcript_url ) {
+			// PowerPress reads the transcript (<podcast:transcript>) from these
+			// same episode data, in the language of the podcast.
+			$feed_options = get_option( 'powerpress_feed_' . $feed_slug, [] );
+			if ( 'podcast' === $feed_slug && ! $feed_options ) {
+				$feed_options = get_option( 'powerpress_feed', [] );
+			}
+			$cat = $feed_options ? false : get_term_by( 'slug', $feed_slug, 'category' );
+			if ( $cat ) {
+				$feed_options = get_option( 'powerpress_cat_feed_' . $cat->term_id, [] );
+			}
+			$extra['pci_transcript']          = 1;
+			$extra['pci_transcript_url']      = $transcript_url;
+			$extra['pci_transcript_language'] = ( is_array( $feed_options ) ? ( $feed_options['rss_language'] ?? '' ) : '' ) ?: get_bloginfo( 'language' );
 		}
 
 		// Formato real de PowerPress: url\nbytes\nmime\nSERIALIZED

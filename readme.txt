@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.15.1
+Stable tag: 1.15.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -232,6 +232,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.15.2 =
+* Fix: the episode transcript (.vtt) now reaches the podcast feed as <podcast:transcript>, in the podcast's language. It was saved where PowerPress does not read it.
 
 = 1.15.1 =
 * Fix: episodes sent to a PowerPress custom channel went to the main podcast feed instead of the channel's own feed. They now land in their channel, and episode numbers count the channel's episodes.
