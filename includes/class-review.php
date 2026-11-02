@@ -236,7 +236,8 @@ class VPConn_Review {
 
 	/** The episode's audio, from PowerPress's enclosure. */
 	public static function audio_url( int $post_id ): string {
-		$enclosure = (string) get_post_meta( $post_id, 'enclosure', true );
+		$feed      = (string) get_post_meta( $post_id, self::META_FEED, true );
+		$enclosure = (string) get_post_meta( $post_id, VPConn_Settings::enclosure_meta_key( $feed ), true );
 		$url       = trim( (string) strtok( $enclosure, "\n" ) );
 		return esc_url_raw( $url );
 	}
