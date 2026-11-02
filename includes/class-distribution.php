@@ -261,7 +261,9 @@ class VPConn_Distribution {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		$feeds = VPConn_Settings::get_powerpress_feeds();
+		// Same podcasts the admin sees in Connect: a site can hide one (an
+		// empty main feed) with the vpconn_user_feed_level filter.
+		$feeds = VPConn_Access::feeds_for_user( get_current_user_id() );
 		// Read-only feed selector on an admin screen.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$feed = sanitize_key( wp_unslash( $_GET['feed'] ?? ( $feeds[0]['slug'] ?? 'podcast' ) ) );
