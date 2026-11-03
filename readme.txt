@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.15.3
+Stable tag: 1.16.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -232,6 +232,12 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.16.0 =
+* New: "How your podcast writes" in VozCaster → Episodes. A style guide (tone, humour, register) that the AI follows for the title, excerpt, post and chapters. Also from the bot with /tono and from the app.
+* New: title pattern with placeholders ({title}, {season}, {episode}, {number}), for podcasts whose titles don't fit the prefix, e.g. «E11S18 ({title})». Also with /titulo.
+* New: chapters. With AI, the bot splits each episode into chapters with their times. They are listed at the end of the post (can be turned off), saved as a chapters file and added to the feed as <podcast:chapters>.
+* New: style reference image for AI covers: the covers take its style, never its subject. Chosen from the media library or sent from the bot (/referencia) or the app.
 
 = 1.15.3 =
 * Fix: VozCaster → Distribute and VozCaster → Access show the same podcasts as Connect, so a podcast the site hides (for example an empty main feed when every podcast lives in its own channel) no longer appears there.
