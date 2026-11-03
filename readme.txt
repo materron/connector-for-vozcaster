@@ -22,8 +22,8 @@ Recording an episode takes minutes. Producing it takes hours: cleaning the audio
 
 * **The sound**: trims silences, removes noise, levels the voice and mixes your intro and outro, with the music fading under the voice. The same, every time.
 * **Several audios, one episode**: record an interview or a show in parts and VozCaster joins them, with an optional separator sound between them.
-* **The words** (Pro): transcribes what you said and writes a title, an excerpt and a full article from it, in the language you speak.
-* **The cover** (Pro): generates a featured image from what the episode is about, with the element you choose for your show, if you set one.
+* **The words** (Pro): transcribes what you said and writes a title, an excerpt, a full article and the chapters with their times, in the language you speak and in your podcast's own voice if you describe it.
+* **The cover** (Pro): generates a featured image from what the episode is about, with the element you choose for your show and the style of a reference image, if you set them.
 * **The publishing**: uploads the audio, creates the post with PowerPress, numbers the episode and the season, and sets the featured image and the Apple Podcasts artwork. Draft or live: you decide.
 * **The platforms**: checks that your feed has everything Spotify, Apple Podcasts and the rest ask for, and walks you through submitting it to each one.
 * **Blog posts too** (Pro): dictate or jot down an idea and get a written post, without audio.
@@ -53,7 +53,8 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 = What the plugin adds to WordPress =
 
 * A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
-* **Per-podcast settings**: title prefix, season, intro, outro and separator sound with their mixing times, post signature, a fixed element for the covers, and category mapping.
+* **Per-podcast settings**: title prefix or a title pattern with placeholders (E{episode}S{season} ({title})), season, how your podcast writes (a style guide for the AI), intro, outro and separator sound with their mixing times, post signature, a fixed element and a style reference image for the covers, and category mapping.
+* **Chapters**: listed at the end of the post and added to the feed as <podcast:chapters>, so podcast apps show them.
 * **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
 * **Who publishes where**: a table of roles × podcasts where each cell is "publishes", "with review" or no access, so a school's English teachers publish only in the English podcast and the general one, and its students send theirs for review.
 * **Classes**: groups inside a podcast (B1.1, "Mila's students"…), created by the teachers themselves, each with its own page, its own feed and the teachers who review it. Their episodes are published in the podcast as usual; at the end of the year a class is archived, never deleted.
@@ -68,7 +69,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 
 This plugin is free and open source, and basic publishing is free too: no card, no invitation. The audio is always produced for you: silence trimming, basic noise reduction and intro/outro mixing.
 
-The paid **Pro** and **Studio** plans add the AI part: automatic transcription (Whisper), a complete article written from what you said, a generated featured image and advanced noise reduction (DeepFilter). The episode arrives with its title, text and cover already done, sounding its best. Pro includes 30 AI episodes per month, Studio 100. See [plans and pricing](https://vozcaster.com/pricing.html).
+The paid **Pro** and **Studio** plans add the AI part: automatic transcription (Whisper), a complete article written from what you said, a generated featured image and advanced noise reduction (DeepFilter). The episode arrives with its title, text and cover already done, sounding its best. Pro includes 30 AI episodes per month and Studio 100; each started hour of audio counts as one episode. See [plans and pricing](https://vozcaster.com/pricing.html).
 
 = Languages =
 
