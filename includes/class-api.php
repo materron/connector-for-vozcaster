@@ -162,6 +162,17 @@ class VPConn_API {
 			]
 		);
 
+		// POST /media/style-reference — image whose style the generated covers follow.
+		register_rest_route(
+			self::NAMESPACE,
+			'/media/style-reference',
+			[
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'upload_style_reference' ],
+				'permission_callback' => [ $this, 'check_token_admin_permission' ],
+			]
+		);
+
 		// POST /media/transcript
 		register_rest_route(
 			self::NAMESPACE,
@@ -304,6 +315,12 @@ class VPConn_API {
 						'required' => false,
 						'type'     => 'boolean',
 						'default'  => false,
+					],
+					// [{start: seconds, title}], cleaned by VPConn_Chapters::sanitize().
+					'chapters'             => [
+						'required' => false,
+						'type'     => 'array',
+						'default'  => [],
 					],
 					'title_prefix'         => [
 						'required'          => false,
@@ -452,7 +469,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks', 'writing_style', 'title_template', 'style_reference', 'chapters' ],
 			]
 		);
 	}
@@ -587,7 +604,60 @@ class VPConn_API {
 			'episode_numbering_mode'  => (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' ),
 			'post_footer'             => (string) get_option( 'vpconn_post_footer', '' ),
 			'image_style'             => (string) get_option( 'vpconn_image_style', '' ),
+			'writing_style'           => (string) get_option( 'vpconn_writing_style', '' ),
+			'title_template'          => (string) get_option( 'vpconn_title_template', '' ),
+			'style_reference_id'      => (int) get_option( 'vpconn_style_reference_id', 0 ),
+			'style_reference_url'     => self::style_reference_url(),
+			'show_chapters'           => VPConn_Chapters::show_in_post(),
 		] + VPConn_Media::mix_config();
+	}
+
+	/** URL of the cover style reference image, or '' if there is none. */
+	public static function style_reference_url(): string {
+		$id = (int) get_option( 'vpconn_style_reference_id', 0 );
+		return $id && wp_attachment_is_image( $id ) ? (string) wp_get_attachment_url( $id ) : '';
+	}
+
+	/**
+	 * Cleans a style guide: plain text with line breaks, 1000 characters at most.
+	 */
+	public static function sanitize_writing_style( string $text ): string {
+		return mb_substr( sanitize_textarea_field( $text ), 0, 1000 );
+	}
+
+	/**
+	 * Cleans a title template. It must keep the episode's own title
+	 * ({title} or {titulo}); otherwise it is rejected with null.
+	 */
+	public static function sanitize_title_template( string $text ): ?string {
+		$text = mb_substr( sanitize_text_field( $text ), 0, 120 );
+		if ( '' === $text ) {
+			return '';
+		}
+		return ( str_contains( $text, '{title}' ) || str_contains( $text, '{titulo}' ) ) ? $text : null;
+	}
+
+	/**
+	 * The post title from the template: {title}/{titulo}, {season}/{temporada},
+	 * {episode}/{episodio} (number within the season) and {number}/{numero}
+	 * (the number the title prefix would use).
+	 */
+	public static function apply_title_template( string $template, string $title, int $season, int $episode, int $number ): string {
+		return trim(
+			strtr(
+				$template,
+				[
+					'{title}'     => $title,
+					'{titulo}'    => $title,
+					'{season}'    => (string) $season,
+					'{temporada}' => (string) $season,
+					'{episode}'   => (string) $episode,
+					'{episodio}'  => (string) $episode,
+					'{number}'    => (string) $number,
+					'{numero}'    => (string) $number,
+				]
+			)
+		);
 	}
 
 	/**
@@ -667,6 +737,34 @@ class VPConn_API {
 			update_option( 'vpconn_image_style', sanitize_text_field( (string) $body['image_style'] ) );
 		}
 
+		if ( isset( $body['writing_style'] ) ) {
+			update_option( 'vpconn_writing_style', self::sanitize_writing_style( (string) $body['writing_style'] ) );
+		}
+
+		if ( isset( $body['title_template'] ) ) {
+			$template = self::sanitize_title_template( (string) $body['title_template'] );
+			if ( null === $template ) {
+				return new WP_Error(
+					'vpconn_bad_template',
+					__( 'The title pattern must include {title}, where the episode title goes.', 'connector-for-vozcaster' ),
+					[ 'status' => 400 ]
+				);
+			}
+			update_option( 'vpconn_title_template', $template );
+		}
+
+		if ( isset( $body['style_reference_id'] ) ) {
+			$ref_id = absint( $body['style_reference_id'] );
+			if ( $ref_id && ! wp_attachment_is_image( $ref_id ) ) {
+				return new WP_Error( 'vpconn_bad_image', __( 'That attachment is not an image.', 'connector-for-vozcaster' ), [ 'status' => 400 ] );
+			}
+			update_option( 'vpconn_style_reference_id', $ref_id );
+		}
+
+		if ( isset( $body['show_chapters'] ) ) {
+			update_option( VPConn_Chapters::OPTION_SHOW, $body['show_chapters'] ? 1 : 0 );
+		}
+
 		return new WP_REST_Response( [ 'updated' => true, 'settings' => $this->_read_all_settings() ] );
 	}
 
@@ -726,6 +824,17 @@ class VPConn_API {
 	public function delete_separator(): WP_REST_Response {
 		VPConn_Media::clear_intro_outro( 'separator' );
 		return new WP_REST_Response( [ 'deleted' => true ], 200 );
+	}
+
+	/**
+	 * POST /media/style-reference
+	 */
+	public function upload_style_reference( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$result = $this->handle_file_upload( $request, [ 'image/jpeg', 'image/png', 'image/webp' ] );
+		if ( ! is_wp_error( $result ) ) {
+			update_option( 'vpconn_style_reference_id', (int) $result->get_data()['id'] );
+		}
+		return $result;
 	}
 
 	public function upload_transcript( WP_REST_Request $request ): WP_REST_Response|WP_Error {
@@ -958,8 +1067,11 @@ class VPConn_API {
 		$episode_no_powerpress = $episode_info['episode_no_in_season']; // número dentro de la temporada para PowerPress
 		$season_number       = $episode_info['season_number'];
 
-		// Construir el título del post según el prefijo configurado.
-		if ( ! empty( $title_prefix ) ) {
+		// Construir el título del post: la plantilla manda; si no hay, el prefijo.
+		$title_template = (string) get_option( 'vpconn_title_template', '' );
+		if ( '' !== $title_template ) {
+			$post_title = self::apply_title_template( $title_template, $clean_title, $season_number, $episode_no_powerpress, $episode_number );
+		} elseif ( ! empty( $title_prefix ) ) {
 			if ( $title_include_season && $season_number > 0 ) {
 				$post_title = sprintf( '%s T%dE%d: %s', $title_prefix, $season_number, $episode_number, $clean_title );
 			} else {
@@ -1010,6 +1122,9 @@ class VPConn_API {
 
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
 
+		// Chapters: list in the post, chapters file and <podcast:chapters>.
+		$chapters_url = VPConn_Chapters::save( (int) $post_id, VPConn_Chapters::sanitize( $request->get_param( 'chapters' ) ) );
+
 		// Imagen destacada: primero la subida por el bot, luego el cover del podcast del feed.
 		$cover_attachment_id = 0;
 		if ( $featured_media > 0 ) {
@@ -1037,7 +1152,8 @@ class VPConn_API {
 				$season_number,
 				(string) $episode_image_url,
 				$feed_slug,
-				(string) $transcript_url
+				(string) $transcript_url,
+				$chapters_url
 			);
 		}
 
@@ -1489,7 +1605,8 @@ class VPConn_API {
 		int $season_number = 1,
 		string $episode_image_url = '',
 		string $feed_slug = 'podcast',
-		string $transcript_url = ''
+		string $transcript_url = '',
+		string $chapters_url = ''
 	): void {
 		$file_size = 0;
 		$file_path = get_attached_file( $audio_id );
@@ -1541,6 +1658,12 @@ class VPConn_API {
 			$extra['pci_transcript']          = 1;
 			$extra['pci_transcript_url']      = $transcript_url;
 			$extra['pci_transcript_language'] = ( is_array( $feed_options ) ? ( $feed_options['rss_language'] ?? '' ) : '' ) ?: get_bloginfo( 'language' );
+		}
+
+		if ( $chapters_url ) {
+			// PowerPress writes <podcast:chapters> from this URL.
+			$extra['pci_chapters']     = 1;
+			$extra['pci_chapters_url'] = $chapters_url;
 		}
 
 		// Formato real de PowerPress: url\nbytes\nmime\nSERIALIZED

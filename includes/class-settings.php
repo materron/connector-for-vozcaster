@@ -19,10 +19,10 @@ class VPConn_Settings {
 	}
 
 	/**
-	 * Enqueues the media picker script on the Audio screen only.
+	 * Enqueues the media picker script on the Audio and Episodes screens.
 	 */
 	public function enqueue_admin_assets( string $hook ): void {
-		if ( ! str_ends_with( $hook, 'page_vozcaster-audio' ) ) {
+		if ( ! str_ends_with( $hook, 'page_vozcaster-audio' ) && ! str_ends_with( $hook, 'page_vozcaster-episodes' ) ) {
 			return;
 		}
 		wp_enqueue_media();
@@ -40,6 +40,7 @@ class VPConn_Settings {
 				'selectIntro' => __( 'Select intro audio', 'connector-for-vozcaster' ),
 				'selectOutro' => __( 'Select outro audio', 'connector-for-vozcaster' ),
 				'selectSeparator' => __( 'Select separator sound', 'connector-for-vozcaster' ),
+				'selectStyle' => __( 'Select the style reference image', 'connector-for-vozcaster' ),
 				'select'      => __( 'Select', 'connector-for-vozcaster' ),
 			]
 		);
@@ -121,7 +122,26 @@ class VPConn_Settings {
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'image_style_saved' ], self::back_url() ) );
 				exit;
 
+			case 'save_writing_style':
+				$style = isset( $_POST['writing_style'] ) ? VPConn_API::sanitize_writing_style( sanitize_textarea_field( wp_unslash( $_POST['writing_style'] ) ) ) : '';
+				update_option( 'vpconn_writing_style', $style );
+				update_option( VPConn_Chapters::OPTION_SHOW, ! empty( $_POST['show_chapters'] ) ? 1 : 0 );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'writing_style_saved' ], self::back_url() ) );
+				exit;
+
+			case 'set_style_reference':
+				$ref_id = absint( wp_unslash( $_POST['style_reference_id'] ?? 0 ) );
+				update_option( 'vpconn_style_reference_id', wp_attachment_is_image( $ref_id ) ? $ref_id : 0 );
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'image_style_saved' ], self::back_url() ) );
+				exit;
+
 			case 'save_title_config':
+				$template = VPConn_API::sanitize_title_template( sanitize_text_field( wp_unslash( $_POST['title_template'] ?? '' ) ) );
+				if ( null === $template ) {
+					wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'title_template_err' ], self::back_url() ) );
+					exit;
+				}
+				update_option( 'vpconn_title_template', $template );
 				$prefix             = sanitize_text_field( wp_unslash( $_POST['title_prefix'] ?? '' ) );
 				$include            = ! empty( $_POST['title_include_season'] ) ? 1 : 0;
 				$numbering_mode_raw = sanitize_key( wp_unslash( $_POST['episode_numbering_mode'] ?? 'enclosure' ) );
@@ -341,9 +361,11 @@ class VPConn_Settings {
 			'title_config_saved'     => __( 'Title settings saved.', 'connector-for-vozcaster' ),
 			'post_footer_saved'      => __( 'Post footer saved.', 'connector-for-vozcaster' ),
 			'image_style_saved'      => __( 'Image style saved.', 'connector-for-vozcaster' ),
+			'writing_style_saved'    => __( 'Writing style saved.', 'connector-for-vozcaster' ),
+			'title_template_err'     => __( 'The title pattern must include {title}, where the episode title goes. Nothing was saved.', 'connector-for-vozcaster' ),
 		];
 
-		$errors = [ 'intro_upload_err', 'outro_upload_err', 'separator_upload_err' ];
+		$errors = [ 'intro_upload_err', 'outro_upload_err', 'separator_upload_err', 'title_template_err' ];
 		if ( in_array( $msg, $errors, true ) && isset( $messages[ $msg ] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice detail after a nonce-verified redirect.
 			$detail = ! empty( $_GET['vpconn_err'] ) ? ' — ' . esc_html( rawurldecode( sanitize_text_field( wp_unslash( $_GET['vpconn_err'] ) ) ) ) : '';
@@ -436,6 +458,11 @@ class VPConn_Settings {
 		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
 		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
 		$image_style     = (string) get_option( 'vpconn_image_style', '' );
+		$writing_style   = (string) get_option( 'vpconn_writing_style', '' );
+		$title_template  = (string) get_option( 'vpconn_title_template', '' );
+		$style_ref_id    = (int) get_option( 'vpconn_style_reference_id', 0 );
+		$style_ref_url   = VPConn_API::style_reference_url();
+		$show_chapters   = VPConn_Chapters::show_in_post();
 		// Saved values, or the defaults for this site's music (see VPConn_Media::mix_settings).
 		$mix             = VPConn_Media::mix_settings();
 		$duck_start      = $mix['intro_duck_start'];
@@ -468,6 +495,22 @@ class VPConn_Settings {
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_title_config">
 				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="title_template"><?php esc_html_e( 'Title pattern', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<input
+								type="text" id="title_template" name="title_template"
+								value="<?php echo esc_attr( $title_template ); ?>"
+								placeholder="<?php echo esc_attr( 'E{episode}S{season} ({title})' ); ?>"
+								style="width:100%; max-width:400px;"
+							>
+							<p class="description">
+								<?php esc_html_e( 'Optional. When set, it replaces the prefix below. Placeholders: {title} (the episode title, required), {season}, {episode} (number within the season) and {number} (the number the prefix would use). The Spanish names {titulo}, {temporada}, {episodio} and {numero} work too.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
 					<tr>
 						<th scope="row">
 							<label for="title_prefix"><?php esc_html_e( 'Title prefix', 'connector-for-vozcaster' ); ?></label>
@@ -551,6 +594,49 @@ class VPConn_Settings {
 
 			<hr>
 
+			<?php /* ----- Writing style ----- */ ?>
+			<h2><?php esc_html_e( 'How your podcast writes', 'connector-for-vozcaster' ); ?></h2>
+			<p class="description">
+				<?php esc_html_e( 'A style guide for the AI that writes the title, excerpt, post and chapters: tone, humour, register, words to use or avoid. Without it, the AI copies the tone it hears. You can also change it from VozCaster, with /tono in Telegram.', 'connector-for-vozcaster' ); ?>
+			</p>
+
+			<form method="post" action="">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_writing_style">
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row">
+							<label for="writing_style"><?php esc_html_e( 'Style guide', 'connector-for-vozcaster' ); ?></label>
+						</th>
+						<td>
+							<textarea
+								id="writing_style" name="writing_style" rows="5" maxlength="1000"
+								style="width:100%; max-width:600px;"
+								placeholder="<?php esc_attr_e( 'e.g. Extremely irreverent, like the hosts. Swear words are fine. Keep the running jokes and the nicknames.', 'connector-for-vozcaster' ); ?>"
+							><?php echo esc_textarea( $writing_style ); ?></textarea>
+							<p class="description">
+								<?php esc_html_e( 'Up to 1,000 characters. It shapes the voice only: the AI still writes in the language of the episode and never invents facts.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Chapters', 'connector-for-vozcaster' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="show_chapters" value="1" <?php checked( $show_chapters ); ?>>
+								<?php esc_html_e( 'Show the chapter list at the end of each post', 'connector-for-vozcaster' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'With AI, the bot splits each episode into chapters with their times. They always go to the feed (podcast apps show them); this only decides whether the post lists them too.', 'connector-for-vozcaster' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save writing style', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<hr>
+
 			<?php /* ----- Post footer ----- */ ?>
 			<h2><?php esc_html_e( 'Post footer (signature)', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
@@ -613,6 +699,29 @@ class VPConn_Settings {
 					</tr>
 				</table>
 				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save image style', 'connector-for-vozcaster' ); ?></button></p>
+			</form>
+
+			<h3><?php esc_html_e( 'Style reference image', 'connector-for-vozcaster' ); ?></h3>
+			<p class="description">
+				<?php esc_html_e( 'Generated covers take the style of this image (technique, colours, mood), never its subject. You can also send it from Telegram: a photo with the caption /referencia.', 'connector-for-vozcaster' ); ?>
+			</p>
+			<?php if ( $style_ref_url ) : ?>
+				<p><img src="<?php echo esc_url( $style_ref_url ); ?>" alt="" style="max-width:200px;height:auto;border-radius:6px;"></p>
+			<?php endif; ?>
+			<form method="post" action="" id="vpconn_style_select_form">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="set_style_reference">
+				<input type="hidden" name="style_reference_id" id="vpconn_style_media_id" value="<?php echo esc_attr( (string) $style_ref_id ); ?>">
+				<p>
+					<button type="button" class="button" onclick="vpconnOpenMediaPicker('style')">
+						<?php echo esc_html( $style_ref_url ? __( 'Change image', 'connector-for-vozcaster' ) : __( 'Choose image', 'connector-for-vozcaster' ) ); ?>
+					</button>
+					<?php if ( $style_ref_url ) : ?>
+						<button type="submit" class="button-link button-link-delete" onclick="document.getElementById('vpconn_style_media_id').value='0';">
+							<?php esc_html_e( 'Remove', 'connector-for-vozcaster' ); ?>
+						</button>
+					<?php endif; ?>
+				</p>
 			</form>
 
 			<hr>

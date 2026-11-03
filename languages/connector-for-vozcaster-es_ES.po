@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.15.0\n"
+"Project-Id-Version: Connector for VozCaster 1.16.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
 "vozcaster\n"
 "POT-Creation-Date: 2026-10-29T11:43:16+00:00\n"
@@ -1760,3 +1760,66 @@ msgid ""
 msgstr ""
 "Muestra los episodios que esperan la revisión del usuario, para escucharlos "
 "y publicarlos o devolverlos."
+
+msgid "Chapters"
+msgstr "Capítulos"
+
+msgid "Select the style reference image"
+msgstr "Selecciona la imagen de referencia del estilo"
+
+msgid "Writing style saved."
+msgstr "Estilo de escritura guardado."
+
+msgid "The title pattern must include {title}, where the episode title goes. Nothing was saved."
+msgstr "El formato del título debe incluir {title} (o {titulo}), donde va el título del episodio. No se ha guardado nada."
+
+msgid "The title pattern must include {title}, where the episode title goes."
+msgstr "El formato del título debe incluir {title} (o {titulo}), donde va el título del episodio."
+
+msgid "That attachment is not an image."
+msgstr "Ese archivo no es una imagen."
+
+msgid "Title pattern"
+msgstr "Formato del título"
+
+msgid "Optional. When set, it replaces the prefix below. Placeholders: {title} (the episode title, required), {season}, {episode} (number within the season) and {number} (the number the prefix would use). The Spanish names {titulo}, {temporada}, {episodio} and {numero} work too."
+msgstr "Opcional. Si lo rellenas, sustituye al prefijo de abajo. Huecos: {titulo} (el título del episodio, obligatorio), {temporada}, {episodio} (número dentro de la temporada) y {numero} (el número que usaría el prefijo). También valen en inglés: {title}, {season}, {episode} y {number}."
+
+msgid "How your podcast writes"
+msgstr "Cómo escribe tu podcast"
+
+msgid "A style guide for the AI that writes the title, excerpt, post and chapters: tone, humour, register, words to use or avoid. Without it, the AI copies the tone it hears. You can also change it from VozCaster, with /tono in Telegram."
+msgstr "Una guía de estilo para la IA que escribe el título, el extracto, el post y los capítulos: tono, humor, registro, palabras que usar o evitar. Sin ella, la IA imita el tono que oye. También puedes cambiarla desde VozCaster, con /tono en Telegram."
+
+msgid "Style guide"
+msgstr "Guía de estilo"
+
+msgid "e.g. Extremely irreverent, like the hosts. Swear words are fine. Keep the running jokes and the nicknames."
+msgstr "p. ej. Extremadamente irreverente, como los presentadores. Los tacos valen. Respeta las bromas recurrentes y los motes."
+
+msgid "Up to 1,000 characters. It shapes the voice only: the AI still writes in the language of the episode and never invents facts."
+msgstr "Hasta 1.000 caracteres. Solo cambia la voz: la IA sigue escribiendo en el idioma del episodio y nunca se inventa nada."
+
+msgid "Show the chapter list at the end of each post"
+msgstr "Mostrar la lista de capítulos al final de cada post"
+
+msgid "With AI, the bot splits each episode into chapters with their times. They always go to the feed (podcast apps show them); this only decides whether the post lists them too."
+msgstr "Con IA, el bot divide cada episodio en capítulos con sus tiempos. Siempre van al feed (las apps de podcast los muestran); esto solo decide si el post también los lista."
+
+msgid "Save writing style"
+msgstr "Guardar estilo de escritura"
+
+msgid "Style reference image"
+msgstr "Imagen de referencia del estilo"
+
+msgid "Generated covers take the style of this image (technique, colours, mood), never its subject. You can also send it from Telegram: a photo with the caption /referencia."
+msgstr "Las portadas generadas toman el estilo de esta imagen (técnica, colores, ambiente), nunca su contenido. También puedes enviarla desde Telegram: una foto con el texto /referencia."
+
+msgid "Change image"
+msgstr "Cambiar imagen"
+
+msgid "Choose image"
+msgstr "Elegir imagen"
+
+msgid "Remove"
+msgstr "Quitar"

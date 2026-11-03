@@ -4,21 +4,23 @@
 
 	/**
 	 * Opens the WordPress media picker to choose an intro, outro or separator audio file,
-	 * then stores the chosen attachment ID and submits the matching form.
+	 * or the cover style reference image, then stores the chosen attachment ID and
+	 * submits the matching form.
 	 *
-	 * @param {string} type "intro", "outro" or "separator".
+	 * @param {string} type "intro", "outro", "separator" or "style".
 	 */
 	window.vpconnOpenMediaPicker = function ( type ) {
 		var titles = {
 			intro: vpconnAdmin.selectIntro,
 			outro: vpconnAdmin.selectOutro,
-			separator: vpconnAdmin.selectSeparator
+			separator: vpconnAdmin.selectSeparator,
+			style: vpconnAdmin.selectStyle
 		};
 
 		var frame = wp.media( {
 			title: titles[ type ] || titles.intro,
 			button: { text: vpconnAdmin.select },
-			library: { type: 'audio' },
+			library: { type: 'style' === type ? 'image' : 'audio' },
 			multiple: false
 		} );
 
