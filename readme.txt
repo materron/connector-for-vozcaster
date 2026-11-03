@@ -69,7 +69,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 
 This plugin is free and open source, and basic publishing is free too: no card, no invitation. The audio is always produced for you: silence trimming, basic noise reduction and intro/outro mixing.
 
-The paid **Pro** and **Studio** plans add the AI part: automatic transcription (Whisper), a complete article written from what you said, a generated featured image and advanced noise reduction (DeepFilter). The episode arrives with its title, text and cover already done, sounding its best. Pro includes 30 AI episodes per month and Studio 100; each started hour of audio counts as one episode. See [plans and pricing](https://vozcaster.com/pricing.html).
+The paid **Pro** and **Studio** plans add the AI part: automatic transcription (Whisper), a complete article written from what you said, a generated featured image and advanced noise reduction (DeepFilter). The episode arrives with its title, text and cover already done, sounding its best. Pro includes 30 AI episodes per month and Studio 100; each started hour of audio counts as one episode. If you only publish now and then, one-off episode packs (no subscription, valid for 12 months) give you the same. See [plans and pricing](https://vozcaster.com/en/pricing.html).
 
 = Languages =
 
@@ -108,7 +108,7 @@ Yes, since 1.14.0. Some hostings answer any request that is not a browser with a
 
 = Do I need a paid account to use it? =
 
-This plugin is free and open source. The VozCaster service it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription. See https://vozcaster.com/pricing.html for the current plans.
+This plugin is free and open source. The VozCaster service it connects to offers a free tier and a paid (Pro) tier. Basic episode publishing (including basic audio cleanup) works on the free tier; the Pro features — automatic transcription, a fully written article, a generated featured image and advanced noise reduction (DeepFilter) — require a Pro or Studio subscription or an episode pack. See https://vozcaster.com/en/pricing.html for the current plans.
 
 = Where is my audio stored? =
 
