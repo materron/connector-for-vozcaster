@@ -137,14 +137,14 @@ class VPConn_Guided_Setup {
 	/**
 	 * Where a form of this assistant goes back to after saving: the next step
 	 * when it asked for it (the "Save and continue" forms), otherwise the same
-	 * step (uploads, deletions, class changes).
+	 * step (uploads, deletions, class changes, and any error: $stay).
 	 */
-	public static function return_url(): string {
+	public static function return_url( bool $stay = false ): string {
 		$here = self::step_url( self::current_step_id() );
 		// Called after the nonce check of the form being handled.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$next = isset( $_POST['vpconn_next'] ) ? esc_url_raw( wp_unslash( $_POST['vpconn_next'] ) ) : '';
-		return '' !== $next ? wp_validate_redirect( $next, $here ) : $here;
+		return ( '' !== $next && ! $stay ) ? wp_validate_redirect( $next, $here ) : $here;
 	}
 
 	public static function has_started( int $user_id ): bool {

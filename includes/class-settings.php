@@ -143,7 +143,7 @@ class VPConn_Settings {
 			case 'save_title_config':
 				$template = VPConn_API::sanitize_title_template( sanitize_text_field( wp_unslash( $_POST['title_template'] ?? '' ) ) );
 				if ( null === $template ) {
-					wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'title_template_err' ], self::back_url() ) );
+					wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'title_template_err' ], self::back_url( true ) ) );
 					exit;
 				}
 				update_option( 'vpconn_title_template', $template );
@@ -428,7 +428,7 @@ class VPConn_Settings {
 	 * Where a settings form goes back to after saving: the page it was sent
 	 * from, without the previous notice parameters.
 	 */
-	private static function back_url(): string {
+	private static function back_url( bool $stay = false ): string {
 		// Forms post to the page itself (action=""), so the page slug is in the
 		// request URL. wp_get_referer() can't be used: it returns false when the
 		// referer equals the current URL, which is always the case here.
@@ -438,7 +438,7 @@ class VPConn_Settings {
 		// Saved from the Guided setup assistant: go to its next step, or stay on
 		// the current one for the forms that do not advance (uploads, deletions…).
 		if ( VPConn_Assistant::PAGE_SLUG === $page ) {
-			return VPConn_Guided_Setup::return_url();
+			return VPConn_Guided_Setup::return_url( $stay );
 		}
 		$tab  = str_starts_with( $page, 'vozcaster-' ) ? substr( $page, strlen( 'vozcaster-' ) ) : '';
 		return self::get_page_url( array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes' );
