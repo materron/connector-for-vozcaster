@@ -236,6 +236,7 @@ Service URLs and policies:
 
 = 1.17.0 =
 * New: VozCaster → Assistants, with a "Getting started" guide (it opens by itself the first time you activate the plugin). It installs PowerPress if needed, fills in your podcast data for Apple Podcasts and Spotify (with a button that suggests values from your site, including a default cover), connects your account with Telegram or the app, and tells you when it is time to send the podcast to the platforms.
+* New: "Guided setup" in VozCaster → Assistants: every setting explained step by step (your podcast with extra feed fields, episode titles, writing style, post footer, cover images, AI notice, intro/outro and mix, who can publish, groups and reviewers, connection and platforms), with an index to jump to any step and the option to resume where you left.
 * New: a notice when your first episode is published, pointing to VozCaster → Distribute.
 
 = 1.16.0 =
