@@ -616,8 +616,10 @@ class VPConn_Assistant {
 		$next     = $opts['next'];
 		$full     = ! empty( $opts['full'] );
 		?>
+		<?php if ( ! $full ) : // Guided setup prints its own title and explanation. ?>
 		<h2><?php esc_html_e( 'Your podcast', 'connector-for-vozcaster' ); ?></h2>
 		<p><?php esc_html_e( 'This is what Apple Podcasts, Spotify and the other apps show about your podcast. You can change all of it later.', 'connector-for-vozcaster' ); ?></p>
+		<?php endif; ?>
 
 		<p>
 			<button type="button" class="button" id="vpconn-gs-fill"><?php esc_html_e( 'Fill in with default data', 'connector-for-vozcaster' ); ?></button>
