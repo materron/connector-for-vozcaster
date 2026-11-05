@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.17.0
+Stable tag: 1.17.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,7 +54,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 
 * A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
 * **Per-podcast settings**: title prefix or a title pattern with placeholders (E{episode}S{season} ({title})), season, how your podcast writes (a style guide for the AI), intro, outro and separator sound with their mixing times, post signature, a fixed element and a style reference image for the covers, and category mapping.
-* **Chapters**: listed at the end of the post and added to the feed as <podcast:chapters>, so podcast apps show them.
+* **Chapters**: listed at the end of the post and added to the feed as `<podcast:chapters>`, so podcast apps show them.
 * **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
 * **Who publishes where**: a table of roles × podcasts where each cell is "publishes", "with review" or no access, so a school's English teachers publish only in the English podcast and the general one, and its students send theirs for review.
 * **Classes**: groups inside a podcast (B1.1, "Mila's students"…), created by the teachers themselves, each with its own page, its own feed and the teachers who review it. Their episodes are published in the podcast as usual; at the end of the year a class is archived, never deleted.
@@ -234,6 +234,10 @@ Service URLs and policies:
 
 == Changelog ==
 
+= 1.17.1 =
+* Fix: the Spanish (es_ES) translation shipped with the plugin now covers the Assistants and follows the WordPress.org Spanish glossary ("entrada", "sitio", "Acceder", "perfil").
+* Fix: the readme showed "added to the feed as ," because the `<podcast:chapters>` and `<podcast:transcript>` tags were stripped.
+
 = 1.17.0 =
 * New: VozCaster → Assistants, with a "Getting started" guide (it opens by itself the first time you activate the plugin). It installs PowerPress if needed, fills in your podcast data for Apple Podcasts and Spotify (with a button that suggests values from your site, including a default cover), connects your account with Telegram or the app, and tells you when it is time to send the podcast to the platforms.
 * New: "Guided setup" in VozCaster → Assistants: every setting explained step by step (your podcast with extra feed fields, episode titles, writing style, post footer, cover images, AI notice, intro/outro and mix, who can publish, groups and reviewers, connection and platforms), with an index to jump to any step and the option to resume where you left.
@@ -242,14 +246,14 @@ Service URLs and policies:
 = 1.16.0 =
 * New: "How your podcast writes" in VozCaster → Episodes. A style guide (tone, humour, register) that the AI follows for the title, excerpt, post and chapters. Also from the bot with /tono and from the app.
 * New: title pattern with placeholders ({title}, {season}, {episode}, {number}), for podcasts whose titles don't fit the prefix, e.g. «E11S18 ({title})». Also with /titulo.
-* New: chapters. With AI, the bot splits each episode into chapters with their times. They are listed at the end of the post (can be turned off), saved as a chapters file and added to the feed as <podcast:chapters>.
+* New: chapters. With AI, the bot splits each episode into chapters with their times. They are listed at the end of the post (can be turned off), saved as a chapters file and added to the feed as `<podcast:chapters>`.
 * New: style reference image for AI covers: the covers take its style, never its subject. Chosen from the media library or sent from the bot (/referencia) or the app.
 
 = 1.15.3 =
 * Fix: VozCaster → Distribute and VozCaster → Access show the same podcasts as Connect, so a podcast the site hides (for example an empty main feed when every podcast lives in its own channel) no longer appears there.
 
 = 1.15.2 =
-* Fix: the episode transcript (.vtt) now reaches the podcast feed as <podcast:transcript>, in the podcast's language. It was saved where PowerPress does not read it.
+* Fix: the episode transcript (.vtt) now reaches the podcast feed as `<podcast:transcript>`, in the podcast's language. It was saved where PowerPress does not read it.
 
 = 1.15.1 =
 * Fix: episodes sent to a PowerPress custom channel went to the main podcast feed instead of the channel's own feed. They now land in their channel, and episode numbers count the channel's episodes.
