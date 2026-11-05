@@ -141,7 +141,7 @@ class VPConn_Assistant {
 	}
 
 	/** Script for the podcast form (step 2) and the connection poll (step 3). */
-	public static function enqueue_script( int $step ): void {
+	public static function enqueue_script( int $step, string $feed_name = '' ): void {
 		wp_enqueue_script( 'vpconn-assistant', VPCONN_URL . 'assets/js/assistant.js', [], VPCONN_VERSION, true );
 		wp_localize_script(
 			'vpconn-assistant',
@@ -151,7 +151,7 @@ class VPConn_Assistant {
 				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 				'nonce'         => wp_create_nonce( 'vpconn_gs_status' ),
 				'pollMs'        => 4000,
-				'defaults'      => 2 === $step ? self::default_values() : [],
+				'defaults'      => 2 === $step ? self::default_values( $feed_name ) : [],
 				'defaultCover'  => VPCONN_URL . 'assets/default-cover.jpg',
 				'i18n'          => [
 					'pickCover'   => __( 'Choose the cover', 'connector-for-vozcaster' ),
@@ -241,7 +241,7 @@ class VPConn_Assistant {
 	// -------------------------------------------------------------------------
 
 	/** Values deduced from the site, for the empty fields of the podcast form. */
-	public static function default_values(): array {
+	public static function default_values( string $feed_name = '' ): array {
 		$site = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 		$tag  = trim( wp_specialchars_decode( get_bloginfo( 'description' ), ENT_QUOTES ) );
 		$user = wp_get_current_user();
@@ -274,7 +274,7 @@ class VPConn_Assistant {
 		}
 
 		return [
-			'title'       => $site,
+			'title'       => '' !== $feed_name ? $feed_name : $site,
 			'description' => '' !== $tag
 				? $tag
 				/* translators: %s: site name. */
@@ -390,6 +390,10 @@ class VPConn_Assistant {
 			'type'        => sanitize_key( wp_unslash( $_POST['type'] ?? '' ) ),
 			'website'     => trim( esc_url_raw( wp_unslash( $_POST['website'] ?? '' ) ) ),
 		];
+		$feed   = sanitize_key( wp_unslash( $_POST['feed'] ?? self::FEED ) );
+		if ( self::FEED !== $feed && ! in_array( $feed, array_column( VPConn_Access::feeds_for_user( get_current_user_id() ), 'slug' ), true ) ) {
+			wp_die( esc_html__( 'You are not allowed to do this.', 'connector-for-vozcaster' ), '', [ 'response' => 403 ] );
+		}
 		$next   = wp_validate_redirect( esc_url_raw( wp_unslash( $_POST['vpconn_next'] ?? '' ) ), self::get_step_url( 3 ) );
 		$return = wp_validate_redirect( esc_url_raw( wp_unslash( $_POST['vpconn_return'] ?? '' ) ), self::get_step_url( 2 ) );
 		$cover_id   = absint( wp_unslash( $_POST['artwork_id'] ?? 0 ) );
@@ -421,7 +425,7 @@ class VPConn_Assistant {
 			$values['artwork_id'] = $cover_id;
 		}
 
-		$saved = VPConn_Podcast_Info::save_fields( self::FEED, $values );
+		$saved = VPConn_Podcast_Info::save_fields( $feed, $values );
 		if ( is_wp_error( $saved ) ) {
 			$messages = [
 				'vpconn_invalid_email'    => __( 'That email address does not look right. Check it and try again.', 'connector-for-vozcaster' ),
@@ -582,13 +586,18 @@ class VPConn_Assistant {
 	 * @param array $opts         next, back, return (URLs) and full (bool: extra feed fields).
 	 */
 	public static function render_podcast_form( array $flash_values, array $opts ): void {
-		$info = VPConn_Podcast_Info::describe( self::FEED );
+		$feed = (string) ( $opts['feed'] ?? self::FEED );
+		$info = VPConn_Podcast_Info::describe( $feed );
 		if ( is_wp_error( $info ) ) {
 			echo '<p>' . esc_html__( 'The podcast data could not be read.', 'connector-for-vozcaster' ) . '</p>';
 			return;
 		}
 		$d     = $info['data'];
-		$val   = static fn( string $k ) => (string) ( $flash_values[ $k ] ?? $d[ $k ] ?? '' );
+		// A channel or category podcast shows the main feed's values when it has none of its
+		// own: leave those empty (placeholder) so saving does not copy them over.
+		$inherited = (array) $info['inherited'];
+		$val   = static fn( string $k ) => (string) ( $flash_values[ $k ] ?? ( in_array( $k, $inherited, true ) ? '' : ( $d[ $k ] ?? '' ) ) );
+		$ph    = static fn( string $k ) => in_array( $k, $inherited, true ) ? (string) ( $d[ $k ] ?? '' ) : '';
 		$cats  = VPConn_Podcast_Info::apple_categories();
 		$langs = VPConn_Podcast_Info::languages();
 
@@ -619,6 +628,7 @@ class VPConn_Assistant {
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="vpconn-gs-form">
 			<?php wp_nonce_field( 'vpconn_gs_podcast' ); ?>
 			<input type="hidden" name="action" value="vpconn_gs_podcast">
+			<input type="hidden" name="feed" value="<?php echo esc_attr( $feed ); ?>">
 			<input type="hidden" name="vpconn_next" value="<?php echo esc_url( $next ); ?>">
 			<input type="hidden" name="vpconn_return" value="<?php echo esc_url( $opts['return'] ); ?>">
 			<input type="hidden" name="artwork_id" id="vpconn-gs-artwork-id" value="<?php echo esc_attr( (string) $art_post ); ?>">
@@ -628,20 +638,20 @@ class VPConn_Assistant {
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><label for="vpconn-gs-title"><?php esc_html_e( 'Title', 'connector-for-vozcaster' ); ?></label></th>
-					<td><input type="text" class="regular-text" id="vpconn-gs-title" name="title" data-default="title" value="<?php echo esc_attr( $val( 'title' ) ); ?>"></td>
+					<td><input type="text" class="regular-text" id="vpconn-gs-title" name="title" data-default="title" placeholder="<?php echo esc_attr( $ph( 'title' ) ); ?>" value="<?php echo esc_attr( $val( 'title' ) ); ?>"></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="vpconn-gs-description"><?php esc_html_e( 'Description', 'connector-for-vozcaster' ); ?></label></th>
-					<td><textarea class="large-text" rows="3" id="vpconn-gs-description" name="description" data-default="description"><?php echo esc_textarea( $val( 'description' ) ); ?></textarea></td>
+					<td><textarea class="large-text" rows="3" id="vpconn-gs-description" name="description" data-default="description" placeholder="<?php echo esc_attr( $ph( 'description' ) ); ?>"><?php echo esc_textarea( $val( 'description' ) ); ?></textarea></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="vpconn-gs-author"><?php esc_html_e( 'Author', 'connector-for-vozcaster' ); ?></label></th>
-					<td><input type="text" class="regular-text" id="vpconn-gs-author" name="author" data-default="author" value="<?php echo esc_attr( $val( 'author' ) ); ?>"></td>
+					<td><input type="text" class="regular-text" id="vpconn-gs-author" name="author" data-default="author" placeholder="<?php echo esc_attr( $ph( 'author' ) ); ?>" value="<?php echo esc_attr( $val( 'author' ) ); ?>"></td>
 				</tr>
 				<tr>
 					<th scope="row"><label for="vpconn-gs-email"><?php esc_html_e( 'Email', 'connector-for-vozcaster' ); ?></label></th>
 					<td>
-						<input type="email" class="regular-text" id="vpconn-gs-email" name="email" data-default="email" value="<?php echo esc_attr( $val( 'email' ) ); ?>">
+						<input type="email" class="regular-text" id="vpconn-gs-email" name="email" data-default="email" placeholder="<?php echo esc_attr( $ph( 'email' ) ); ?>" value="<?php echo esc_attr( $val( 'email' ) ); ?>">
 						<p class="description"><?php esc_html_e( 'It appears in your public feed, and Apple uses it to check that the podcast is yours.', 'connector-for-vozcaster' ); ?></p>
 					</td>
 				</tr>
@@ -680,7 +690,7 @@ class VPConn_Assistant {
 				<tr>
 					<th scope="row"><label for="vpconn-gs-copyright"><?php esc_html_e( 'Copyright', 'connector-for-vozcaster' ); ?></label></th>
 					<td>
-						<input type="text" class="regular-text" id="vpconn-gs-copyright" name="copyright" data-default="copyright" value="<?php echo esc_attr( $val( 'copyright' ) ); ?>">
+						<input type="text" class="regular-text" id="vpconn-gs-copyright" name="copyright" data-default="copyright" placeholder="<?php echo esc_attr( $ph( 'copyright' ) ); ?>" value="<?php echo esc_attr( $val( 'copyright' ) ); ?>">
 						<p class="description"><?php esc_html_e( 'Optional. Shown in your feed, for example «© 2026 Your name».', 'connector-for-vozcaster' ); ?></p>
 					</td>
 				</tr>
@@ -735,12 +745,12 @@ class VPConn_Assistant {
 		<?php
 	}
 
-	public static function render_step_connect( int $user_id, string $next, string $back = '' ): void {
+	public static function render_step_connect( int $user_id, string $next, string $back = '', string $feed_slug = self::FEED ): void {
 		$connected = VPConn_Auth::has_token( $user_id );
 		$feeds     = VPConn_Access::feeds_for_user( $user_id );
 		$feed      = $feeds[0] ?? null;
 		foreach ( $feeds as $f ) {
-			if ( self::FEED === $f['slug'] ) {
+			if ( $feed_slug === $f['slug'] ) {
 				$feed = $f;
 			}
 		}
@@ -816,8 +826,8 @@ class VPConn_Assistant {
 	 *
 	 * @param string $here URL of the screen, for "Check again".
 	 */
-	public static function render_platforms_block( string $here ): void {
-		$info     = VPConn_Podcast_Info::describe( self::FEED );
+	public static function render_platforms_block( string $here, string $feed = self::FEED ): void {
+		$info     = VPConn_Podcast_Info::describe( $feed );
 		$episodes = is_wp_error( $info ) ? 0 : (int) $info['episodes'];
 		$default  = (int) get_option( self::COVER_OPTION );
 		$uses_default = ! is_wp_error( $info ) && ! empty( $info['artwork']['id'] ) && $default && (int) $info['artwork']['id'] === $default;
@@ -834,7 +844,7 @@ class VPConn_Assistant {
 					<div class="notice notice-warning inline"><p><?php esc_html_e( 'Your podcast still uses the VozCaster default cover. It is better to set your own before sending it to the platforms (VozCaster → Assistants → Getting started, step 2).', 'connector-for-vozcaster' ); ?></p></div>
 				<?php endif; ?>
 				<p><?php esc_html_e( 'Your first episode is out. Send your feed to each platform once; after that they pick up every new episode by themselves.', 'connector-for-vozcaster' ); ?></p>
-				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=vozcaster-distribute' ) ); ?>"><?php esc_html_e( 'Send to platforms', 'connector-for-vozcaster' ); ?></a></p>
+				<p><a class="button button-primary" href="<?php echo esc_url( add_query_arg( 'feed', $feed, admin_url( 'admin.php?page=vozcaster-distribute' ) ) ); ?>"><?php esc_html_e( 'Send to platforms', 'connector-for-vozcaster' ); ?></a></p>
 			<?php endif; ?>
 		<?php
 	}

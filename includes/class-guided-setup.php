@@ -18,6 +18,7 @@ class VPConn_Guided_Setup {
 	const ASSISTANT    = 'guided-setup';
 	const META_STEP    = 'vpconn_gs_guided_step';
 	const META_VISITED = 'vpconn_gs_guided_visited';
+	const META_FEED    = 'vpconn_gs_guided_feed';
 
 	// -------------------------------------------------------------------------
 	// Steps
@@ -31,6 +32,12 @@ class VPConn_Guided_Setup {
 	 */
 	private static function all_steps(): array {
 		return [
+			'feed'        => [
+				'chapter' => __( 'Your podcast', 'connector-for-vozcaster' ),
+				'title'   => __( 'Which podcast do you want to set up?', 'connector-for-vozcaster' ),
+				'intro'   => __( 'This site has more than one podcast. Choose the one to set up now; the steps about its data and its platforms will work on it. You can change it at any time from the top of this page.', 'connector-for-vozcaster' ),
+				'footer'  => 'self',
+			],
 			'podcast'     => [
 				'chapter' => __( 'Your podcast', 'connector-for-vozcaster' ),
 				'title'   => __( 'Your podcast', 'connector-for-vozcaster' ),
@@ -109,18 +116,46 @@ class VPConn_Guided_Setup {
 	/** Steps this user may see: administrators all of them, anyone else only the connection. */
 	private static function steps(): array {
 		$all = self::all_steps();
-		return current_user_can( 'manage_options' ) ? $all : array_intersect_key( $all, [ 'connect' => true ] );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return array_intersect_key( $all, [ 'connect' => true ] );
+		}
+		// The podcast picker only exists when there is something to pick.
+		if ( count( self::feeds() ) < 2 ) {
+			unset( $all['feed'] );
+		}
+		return $all;
 	}
 
-	public static function step_url( string $id ): string {
-		return add_query_arg(
-			[
-				'page'      => VPConn_Assistant::PAGE_SLUG,
-				'assistant' => self::ASSISTANT,
-				'step'      => $id,
-			],
-			admin_url( 'admin.php' )
-		);
+	/** @return array<int, array> The podcasts of this site the user can work on. */
+	private static function feeds(): array {
+		return VPConn_Access::feeds_for_user( get_current_user_id() );
+	}
+
+	/** The podcast the feed-dependent steps work on: ?feed=, the last one used, or the first. */
+	private static function current_feed(): array {
+		$feeds = self::feeds();
+		// Read-only navigation on an admin screen.
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$wanted = isset( $_GET['feed'] ) ? sanitize_key( wp_unslash( $_GET['feed'] ) ) : (string) get_user_meta( get_current_user_id(), self::META_FEED, true );
+		foreach ( $feeds as $feed ) {
+			if ( $feed['slug'] === $wanted ) {
+				return $feed;
+			}
+		}
+		return $feeds[0] ?? [ 'slug' => VPConn_Assistant::FEED, 'name' => get_bloginfo( 'name' ) ];
+	}
+
+	public static function step_url( string $id, ?string $feed = null ): string {
+		$args = [
+			'page'      => VPConn_Assistant::PAGE_SLUG,
+			'assistant' => self::ASSISTANT,
+			'step'      => $id,
+		];
+		// Only sites with several podcasts carry the chosen one in the address.
+		if ( count( self::feeds() ) > 1 ) {
+			$args['feed'] = $feed ?? self::current_feed()['slug'];
+		}
+		return add_query_arg( $args, admin_url( 'admin.php' ) );
 	}
 
 	private static function current_step_id(): string {
@@ -154,6 +189,9 @@ class VPConn_Guided_Setup {
 	public static function resume_url( int $user_id ): string {
 		$id    = (string) get_user_meta( $user_id, self::META_STEP, true );
 		$steps = self::steps();
+		if ( 'feed' === $id && isset( $steps['podcast'] ) && '' !== (string) get_user_meta( $user_id, self::META_FEED, true ) ) {
+			$id = 'podcast';
+		}
 		return self::step_url( isset( $steps[ $id ] ) ? $id : (string) array_key_first( $steps ) );
 	}
 
@@ -165,7 +203,8 @@ class VPConn_Guided_Setup {
 		$id = self::current_step_id();
 		if ( 'podcast' === $id ) {
 			wp_enqueue_media();
-			VPConn_Assistant::enqueue_script( 2 );
+			$feed = self::current_feed();
+			VPConn_Assistant::enqueue_script( 2, VPConn_Assistant::FEED === $feed['slug'] ? '' : (string) $feed['name'] );
 		} elseif ( 'connect' === $id ) {
 			VPConn_Assistant::enqueue_script( 3 );
 		} elseif ( in_array( $id, [ 'image', 'audio-files' ], true ) ) {
@@ -181,6 +220,8 @@ class VPConn_Guided_Setup {
 		$steps   = self::steps();
 		$ids     = array_keys( $steps );
 		$id      = self::current_step_id();
+		$feed    = self::current_feed();
+		update_user_meta( $user_id, self::META_FEED, $feed['slug'] );
 		$pos     = (int) array_search( $id, $ids, true );
 		$step    = $steps[ $id ];
 		$next    = isset( $ids[ $pos + 1 ] ) ? self::step_url( $ids[ $pos + 1 ] ) : VPConn_Assistant::get_page_url();
@@ -206,7 +247,7 @@ class VPConn_Guided_Setup {
 			<a class="vpconn-gs-skip" href="<?php echo esc_url( VPConn_Assistant::get_page_url() ); ?>"><?php esc_html_e( 'Back to Assistants', 'connector-for-vozcaster' ); ?></a>
 		</div>
 
-		<?php self::render_index( $steps, $id, $visited ); ?>
+		<?php self::render_index( $steps, $id, $visited, $feed ); ?>
 
 		<?php
 		if ( ! empty( $flash['message'] ) ) {
@@ -229,8 +270,10 @@ class VPConn_Guided_Setup {
 						'back'   => $prev,
 						'return' => $here,
 						'full'   => true,
+						'feed'   => $feed['slug'],
 					]
 				),
+				'feed'        => self::render_feed_picker( $feed ),
 				'titles'      => VPConn_Settings::section_titles( $ctx ),
 				'writing'     => VPConn_Settings::section_writing( $ctx ),
 				'footer'      => VPConn_Settings::section_footer( $ctx ),
@@ -240,8 +283,8 @@ class VPConn_Guided_Setup {
 				'mix'         => VPConn_Settings::section_mix( $ctx ),
 				'access'      => VPConn_Settings::section_access( $ctx ),
 				'groups'      => self::render_groups( $here ),
-				'connect'     => VPConn_Assistant::render_step_connect( $user_id, $next, $prev ),
-				default       => VPConn_Assistant::render_platforms_block( $here ),
+				'connect'     => VPConn_Assistant::render_step_connect( $user_id, $next, $prev, $feed['slug'] ),
+				default       => VPConn_Assistant::render_platforms_block( $here, $feed['slug'] ),
 			};
 			self::render_footer( $step['footer'], $next, $prev );
 			?>
@@ -250,7 +293,7 @@ class VPConn_Guided_Setup {
 	}
 
 	/** Index of every step, grouped by chapter, with the visited ones ticked. */
-	private static function render_index( array $steps, string $current, array $visited ): void {
+	private static function render_index( array $steps, string $current, array $visited, array $feed ): void {
 		$chapters = [];
 		foreach ( $steps as $id => $step ) {
 			$chapters[ $step['chapter'] ][ $id ] = $step['title'];
@@ -258,6 +301,15 @@ class VPConn_Guided_Setup {
 		?>
 		<details class="vpconn-gs-index" <?php echo count( $steps ) > 1 ? 'open' : 'hidden'; ?>>
 			<summary><?php esc_html_e( 'All steps', 'connector-for-vozcaster' ); ?></summary>
+			<?php if ( isset( $steps['feed'] ) ) : ?>
+				<p class="vpconn-gs-current-feed">
+					<?php
+					/* translators: %s: podcast name. */
+					echo esc_html( sprintf( __( 'Podcast: %s', 'connector-for-vozcaster' ), $feed['name'] ) );
+					?>
+					— <a href="<?php echo esc_url( self::step_url( 'feed' ) ); ?>"><?php esc_html_e( 'Change', 'connector-for-vozcaster' ); ?></a>
+				</p>
+			<?php endif; ?>
 			<ol>
 				<?php foreach ( $chapters as $chapter => $items ) : ?>
 					<li>
@@ -281,6 +333,33 @@ class VPConn_Guided_Setup {
 				<?php endforeach; ?>
 			</ol>
 		</details>
+		<?php
+	}
+
+	/** "Which podcast do you want to set up?": the podcasts that already exist in PowerPress. */
+	private static function render_feed_picker( array $current ): void {
+		?>
+		<table class="widefat striped vpconn-gs-feeds">
+			<tbody>
+			<?php foreach ( self::feeds() as $feed ) : ?>
+				<tr>
+					<td>
+						<strong><?php echo esc_html( $feed['name'] ); ?></strong>
+						<?php if ( $feed['slug'] === $current['slug'] ) : ?>
+							<span class="vpconn-gs-badge"><?php esc_html_e( 'Selected', 'connector-for-vozcaster' ); ?></span>
+						<?php endif; ?>
+					</td>
+					<td style="text-align:right;">
+						<a class="button button-primary" href="<?php echo esc_url( self::step_url( 'podcast', $feed['slug'] ) ); ?>"><?php esc_html_e( 'Set up this podcast', 'connector-for-vozcaster' ); ?></a>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+		<p class="description">
+			<?php esc_html_e( 'This assistant does not create podcasts or channels: that is done in PowerPress.', 'connector-for-vozcaster' ); ?>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=powerpressadmin_basic' ) ); ?>"><?php esc_html_e( 'Open PowerPress', 'connector-for-vozcaster' ); ?></a>
+		</p>
 		<?php
 	}
 
