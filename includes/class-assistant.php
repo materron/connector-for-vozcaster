@@ -373,7 +373,7 @@ class VPConn_Assistant {
 		];
 		$cover_id   = absint( wp_unslash( $_POST['artwork_id'] ?? 0 ) );
 		$cover_orig = absint( wp_unslash( $_POST['artwork_orig'] ?? 0 ) );
-		$use_def    = '1' === ( $_POST['use_default_cover'] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Compared, never stored.
+		$use_def    = '1' === sanitize_text_field( wp_unslash( $_POST['use_default_cover'] ?? '' ) );
 
 		$back = static function ( string $message ) use ( $posted, $cover_id, $use_def ): void {
 			self::flash( 'error', $message, $posted + [ 'artwork_id' => $cover_id, 'use_default' => $use_def ] );
