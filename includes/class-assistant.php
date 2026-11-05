@@ -77,7 +77,7 @@ class VPConn_Assistant {
 	}
 
 	/** Queues a one-shot message for the next render of the wizard. */
-	private static function flash( string $type, string $message, array $values = [] ): void {
+	public static function flash( string $type, string $message, array $values = [] ): void {
 		set_transient(
 			self::NOTICE_TRANS . get_current_user_id(),
 			[
@@ -89,7 +89,7 @@ class VPConn_Assistant {
 		);
 	}
 
-	private static function take_flash(): array {
+	public static function take_flash(): array {
 		$key  = self::NOTICE_TRANS . get_current_user_id();
 		$data = get_transient( $key );
 		if ( false === $data ) {
@@ -123,6 +123,10 @@ class VPConn_Assistant {
 		}
 		wp_enqueue_style( 'vpconn-assistant', VPCONN_URL . 'assets/css/assistant.css', [], VPCONN_VERSION );
 
+		if ( self::is_guided_request() ) {
+			VPConn_Guided_Setup::enqueue();
+			return;
+		}
 		if ( ! self::is_wizard_request() ) {
 			return;
 		}
@@ -133,6 +137,11 @@ class VPConn_Assistant {
 		if ( 2 !== $step && 3 !== $step ) {
 			return;
 		}
+		self::enqueue_script( $step );
+	}
+
+	/** Script for the podcast form (step 2) and the connection poll (step 3). */
+	public static function enqueue_script( int $step ): void {
 		wp_enqueue_script( 'vpconn-assistant', VPCONN_URL . 'assets/js/assistant.js', [], VPCONN_VERSION, true );
 		wp_localize_script(
 			'vpconn-assistant',
@@ -176,6 +185,11 @@ class VPConn_Assistant {
 	private static function is_wizard_request(): bool {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return isset( $_GET['assistant'] ) && self::ASSISTANT === sanitize_key( wp_unslash( $_GET['assistant'] ) );
+	}
+
+	private static function is_guided_request(): bool {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return isset( $_GET['assistant'] ) && VPConn_Guided_Setup::ASSISTANT === sanitize_key( wp_unslash( $_GET['assistant'] ) );
 	}
 
 	// -------------------------------------------------------------------------
@@ -227,7 +241,7 @@ class VPConn_Assistant {
 	// -------------------------------------------------------------------------
 
 	/** Values deduced from the site, for the empty fields of the podcast form. */
-	private static function default_values(): array {
+	public static function default_values(): array {
 		$site = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
 		$tag  = trim( wp_specialchars_decode( get_bloginfo( 'description' ), ENT_QUOTES ) );
 		$user = wp_get_current_user();
@@ -270,6 +284,8 @@ class VPConn_Assistant {
 			'language'    => $language,
 			'category'    => $category,
 			'explicit'    => '0',
+			'copyright'   => sprintf( '© %1$s %2$s', gmdate( 'Y' ), $site ),
+			'type'        => 'episodic',
 		];
 	}
 
@@ -370,19 +386,24 @@ class VPConn_Assistant {
 			'language'    => sanitize_text_field( wp_unslash( $_POST['language'] ?? '' ) ),
 			'category'    => sanitize_text_field( wp_unslash( $_POST['category'] ?? '' ) ),
 			'explicit'    => sanitize_text_field( wp_unslash( $_POST['explicit'] ?? '' ) ),
+			'copyright'   => sanitize_text_field( wp_unslash( $_POST['copyright'] ?? '' ) ),
+			'type'        => sanitize_key( wp_unslash( $_POST['type'] ?? '' ) ),
+			'website'     => trim( esc_url_raw( wp_unslash( $_POST['website'] ?? '' ) ) ),
 		];
+		$next   = wp_validate_redirect( esc_url_raw( wp_unslash( $_POST['vpconn_next'] ?? '' ) ), self::get_step_url( 3 ) );
+		$return = wp_validate_redirect( esc_url_raw( wp_unslash( $_POST['vpconn_return'] ?? '' ) ), self::get_step_url( 2 ) );
 		$cover_id   = absint( wp_unslash( $_POST['artwork_id'] ?? 0 ) );
 		$cover_orig = absint( wp_unslash( $_POST['artwork_orig'] ?? 0 ) );
 		$use_def    = '1' === sanitize_text_field( wp_unslash( $_POST['use_default_cover'] ?? '' ) );
 
-		$back = static function ( string $message ) use ( $posted, $cover_id, $use_def ): void {
+		$back = static function ( string $message ) use ( $posted, $cover_id, $use_def, $return ): void {
 			self::flash( 'error', $message, $posted + [ 'artwork_id' => $cover_id, 'use_default' => $use_def ] );
-			wp_safe_redirect( self::get_step_url( 2 ) );
+			wp_safe_redirect( $return );
 			exit;
 		};
 
 		$values = [];
-		foreach ( [ 'title', 'description', 'author', 'email', 'language', 'category' ] as $field ) {
+		foreach ( [ 'title', 'description', 'author', 'email', 'language', 'category', 'copyright', 'type', 'website' ] as $field ) {
 			if ( '' !== $posted[ $field ] ) {
 				$values[ $field ] = $posted[ $field ];
 			}
@@ -406,6 +427,8 @@ class VPConn_Assistant {
 				'vpconn_invalid_email'    => __( 'That email address does not look right. Check it and try again.', 'connector-for-vozcaster' ),
 				'vpconn_invalid_language' => __( 'Choose the language from the list.', 'connector-for-vozcaster' ),
 				'vpconn_invalid_category' => __( 'Choose the category from the list.', 'connector-for-vozcaster' ),
+				'vpconn_invalid_type'     => __( 'Choose the podcast type from the list.', 'connector-for-vozcaster' ),
+				'vpconn_invalid_website'  => __( 'That website address does not look right. It should start with https://', 'connector-for-vozcaster' ),
 				'vpconn_invalid_artwork'  => sprintf(
 					/* translators: 1: minimum size in pixels, 2: maximum size in pixels. */
 					__( 'The cover must be square, between %1$d and %2$d px. Choose another image.', 'connector-for-vozcaster' ),
@@ -417,7 +440,7 @@ class VPConn_Assistant {
 		}
 
 		update_option( self::OPT_SAVED, 1, false );
-		wp_safe_redirect( self::get_step_url( 3 ) );
+		wp_safe_redirect( $next );
 		exit;
 	}
 
@@ -442,6 +465,8 @@ class VPConn_Assistant {
 		echo '<div class="wrap vpconn-gs">';
 		if ( self::is_wizard_request() ) {
 			$this->render_wizard( $user_id );
+		} elseif ( self::is_guided_request() ) {
+			VPConn_Guided_Setup::render( $user_id );
 		} else {
 			$this->render_cards( $user_id );
 		}
@@ -467,10 +492,14 @@ class VPConn_Assistant {
 					</a>
 				</p>
 			</div>
-			<div class="vpconn-gs-card vpconn-gs-card--off" aria-disabled="true">
-				<h2><?php esc_html_e( 'Guided setup', 'connector-for-vozcaster' ); ?> <span class="vpconn-gs-badge"><?php esc_html_e( 'Coming soon', 'connector-for-vozcaster' ); ?></span></h2>
-				<p><?php esc_html_e( 'The advanced settings, explained one by one: titles, style, intro and outro, and who can publish.', 'connector-for-vozcaster' ); ?></p>
-				<p><button type="button" class="button" disabled><?php esc_html_e( 'Coming soon', 'connector-for-vozcaster' ); ?></button></p>
+			<div class="vpconn-gs-card">
+				<h2><?php esc_html_e( 'Guided setup', 'connector-for-vozcaster' ); ?></h2>
+				<p><?php esc_html_e( 'All the settings, explained one by one: your podcast, titles, writing style, intro and outro, who can publish, groups and reviewers, and the platforms. Skip what you do not need and come back any time.', 'connector-for-vozcaster' ); ?></p>
+				<p>
+					<a class="button button-primary" href="<?php echo esc_url( VPConn_Guided_Setup::resume_url( $user_id ) ); ?>">
+						<?php echo esc_html( VPConn_Guided_Setup::has_started( $user_id ) ? __( 'Resume', 'connector-for-vozcaster' ) : __( 'Start', 'connector-for-vozcaster' ) ); ?>
+					</a>
+				</p>
 			</div>
 		</div>
 		<?php
@@ -508,7 +537,7 @@ class VPConn_Assistant {
 		match ( $step ) {
 			1       => $this->render_step_welcome(),
 			2       => $this->render_step_podcast( (array) ( $flash['values'] ?? [] ) ),
-			3       => $this->render_step_connect( $user_id ),
+			3       => self::render_step_connect( $user_id, self::get_step_url( 4 ), current_user_can( 'manage_options' ) ? self::get_step_url( 2 ) : '' ),
 			default => $this->render_step_record( $user_id ),
 		};
 		echo '</div>';
@@ -543,6 +572,16 @@ class VPConn_Assistant {
 	}
 
 	private function render_step_podcast( array $flash_values ): void {
+		self::render_podcast_form( $flash_values, [ 'next' => self::get_step_url( 3 ), 'back' => self::get_step_url( 1 ), 'return' => self::get_step_url( 2 ), 'full' => false ] );
+	}
+
+	/**
+	 * The podcast data form, shared by Getting started and Guided setup.
+	 *
+	 * @param array $flash_values Values of a form that failed validation.
+	 * @param array $opts         next, back, return (URLs) and full (bool: extra feed fields).
+	 */
+	public static function render_podcast_form( array $flash_values, array $opts ): void {
 		$info = VPConn_Podcast_Info::describe( self::FEED );
 		if ( is_wp_error( $info ) ) {
 			echo '<p>' . esc_html__( 'The podcast data could not be read.', 'connector-for-vozcaster' ) . '</p>';
@@ -565,7 +604,8 @@ class VPConn_Assistant {
 		}
 		// Only "Yes" is pre-selected: an unset value stays unset until the user picks.
 		$explicit = (string) ( $flash_values['explicit'] ?? ( $d['explicit'] ? '1' : '' ) );
-		$next     = self::get_step_url( 3 );
+		$next     = $opts['next'];
+		$full     = ! empty( $opts['full'] );
 		?>
 		<h2><?php esc_html_e( 'Your podcast', 'connector-for-vozcaster' ); ?></h2>
 		<p><?php esc_html_e( 'This is what Apple Podcasts, Spotify and the other apps show about your podcast. You can change all of it later.', 'connector-for-vozcaster' ); ?></p>
@@ -579,6 +619,8 @@ class VPConn_Assistant {
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="vpconn-gs-form">
 			<?php wp_nonce_field( 'vpconn_gs_podcast' ); ?>
 			<input type="hidden" name="action" value="vpconn_gs_podcast">
+			<input type="hidden" name="vpconn_next" value="<?php echo esc_url( $next ); ?>">
+			<input type="hidden" name="vpconn_return" value="<?php echo esc_url( $opts['return'] ); ?>">
 			<input type="hidden" name="artwork_id" id="vpconn-gs-artwork-id" value="<?php echo esc_attr( (string) $art_post ); ?>">
 			<input type="hidden" name="artwork_orig" value="<?php echo esc_attr( (string) $art_id ); ?>">
 			<input type="hidden" name="use_default_cover" id="vpconn-gs-use-default" value="<?php echo $use_default ? '1' : '0'; ?>">
@@ -634,6 +676,32 @@ class VPConn_Assistant {
 						<label><input type="radio" name="explicit" value="1" <?php checked( '1', $explicit ); ?>> <?php esc_html_e( 'Yes', 'connector-for-vozcaster' ); ?></label>
 					</td>
 				</tr>
+				<?php if ( $full ) : ?>
+				<tr>
+					<th scope="row"><label for="vpconn-gs-copyright"><?php esc_html_e( 'Copyright', 'connector-for-vozcaster' ); ?></label></th>
+					<td>
+						<input type="text" class="regular-text" id="vpconn-gs-copyright" name="copyright" data-default="copyright" value="<?php echo esc_attr( $val( 'copyright' ) ); ?>">
+						<p class="description"><?php esc_html_e( 'Optional. Shown in your feed, for example «© 2026 Your name».', 'connector-for-vozcaster' ); ?></p>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="vpconn-gs-type"><?php esc_html_e( 'Podcast type', 'connector-for-vozcaster' ); ?></label></th>
+					<td>
+						<select id="vpconn-gs-type" name="type" data-default="type">
+							<option value=""><?php esc_html_e( '— Not set —', 'connector-for-vozcaster' ); ?></option>
+							<option value="episodic" <?php selected( $val( 'type' ), 'episodic' ); ?>><?php esc_html_e( 'Episodic: newest episode first (most podcasts)', 'connector-for-vozcaster' ); ?></option>
+							<option value="serial" <?php selected( $val( 'type' ), 'serial' ); ?>><?php esc_html_e( 'Serial: episodes are meant to be heard in order', 'connector-for-vozcaster' ); ?></option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><label for="vpconn-gs-website"><?php esc_html_e( 'Website address', 'connector-for-vozcaster' ); ?></label></th>
+					<td>
+						<input type="url" class="regular-text" id="vpconn-gs-website" name="website" value="<?php echo esc_attr( $val( 'website' ) ); ?>">
+						<p class="description"><?php esc_html_e( 'Optional. The page your feed links to. Leave it empty to use the home page of this site.', 'connector-for-vozcaster' ); ?></p>
+					</td>
+				</tr>
+				<?php endif; ?>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Cover', 'connector-for-vozcaster' ); ?></th>
 					<td>
@@ -660,14 +728,14 @@ class VPConn_Assistant {
 
 			<p>
 				<button type="submit" class="button button-primary"><?php esc_html_e( 'Save and continue', 'connector-for-vozcaster' ); ?></button>
-				&nbsp;<a href="<?php echo esc_url( $next ); ?>"><?php esc_html_e( 'Skip this step', 'connector-for-vozcaster' ); ?></a>
-				&nbsp;<a href="<?php echo esc_url( self::get_step_url( 1 ) ); ?>"><?php esc_html_e( 'Back', 'connector-for-vozcaster' ); ?></a>
+				&nbsp;<a href="<?php echo esc_url( $next ); ?>"><?php echo esc_html( $full ? __( 'Keep as is', 'connector-for-vozcaster' ) : __( 'Skip this step', 'connector-for-vozcaster' ) ); ?></a>
+				&nbsp;<a href="<?php echo esc_url( $opts['back'] ); ?>"><?php esc_html_e( 'Back', 'connector-for-vozcaster' ); ?></a>
 			</p>
 		</form>
 		<?php
 	}
 
-	private function render_step_connect( int $user_id ): void {
+	public static function render_step_connect( int $user_id, string $next, string $back = '' ): void {
 		$connected = VPConn_Auth::has_token( $user_id );
 		$feeds     = VPConn_Access::feeds_for_user( $user_id );
 		$feed      = $feeds[0] ?? null;
@@ -676,7 +744,6 @@ class VPConn_Assistant {
 				$feed = $f;
 			}
 		}
-		$can_edit = current_user_can( 'manage_options' );
 		?>
 		<h2><?php esc_html_e( 'Connect', 'connector-for-vozcaster' ); ?></h2>
 		<p><?php esc_html_e( 'Link this site with VozCaster so you can send voice notes from your phone. Pick where you prefer to record. It opens in a new tab; come back here when you are done.', 'connector-for-vozcaster' ); ?></p>
@@ -710,11 +777,11 @@ class VPConn_Assistant {
 		<?php endif; ?>
 
 		<p>
-			<a class="button <?php echo $connected ? 'button-primary' : ''; ?>" id="vpconn-gs-next" href="<?php echo esc_url( self::get_step_url( 4 ) ); ?>">
+			<a class="button <?php echo $connected ? 'button-primary' : ''; ?>" id="vpconn-gs-next" href="<?php echo esc_url( $next ); ?>">
 				<?php echo esc_html( $connected ? __( 'Continue', 'connector-for-vozcaster' ) : __( 'Skip this step', 'connector-for-vozcaster' ) ); ?>
 			</a>
-			<?php if ( $can_edit ) : ?>
-				&nbsp;<a href="<?php echo esc_url( self::get_step_url( 2 ) ); ?>"><?php esc_html_e( 'Back', 'connector-for-vozcaster' ); ?></a>
+			<?php if ( '' !== $back ) : ?>
+				&nbsp;<a href="<?php echo esc_url( $back ); ?>"><?php esc_html_e( 'Back', 'connector-for-vozcaster' ); ?></a>
 			<?php endif; ?>
 		</p>
 		<?php
@@ -733,22 +800,34 @@ class VPConn_Assistant {
 		</p>
 
 		<?php if ( $is_admin ) : ?>
-			<?php
-			$info     = VPConn_Podcast_Info::describe( self::FEED );
-			$episodes = is_wp_error( $info ) ? 0 : (int) $info['episodes'];
-			$default  = (int) get_option( self::COVER_OPTION );
-			$uses_default = ! is_wp_error( $info ) && ! empty( $info['artwork']['id'] ) && (int) $info['artwork']['id'] === $default && $default;
-			?>
 			<div class="notice notice-info inline">
 				<p><?php esc_html_e( 'To send your podcast to Apple Podcasts, Spotify and the other platforms, you need at least one published episode. Record the first one and come back.', 'connector-for-vozcaster' ); ?></p>
 			</div>
 			<hr>
+			<?php self::render_platforms_block( self::get_step_url( 4 ) ); ?>
+		<?php endif; ?>
+		<p><a href="<?php echo esc_url( self::get_page_url() ); ?>"><?php esc_html_e( 'Back to Assistants', 'connector-for-vozcaster' ); ?></a></p>
+		<?php
+	}
+
+	/**
+	 * "Send to platforms": locked until the main feed has a published episode,
+	 * then a link to VozCaster → Distribute. Shared by both assistants.
+	 *
+	 * @param string $here URL of the screen, for "Check again".
+	 */
+	public static function render_platforms_block( string $here ): void {
+		$info     = VPConn_Podcast_Info::describe( self::FEED );
+		$episodes = is_wp_error( $info ) ? 0 : (int) $info['episodes'];
+		$default  = (int) get_option( self::COVER_OPTION );
+		$uses_default = ! is_wp_error( $info ) && ! empty( $info['artwork']['id'] ) && $default && (int) $info['artwork']['id'] === $default;
+		?>
 			<h3><?php esc_html_e( 'Send to platforms', 'connector-for-vozcaster' ); ?></h3>
 			<?php if ( $episodes < 1 ) : ?>
 				<p class="vpconn-gs-locked">🔒 <?php esc_html_e( 'Locked until your podcast has its first published episode.', 'connector-for-vozcaster' ); ?></p>
 				<p>
 					<button type="button" class="button" disabled><?php esc_html_e( 'Send to platforms', 'connector-for-vozcaster' ); ?></button>
-					&nbsp;<a href="<?php echo esc_url( self::get_step_url( 4 ) ); ?>"><?php esc_html_e( 'Check again', 'connector-for-vozcaster' ); ?></a>
+					&nbsp;<a href="<?php echo esc_url( $here ); ?>"><?php esc_html_e( 'Check again', 'connector-for-vozcaster' ); ?></a>
 				</p>
 			<?php else : ?>
 				<?php if ( $uses_default ) : ?>
@@ -757,8 +836,6 @@ class VPConn_Assistant {
 				<p><?php esc_html_e( 'Your first episode is out. Send your feed to each platform once; after that they pick up every new episode by themselves.', 'connector-for-vozcaster' ); ?></p>
 				<p><a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=vozcaster-distribute' ) ); ?>"><?php esc_html_e( 'Send to platforms', 'connector-for-vozcaster' ); ?></a></p>
 			<?php endif; ?>
-		<?php endif; ?>
-		<p><a href="<?php echo esc_url( self::get_page_url() ); ?>"><?php esc_html_e( 'Back to Assistants', 'connector-for-vozcaster' ); ?></a></p>
 		<?php
 	}
 

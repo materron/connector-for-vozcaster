@@ -32,6 +32,10 @@ class VPConn_Podcast_Info {
 		'category'    => 'apple_cat_1',
 		'explicit'    => 'itunes_explicit',
 		'artwork'     => 'itunes_image',
+		// Extra PowerPress feed settings (same keys as its own feed screen).
+		'copyright'   => 'copyright',
+		'type'        => 'itunes_type',
+		'website'     => 'url',
 	];
 
 	// Apple Podcasts artwork requirements.
@@ -296,7 +300,8 @@ class VPConn_Podcast_Info {
 	 *
 	 * @param string $slug   Feed slug.
 	 * @param array  $values Any of title, description, author, email, language,
-	 *                       category, explicit (bool), artwork_id (int).
+	 *                       category, explicit (bool), artwork_id (int), copyright,
+	 *                       type (episodic|serial) and website.
 	 */
 	public static function save_fields( string $slug, array $values ): true|WP_Error {
 		if ( ! function_exists( 'powerpress_apple_categories' ) ) {
@@ -339,6 +344,26 @@ class VPConn_Podcast_Info {
 				return new WP_Error( 'vpconn_invalid_category', 'Unknown Apple Podcasts category.', [ 'status' => 400 ] );
 			}
 			$changes['apple_cat_1'] = $cat;
+		}
+
+		if ( array_key_exists( 'copyright', $values ) ) {
+			$changes['copyright'] = sanitize_text_field( (string) $values['copyright'] );
+		}
+
+		if ( array_key_exists( 'type', $values ) ) {
+			$type = (string) $values['type'];
+			if ( ! in_array( $type, [ '', 'episodic', 'serial' ], true ) ) {
+				return new WP_Error( 'vpconn_invalid_type', 'Unknown podcast type.', [ 'status' => 400 ] );
+			}
+			$changes['itunes_type'] = $type;
+		}
+
+		if ( array_key_exists( 'website', $values ) ) {
+			$website = trim( (string) $values['website'] );
+			if ( '' !== $website && ! wp_http_validate_url( $website ) ) {
+				return new WP_Error( 'vpconn_invalid_website', 'Invalid website address.', [ 'status' => 400 ] );
+			}
+			$changes['url'] = esc_url_raw( $website );
 		}
 
 		if ( array_key_exists( 'explicit', $values ) ) {

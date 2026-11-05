@@ -33,6 +33,7 @@ require_once VPCONN_DIR . 'includes/class-pairing.php';
 require_once VPCONN_DIR . 'includes/class-podcast-info.php';
 require_once VPCONN_DIR . 'includes/class-distribution.php';
 require_once VPCONN_DIR . 'includes/class-assistant.php';
+require_once VPCONN_DIR . 'includes/class-guided-setup.php';
 require_once VPCONN_DIR . 'includes/class-review.php';
 require_once VPCONN_DIR . 'includes/class-relay.php';
 require_once VPCONN_DIR . 'includes/class-access.php';

@@ -25,6 +25,11 @@ class VPConn_Settings {
 		if ( ! str_ends_with( $hook, 'page_vozcaster-audio' ) && ! str_ends_with( $hook, 'page_vozcaster-episodes' ) ) {
 			return;
 		}
+		self::enqueue_picker();
+	}
+
+	/** Media picker script used by the Audio and Episodes forms (and the Guided setup steps that embed them). */
+	public static function enqueue_picker(): void {
 		wp_enqueue_media();
 		wp_enqueue_script(
 			'vpconn-admin',
@@ -430,70 +435,55 @@ class VPConn_Settings {
 		// Only called from handle_actions(), after check_admin_referer().
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$page = sanitize_key( wp_unslash( $_GET['page'] ?? '' ) );
+		// Saved from the Guided setup assistant: go to its next step, or stay on
+		// the current one for the forms that do not advance (uploads, deletions…).
+		if ( VPConn_Assistant::PAGE_SLUG === $page ) {
+			return VPConn_Guided_Setup::return_url();
+		}
 		$tab  = str_starts_with( $page, 'vozcaster-' ) ? substr( $page, strlen( 'vozcaster-' ) ) : '';
 		return self::get_page_url( array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes' );
 	}
 
-	private function render_page( string $tab ): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
+	/** Hidden field that sends the user to the next assistant step after saving. */
+	public static function next_field( ?array $ctx ): void {
+		if ( $ctx ) {
+			echo '<input type="hidden" name="vpconn_next" value="' . esc_url( $ctx['next'] ) . '">';
+		}
+	}
+
+	/** Submit button of a settings form; in the assistant it is "Save and continue" plus "Keep as is". */
+	public static function save_button( string $label, ?array $ctx ): void {
+		if ( ! $ctx ) {
+			echo '<p><button type="submit" class="button button-primary">' . esc_html( $label ) . '</button></p>';
 			return;
 		}
+		echo '<p class="vpconn-gs-actions"><button type="submit" class="button button-primary">' . esc_html__( 'Save and continue', 'connector-for-vozcaster' ) . '</button> <a class="button" href="' . esc_url( $ctx['next'] ) . '">' . esc_html__( 'Keep as is', 'connector-for-vozcaster' ) . '</a></p>';
+	}
 
-		$role_names      = wp_roles()->get_names();
-		$connected_ids   = VPConn_Auth::get_connected_user_ids();
-		$notice_enabled  = VPConn_AI_Notice::is_enabled();
-		$notice_text     = VPConn_AI_Notice::get_custom_text();
-		$notice_position = VPConn_AI_Notice::get_position();
-		$credit_enabled  = VPConn_AI_Notice::is_credit_enabled();
-		$intro           = VPConn_Media::get_intro_outro_info( 'intro' );
-		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
-		$separator       = VPConn_Media::get_intro_outro_info( 'separator' );
-		$log             = self::get_log();
-		$pp_active       = is_plugin_active( 'powerpress/powerpress.php' );
-		$tab             = array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes';
-		$nonce_field     = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+	/**
+	 * Section "titles" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_titles( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
 		$title_prefix           = (string) get_option( 'vpconn_title_prefix', '' );
 		$title_include_season   = (bool)   get_option( 'vpconn_title_include_season', false );
 		$episode_numbering_mode = (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' );
 		$current_season         = (int)    get_option( 'vpconn_current_season', 0 );
-		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
-		$image_style     = (string) get_option( 'vpconn_image_style', '' );
-		$writing_style   = (string) get_option( 'vpconn_writing_style', '' );
 		$title_template  = (string) get_option( 'vpconn_title_template', '' );
-		$style_ref_id    = (int) get_option( 'vpconn_style_reference_id', 0 );
-		$style_ref_url   = VPConn_API::style_reference_url();
-		$show_chapters   = VPConn_Chapters::show_in_post();
-		// Saved values, or the defaults for this site's music (see VPConn_Media::mix_settings).
-		$mix             = VPConn_Media::mix_settings();
-		$duck_start      = $mix['intro_duck_start'];
-		$duck_vol        = $mix['intro_duck_volume'];
-		$fade_end        = null !== $mix['intro_fade_end'] ? $mix['intro_fade_end'] : '';
-		// Shown as seconds after duck_start, which is easier to understand.
-		$knee_delay      = null !== $mix['intro_knee_time'] ? max( 0, $mix['intro_knee_time'] - $duck_start ) : '';
-		$outro_start     = $mix['outro_fade_start'];
-		$outro_vol       = $mix['outro_duck_volume'];
-
 		?>
-		<div class="wrap">
-			<h1><?php echo esc_html( self::get_page_titles()[ $tab ] ?? '' ); ?></h1>
-
-			<?php if ( ! $pp_active ) : ?>
-				<div class="notice notice-warning inline"><p>
-					<?php esc_html_e( 'PowerPress is not installed or not active. Episodes will be created without podcast data.', 'connector-for-vozcaster' ); ?>
-				</p></div>
-			<?php endif; ?>
-
-			<?php if ( 'episodes' === $tab ) : ?>
-
-			<?php /* ----- Episode titles ----- */ ?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Episode titles', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_title_config">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
@@ -589,20 +579,32 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save title settings', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save title settings', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
+		<?php
+	}
 
-			<hr>
-
-			<?php /* ----- Writing style ----- */ ?>
+	/**
+	 * Section "writing" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_writing( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$writing_style   = (string) get_option( 'vpconn_writing_style', '' );
+		$show_chapters   = VPConn_Chapters::show_in_post();
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'How your podcast writes', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'A style guide for the AI that writes the title, excerpt, post and chapters: tone, humour, register, words to use or avoid. Without it, the AI copies the tone it hears. You can also change it from VozCaster, with /tono in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_writing_style">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
@@ -632,20 +634,31 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save writing style', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save writing style', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
+		<?php
+	}
 
-			<hr>
-
-			<?php /* ----- Post footer ----- */ ?>
+	/**
+	 * Section "footer" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_footer( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$post_footer     = (string) get_option( 'vpconn_post_footer', '' );
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Post footer (signature)', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_post_footer">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
@@ -664,20 +677,33 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save footer', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save footer', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
+		<?php
+	}
 
-			<hr>
-
-			<?php /* ----- Image style ----- */ ?>
+	/**
+	 * Section "image_style" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_image_style( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$image_style     = (string) get_option( 'vpconn_image_style', '' );
+		$style_ref_id    = (int) get_option( 'vpconn_style_reference_id', 0 );
+		$style_ref_url   = VPConn_API::style_reference_url();
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Image style', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_image_style">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
@@ -698,7 +724,7 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save image style', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save image style', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
 
 			<h3><?php esc_html_e( 'Style reference image', 'connector-for-vozcaster' ); ?></h3>
@@ -723,18 +749,32 @@ class VPConn_Settings {
 					<?php endif; ?>
 				</p>
 			</form>
+		<?php
+	}
 
-			<hr>
-
-			<?php /* ----- AI notice and credit ----- */ ?>
+	/**
+	 * Section "ai_notice" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_ai_notice( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$notice_enabled  = VPConn_AI_Notice::is_enabled();
+		$notice_text     = VPConn_AI_Notice::get_custom_text();
+		$notice_position = VPConn_AI_Notice::get_position();
+		$credit_enabled  = VPConn_AI_Notice::is_credit_enabled();
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'AI content notice', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_ai_notice">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row"><?php esc_html_e( 'Show the AI notice', 'connector-for-vozcaster' ); ?></th>
@@ -776,17 +816,29 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save notice settings', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save notice settings', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
+		<?php
+	}
 
-			<?php elseif ( 'audio' === $tab ) : ?>
-
-			<?php /* ----- Intro & Outro ----- */ ?>
+	/**
+	 * Section "audio_files" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_audio_files( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$intro           = VPConn_Media::get_intro_outro_info( 'intro' );
+		$outro           = VPConn_Media::get_intro_outro_info( 'outro' );
+		$separator       = VPConn_Media::get_intro_outro_info( 'separator' );
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Intro, outro &amp; separator', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu).', 'connector-for-vozcaster' ); ?>
 			</p>
-			<table class="form-table" role="presentation">
+			
+			<?php endif; ?>
+<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Intro', 'connector-for-vozcaster' ); ?></th>
 					<td>
@@ -912,18 +964,37 @@ class VPConn_Settings {
 					</td>
 				</tr>
 			</table>
+		<?php
+	}
 
-			<hr>
-
-			<?php /* ----- Audio mix settings ----- */ ?>
+	/**
+	 * Section "mix" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_mix( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		// Saved values, or the defaults for this site's music (see VPConn_Media::mix_settings).
+		$mix             = VPConn_Media::mix_settings();
+		$duck_start      = $mix['intro_duck_start'];
+		$duck_vol        = $mix['intro_duck_volume'];
+		$fade_end        = null !== $mix['intro_fade_end'] ? $mix['intro_fade_end'] : '';
+		// Shown as seconds after duck_start, which is easier to understand.
+		$knee_delay      = null !== $mix['intro_knee_time'] ? max( 0, $mix['intro_knee_time'] - $duck_start ) : '';
+		$outro_start     = $mix['outro_fade_start'];
+		$outro_vol       = $mix['outro_duck_volume'];
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Audio mix settings (intro/outro)', 'connector-for-vozcaster' ); ?></h2>
 			<p class="description">
 				<?php esc_html_e( 'Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster.', 'connector-for-vozcaster' ); ?>
 			</p>
 
-			<form method="post" action="">
+			
+			<?php endif; ?>
+<form method="post" action="">
 				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				<input type="hidden" name="vpconn_action" value="save_mix_config">
+					<?php self::next_field( $ctx ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
@@ -1008,14 +1079,25 @@ class VPConn_Settings {
 						</td>
 					</tr>
 				</table>
-				<p><button type="submit" class="button button-primary"><?php esc_html_e( 'Save mix settings', 'connector-for-vozcaster' ); ?></button></p>
+				<?php self::save_button( __( 'Save mix settings', 'connector-for-vozcaster' ), $ctx ); ?>
 			</form>
+		<?php
+	}
 
-			<?php elseif ( 'access' === $tab ) : ?>
-
-			<?php /* ----- Who can publish, in which podcast ----- */ ?>
+	/**
+	 * Section "access" of the settings pages. Printed by its settings page and,
+	 * with $ctx = ['next' => URL], as a step of the Guided setup assistant.
+	 */
+	public static function section_access( ?array $ctx = null ): void {
+		$nonce_field = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+		$role_names      = wp_roles()->get_names();
+		$connected_ids   = VPConn_Auth::get_connected_user_ids();
+		?>
+			<?php if ( ! $ctx ) : ?>
 			<h2><?php esc_html_e( 'Who can publish, in which podcast', 'connector-for-vozcaster' ); ?></h2>
-			<?php echo VPConn_Access::render( self::get_page_url( 'access' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside. ?>
+
+			<?php endif; ?>
+			<?php echo VPConn_Access::render( $ctx ? $ctx['next'] : self::get_page_url( 'access' ), $ctx ? __( 'Save and continue', 'connector-for-vozcaster' ) : null ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside. ?>
 			<p class="description">
 				<?php esc_html_e( 'Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin.', 'connector-for-vozcaster' ); ?>
 			</p>
@@ -1075,6 +1157,60 @@ class VPConn_Settings {
 					</tbody>
 				</table>
 			<?php endif; ?>
+		<?php
+	}
+
+	private function render_page( string $tab ): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$log             = self::get_log();
+		$pp_active       = is_plugin_active( 'powerpress/powerpress.php' );
+		$tab             = array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes';
+		$nonce_field     = wp_nonce_field( 'vpconn_settings_action', '_wpnonce', true, false );
+
+		?>
+		<div class="wrap">
+			<h1><?php echo esc_html( self::get_page_titles()[ $tab ] ?? '' ); ?></h1>
+
+			<?php if ( ! $pp_active ) : ?>
+				<div class="notice notice-warning inline"><p>
+					<?php esc_html_e( 'PowerPress is not installed or not active. Episodes will be created without podcast data.', 'connector-for-vozcaster' ); ?>
+				</p></div>
+			<?php endif; ?>
+
+			<?php if ( 'episodes' === $tab ) : ?>
+
+			<?php self::section_titles(); ?>
+
+			<hr>
+
+			<?php self::section_writing(); ?>
+
+			<hr>
+
+			<?php self::section_footer(); ?>
+
+			<hr>
+
+			<?php self::section_image_style(); ?>
+
+			<hr>
+
+			<?php self::section_ai_notice(); ?>
+
+			<?php elseif ( 'audio' === $tab ) : ?>
+
+			<?php self::section_audio_files(); ?>
+
+			<hr>
+
+			<?php self::section_mix(); ?>
+
+			<?php elseif ( 'access' === $tab ) : ?>
+
+			<?php self::section_access(); ?>
 
 			<?php else : ?>
 

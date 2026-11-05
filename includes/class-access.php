@@ -194,7 +194,7 @@ class VPConn_Access {
 		add_action( 'admin_post_' . self::ACTION, [ $this, 'handle_action' ] );
 	}
 
-	public static function render( string $redirect_to ): string {
+	public static function render( string $redirect_to, ?string $save_label = null ): string {
 		$user_id = get_current_user_id();
 		if ( ! self::is_manager( $user_id ) ) {
 			return '<p>' . esc_html__( 'Only the people who manage VozCaster on this site can change who publishes.', 'connector-for-vozcaster' ) . '</p>';
@@ -267,7 +267,7 @@ class VPConn_Access {
 			</table>
 			</div>
 			<p class="vpconn-muted"><?php esc_html_e( 'Administrators always publish everywhere. "Manages VozCaster" lets a role change this table and the classes of every podcast, without being a WordPress administrator; only administrators can change that column.', 'connector-for-vozcaster' ); ?></p>
-			<p><button type="submit" class="button button-primary wp-element-button"><?php esc_html_e( 'Save access settings', 'connector-for-vozcaster' ); ?></button></p>
+			<p><button type="submit" class="button button-primary wp-element-button"><?php echo esc_html( $save_label ?? __( 'Save access settings', 'connector-for-vozcaster' ) ); ?></button></p>
 		</form>
 		<?php
 		return (string) ob_get_clean();

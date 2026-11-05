@@ -25,3 +25,13 @@
 	.vpconn-gs-cover { flex-direction: column; align-items: flex-start; }
 }
 .vpconn-gs [hidden] { display: none !important; }
+.vpconn-gs-intro { font-size: 14px; max-width: 70ch; }
+.vpconn-gs-index { background: #fff; border: 1px solid #dcdcde; border-radius: 4px; padding: 6px 16px; margin: 0 0 16px; }
+.vpconn-gs-index summary { cursor: pointer; font-weight: 600; color: var(--vpconn-indigo); padding: 4px 0; }
+.vpconn-gs-index ol { margin: 8px 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px 16px; }
+.vpconn-gs-index ul { margin: 0; padding: 0; list-style: none; }
+.vpconn-gs-chapter { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #646970; }
+.vpconn-gs-index li.is-current > a { font-weight: 700; color: var(--vpconn-indigo); }
+.vpconn-gs-nav { margin-top: 16px; }
+.vpconn-gs-actions .button { margin-right: 6px; }
+.vpconn-gs-panel .vpconn-table { max-width: 100%; }
