@@ -631,7 +631,7 @@ class VPConn_Assistant {
 			<input type="hidden" name="feed" value="<?php echo esc_attr( $feed ); ?>">
 			<input type="hidden" name="vpconn_next" value="<?php echo esc_url( $next ); ?>">
 			<input type="hidden" name="vpconn_return" value="<?php echo esc_url( $opts['return'] ); ?>">
-			<input type="hidden" name="artwork_id" id="vpconn-gs-artwork-id" value="<?php echo esc_attr( (string) $art_post ); ?>">
+			<input type="hidden" name="artwork_id" id="vpconn-gs-artwork-id" value="<?php echo esc_attr( $art_post ? (string) $art_post : '' ); ?>">
 			<input type="hidden" name="artwork_orig" value="<?php echo esc_attr( (string) $art_id ); ?>">
 			<input type="hidden" name="use_default_cover" id="vpconn-gs-use-default" value="<?php echo $use_default ? '1' : '0'; ?>">
 
@@ -759,7 +759,7 @@ class VPConn_Assistant {
 		<p><?php esc_html_e( 'Link this site with VozCaster so you can send voice notes from your phone. Pick where you prefer to record. It opens in a new tab; come back here when you are done.', 'connector-for-vozcaster' ); ?></p>
 
 		<div id="vpconn-gs-connected" class="vpconn-gs-ok" role="status" <?php echo $connected ? '' : 'hidden'; ?>>
-			✓ <?php esc_html_e( 'Connected ✓ Your account is linked with VozCaster.', 'connector-for-vozcaster' ); ?>
+			<?php esc_html_e( 'Connected ✓ Your account is linked with VozCaster.', 'connector-for-vozcaster' ); ?>
 		</div>
 
 		<?php if ( ! $feed ) : ?>
@@ -810,9 +810,12 @@ class VPConn_Assistant {
 		</p>
 
 		<?php if ( $is_admin ) : ?>
-			<div class="notice notice-info inline">
-				<p><?php esc_html_e( 'To send your podcast to Apple Podcasts, Spotify and the other platforms, you need at least one published episode. Record the first one and come back.', 'connector-for-vozcaster' ); ?></p>
-			</div>
+			<?php $vpconn_info = VPConn_Podcast_Info::describe( self::FEED ); ?>
+			<?php if ( is_wp_error( $vpconn_info ) || (int) $vpconn_info['episodes'] < 1 ) : ?>
+				<div class="notice notice-info inline">
+					<p><?php esc_html_e( 'To send your podcast to Apple Podcasts, Spotify and the other platforms, you need at least one published episode. Record the first one and come back.', 'connector-for-vozcaster' ); ?></p>
+				</div>
+			<?php endif; ?>
 			<hr>
 			<?php self::render_platforms_block( self::get_step_url( 4 ) ); ?>
 		<?php endif; ?>

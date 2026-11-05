@@ -45,7 +45,7 @@
 				radios[ 0 ].checked = true;
 				count++;
 			}
-			if ( '' === artId.value && '1' !== useDef.value && ! img.getAttribute( 'src' ) ) {
+			if ( ( '' === artId.value || '0' === artId.value ) && '1' !== useDef.value && ! img.getAttribute( 'src' ) ) {
 				useDef.value = '1';
 				img.src = cfg.defaultCover;
 				img.hidden = false;
@@ -106,6 +106,12 @@
 				} )
 				.catch( function () {} );
 		}, cfg.pollMs || 4000 );
+	}
+
+	// The Guided setup index starts collapsed on phones, where it is very tall.
+	var index = document.querySelector( '.vpconn-gs-index' );
+	if ( index && window.matchMedia( '(max-width: 782px)' ).matches ) {
+		index.removeAttribute( 'open' );
 	}
 
 	// wp_localize_script turns numbers into strings.

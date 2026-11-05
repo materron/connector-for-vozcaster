@@ -207,8 +207,12 @@ class VPConn_Guided_Setup {
 			VPConn_Assistant::enqueue_script( 2, VPConn_Assistant::FEED === $feed['slug'] ? '' : (string) $feed['name'] );
 		} elseif ( 'connect' === $id ) {
 			VPConn_Assistant::enqueue_script( 3 );
-		} elseif ( in_array( $id, [ 'image', 'audio-files' ], true ) ) {
-			VPConn_Settings::enqueue_picker();
+		} else {
+			// Only the index needs the script here (it starts collapsed on phones).
+			VPConn_Assistant::enqueue_script( 0 );
+			if ( in_array( $id, [ 'image', 'audio-files' ], true ) ) {
+				VPConn_Settings::enqueue_picker();
+			}
 		}
 	}
 
