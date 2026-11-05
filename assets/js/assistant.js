@@ -108,9 +108,11 @@
 		}, cfg.pollMs || 4000 );
 	}
 
-	if ( 2 === cfg.step ) {
+	// wp_localize_script turns numbers into strings.
+	var step = parseInt( cfg.step, 10 );
+	if ( 2 === step ) {
 		initPodcastForm();
-	} else if ( 3 === cfg.step ) {
+	} else if ( 3 === step ) {
 		initConnectPoll();
 	}
 }() );
