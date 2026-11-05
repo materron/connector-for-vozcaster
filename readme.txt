@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.17.1
+Stable tag: 1.17.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,7 +73,7 @@ The paid **Pro** and **Studio** plans add the AI part: automatic transcription (
 
 = Languages =
 
-The VozCaster app and bot speak Spanish and English. The episode text is written in the language you record in: the transcription detects it automatically.
+The VozCaster app and bot menus are in Spanish and English. Your episodes can be in almost any language: the transcription detects the language you speak (Spanish, English, French, Japanese, Swedish…) and the title, excerpt and post are written in it.
 
 = How it works =
 
@@ -166,7 +166,7 @@ Not unless you ask it to. There is an optional "Published with VozCaster" credit
 
 = How do I get support? =
 
-For documentation, see the [VozCaster manual](https://vozcaster.com/manual). For issues or questions, email info@vozcaster.com.
+For documentation, see the [VozCaster manual](https://vozcaster.com/manual). For issues or questions, email info@potencia.pro.
 
 == External Services ==
 
@@ -233,6 +233,10 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.17.2 =
+* Fix: an episode published from VozCaster now goes live only once its category, cover and audio are in place. Cache plugins that purge on publishing (FlyingPress, for one, only purges on an update) did not refresh the home and category pages, so the new episode did not show there until the cache expired.
+* Readme: episodes can be in almost any language (only the app and bot menus are limited to Spanish and English), and the support email is now info@potencia.pro.
 
 = 1.17.1 =
 * Fix: the Spanish (es_ES) translation shipped with the plugin now covers the Assistants and follows the WordPress.org Spanish glossary ("entrada", "sitio", "Acceder", "perfil").

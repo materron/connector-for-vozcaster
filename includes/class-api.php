@@ -1085,7 +1085,7 @@ class VPConn_API {
 			'post_title'   => $post_title,
 			'post_content' => $content,
 			'post_excerpt' => $excerpt,
-			'post_status'  => $status,
+			'post_status'  => self::insert_status( $status ),
 			'post_type'    => 'post',
 		];
 
@@ -1157,6 +1157,11 @@ class VPConn_API {
 			);
 		}
 
+		$published = self::publish_when_complete( (int) $post_id, $status );
+		if ( is_wp_error( $published ) ) {
+			return $published;
+		}
+
 		// Registrar en el log.
 		VPConn_Settings::add_to_log(
 			[
@@ -1188,6 +1193,37 @@ class VPConn_API {
 	}
 
 	/**
+	 * Status to create a post with. A post to be published right away is
+	 * created as a draft and published by publish_when_complete() once its
+	 * category, cover and audio are in place: what reacts to publishing
+	 * (cache plugins purging the home and category pages, sharing plugins…)
+	 * then sees the finished post. FlyingPress, for one, only purges on an
+	 * update, never on a post inserted already published.
+	 */
+	private static function insert_status( string $status ): string {
+		return 'publish' === $status ? 'draft' : $status;
+	}
+
+	/**
+	 * Publishes a post created by insert_status() as a draft.
+	 *
+	 * @return true|WP_Error
+	 */
+	private static function publish_when_complete( int $post_id, string $status ): bool|WP_Error {
+		if ( 'publish' !== $status ) {
+			return true;
+		}
+		$result = wp_update_post(
+			[
+				'ID'          => $post_id,
+				'post_status' => 'publish',
+			],
+			true
+		);
+		return is_wp_error( $result ) ? $result : true;
+	}
+
+	/**
 	 * POST /post
 	 *
 	 * Crea un post de blog sin metadatos de PowerPress.
@@ -1213,7 +1249,7 @@ class VPConn_API {
 			'post_title'   => $title,
 			'post_content' => $content,
 			'post_excerpt' => $excerpt,
-			'post_status'  => $status,
+			'post_status'  => self::insert_status( $status ),
 			'post_type'    => 'post',
 		];
 
@@ -1233,6 +1269,11 @@ class VPConn_API {
 		}
 
 		VPConn_AI_Notice::mark_post( $post_id, (bool) $request->get_param( 'ai_generated' ) );
+
+		$published = self::publish_when_complete( (int) $post_id, $status );
+		if ( is_wp_error( $published ) ) {
+			return $published;
+		}
 
 		if ( $held ) {
 			VPConn_Review::hold( (int) $post_id, (string) ( $feeds[0]['slug'] ?? 'podcast' ), 0, $requested );
