@@ -1,0 +1,27 @@
+/* VozCaster → Assistants. Native wp-admin look with the brand as accent. */
+.vpconn-gs { --vpconn-indigo: #2e276b; --vpconn-orange: #f7ad55; max-width: 860px; }
+.vpconn-gs h1 { color: var(--vpconn-indigo); }
+.vpconn-gs-lead { font-size: 14px; }
+.vpconn-gs-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+.vpconn-gs-card { background: #fff; border: 1px solid #dcdcde; border-top: 4px solid var(--vpconn-indigo); border-radius: 4px; padding: 4px 20px 12px; }
+.vpconn-gs-card h2, .vpconn-gs-card h3 { margin-top: 14px; color: var(--vpconn-indigo); }
+.vpconn-gs-card--off { border-top-color: #c3c4c7; opacity: .75; }
+.vpconn-gs-badge { display: inline-block; font-size: 11px; font-weight: 600; vertical-align: middle; background: var(--vpconn-orange); color: var(--vpconn-indigo); padding: 2px 8px; border-radius: 10px; }
+.vpconn-gs-progress { display: flex; align-items: center; gap: 12px; margin: 12px 0; font-weight: 600; color: var(--vpconn-indigo); flex-wrap: wrap; }
+.vpconn-gs-bar { flex: 1 1 120px; height: 8px; background: #e0dfef; border-radius: 4px; overflow: hidden; }
+.vpconn-gs-bar i { display: block; height: 100%; background: var(--vpconn-orange); }
+.vpconn-gs-skip { font-weight: 400; }
+.vpconn-gs-panel { background: #fff; border: 1px solid #dcdcde; border-left: 4px solid var(--vpconn-indigo); border-radius: 4px; padding: 8px 24px 20px; }
+.vpconn-gs-panel h2 { color: var(--vpconn-indigo); }
+.vpconn-gs-ok { color: #1a6b2f; font-weight: 600; }
+.vpconn-gs-locked { color: #50575e; }
+.vpconn-gs-cover { display: flex; gap: 16px; align-items: center; }
+.vpconn-gs-cover img { border-radius: 6px; border: 1px solid #dcdcde; object-fit: cover; }
+.vpconn-gs-filled { box-shadow: 0 0 0 2px var(--vpconn-orange); }
+.vpconn-gs-panel .form-table th { width: 190px; }
+@media (max-width: 782px) {
+	.vpconn-gs-panel { padding: 4px 14px 16px; }
+	.vpconn-gs-panel .form-table th { width: auto; }
+	.vpconn-gs-cover { flex-direction: column; align-items: flex-start; }
+}
+.vpconn-gs [hidden] { display: none !important; }

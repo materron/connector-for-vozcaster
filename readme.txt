@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.16.0
+Stable tag: 1.17.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,8 +77,8 @@ The VozCaster app and bot speak Spanish and English. The episode text is written
 
 = How it works =
 
-1. Install and activate PowerPress and this plugin on your WordPress site.
-2. Open the new **VozCaster** menu in wp-admin and press **Connect in the app** (or **Connect in Telegram**).
+1. Install and activate this plugin: the **Getting started** guide (VozCaster → Assistants) opens by itself and sets up PowerPress, your podcast data and the connection step by step.
+2. Or do it by hand: install and activate PowerPress, open the new **VozCaster** menu in wp-admin and press **Connect in the app** (or **Connect in Telegram**).
 3. Record, or upload an audio. VozCaster produces it and the episode appears on your site, ready to review or publish.
 
 If your site's address cannot be passed on automatically (for example, WordPress installed in a subfolder), the same page tells you to send `/conectar` to the bot and paste the address instead.
@@ -233,6 +233,10 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.17.0 =
+* New: VozCaster → Assistants, with a "Getting started" guide (it opens by itself the first time you activate the plugin). It installs PowerPress if needed, fills in your podcast data for Apple Podcasts and Spotify (with a button that suggests values from your site, including a default cover), connects your account with Telegram or the app, and tells you when it is time to send the podcast to the platforms.
+* New: a notice when your first episode is published, pointing to VozCaster → Distribute.
 
 = 1.16.0 =
 * New: "How your podcast writes" in VozCaster → Episodes. A style guide (tone, humour, register) that the AI follows for the title, excerpt, post and chapters. Also from the bot with /tono and from the app.

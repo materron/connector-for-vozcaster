@@ -122,6 +122,27 @@ class VPConn_Pairing {
 		);
 	}
 
+	/**
+	 * Prints one "connect" button (a form posting to handle_pair()), opening
+	 * Telegram or the app in a new tab. Shared with the Getting started assistant.
+	 *
+	 * @param string $feed    Podcast feed slug.
+	 * @param string $target  'telegram' or 'app'.
+	 * @param string $label   Button text.
+	 * @param bool   $primary Style as the primary button.
+	 */
+	public static function connect_form( string $feed, string $target, string $label, bool $primary = false ): void {
+		?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" target="_blank" style="margin:0;">
+			<?php wp_nonce_field( 'vpconn_pair' ); ?>
+			<input type="hidden" name="action" value="vpconn_pair">
+			<input type="hidden" name="target" value="<?php echo esc_attr( $target ); ?>">
+			<input type="hidden" name="feed" value="<?php echo esc_attr( $feed ); ?>">
+			<button type="submit" class="button <?php echo $primary ? 'button-primary' : ''; ?>"><?php echo esc_html( $label ); ?></button>
+		</form>
+		<?php
+	}
+
 	public function render_page(): void {
 		$user_id = get_current_user_id();
 		if ( ! VPConn_Auth::is_user_allowed( $user_id ) ) {
@@ -347,7 +368,7 @@ class VPConn_Pairing {
 
 	public function show_connect_notice(): void {
 		$screen = get_current_screen();
-		if ( ! $screen || 'toplevel_page_' . self::PAGE_SLUG === $screen->id ) {
+		if ( ! $screen || 'toplevel_page_' . self::PAGE_SLUG === $screen->id || str_ends_with( $screen->id, 'page_' . VPConn_Assistant::PAGE_SLUG ) ) {
 			return;
 		}
 		if ( ! in_array( $screen->id, [ 'dashboard', 'plugins' ], true ) && ! VPConn_Settings::is_plugin_screen( $screen->id ) ) {
@@ -362,14 +383,25 @@ class VPConn_Pairing {
 			return;
 		}
 		$dismiss_url = wp_nonce_url( add_query_arg( 'vpconn_dismiss_connect', 1 ), 'vpconn_dismiss_connect' );
+		// Until the Getting started assistant is finished or skipped, the notice leads there.
+		$guided = ! VPConn_Assistant::is_done( $user_id ) && ! get_user_meta( $user_id, VPConn_Assistant::META_SKIPPED, true );
 		?>
 		<div class="notice notice-info">
 			<p>
-				<strong><?php esc_html_e( 'Publish your podcast from Telegram.', 'connector-for-vozcaster' ); ?></strong>
-				<?php esc_html_e( 'Connect your account with the VozCaster bot in one click.', 'connector-for-vozcaster' ); ?>
+				<?php if ( $guided ) : ?>
+					<strong><?php esc_html_e( 'Set up your podcast in a few minutes.', 'connector-for-vozcaster' ); ?></strong>
+					<?php esc_html_e( 'A short guide takes you through the essentials and connects your account with VozCaster.', 'connector-for-vozcaster' ); ?>
+				<?php else : ?>
+					<strong><?php esc_html_e( 'Publish your podcast from Telegram.', 'connector-for-vozcaster' ); ?></strong>
+					<?php esc_html_e( 'Connect your account with the VozCaster bot in one click.', 'connector-for-vozcaster' ); ?>
+				<?php endif; ?>
 			</p>
 			<p>
-				<a class="button button-primary" href="<?php echo esc_url( self::get_page_url() ); ?>"><?php esc_html_e( 'Connect with VozCaster', 'connector-for-vozcaster' ); ?></a>
+				<?php if ( $guided ) : ?>
+					<a class="button button-primary" href="<?php echo esc_url( VPConn_Assistant::get_step_url( current_user_can( 'manage_options' ) ? 1 : 3 ) ); ?>"><?php esc_html_e( 'Getting started', 'connector-for-vozcaster' ); ?></a>
+				<?php else : ?>
+					<a class="button button-primary" href="<?php echo esc_url( self::get_page_url() ); ?>"><?php esc_html_e( 'Connect with VozCaster', 'connector-for-vozcaster' ); ?></a>
+				<?php endif; ?>
 				&nbsp;<a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Dismiss', 'connector-for-vozcaster' ); ?></a>
 			</p>
 		</div>

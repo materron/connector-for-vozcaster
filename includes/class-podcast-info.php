@@ -129,7 +129,7 @@ class VPConn_Podcast_Info {
 	}
 
 	/** @return array<string, string> Language code => name, as PowerPress accepts them. */
-	private static function languages(): array {
+	public static function languages(): array {
 		return function_exists( 'powerpress_languages' ) ? (array) powerpress_languages() : [];
 	}
 
@@ -275,26 +275,48 @@ class VPConn_Podcast_Info {
 	// -------------------------------------------------------------------------
 
 	public function update_info( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$params = $request->get_params();
+		$values = [];
+		foreach ( [ 'title', 'description', 'author', 'email', 'language', 'category', 'explicit', 'artwork_id' ] as $field ) {
+			if ( array_key_exists( $field, $params ) ) {
+				$values[ $field ] = $request->get_param( $field );
+			}
+		}
+		$saved = self::save_fields( (string) $request->get_param( 'feed' ), $values );
+		if ( is_wp_error( $saved ) ) {
+			return $saved;
+		}
+		return $this->get_info( $request );
+	}
+
+	/**
+	 * Validates and stores show data into a feed's PowerPress settings. Only the
+	 * keys present in $values are touched. Shared by the REST endpoint and the
+	 * Getting started assistant.
+	 *
+	 * @param string $slug   Feed slug.
+	 * @param array  $values Any of title, description, author, email, language,
+	 *                       category, explicit (bool), artwork_id (int).
+	 */
+	public static function save_fields( string $slug, array $values ): true|WP_Error {
 		if ( ! function_exists( 'powerpress_apple_categories' ) ) {
 			return new WP_Error( 'vpconn_no_powerpress', 'PowerPress is not active.', [ 'status' => 409 ] );
 		}
-		$slug   = (string) $request->get_param( 'feed' );
 		$option = self::option_name( $slug );
 		if ( null === $option ) {
 			return new WP_Error( 'vpconn_unknown_feed', 'Unknown feed.', [ 'status' => 404 ] );
 		}
 
-		$params  = $request->get_params();
 		$changes = [];
 
 		foreach ( [ 'title', 'description', 'author' ] as $field ) {
-			if ( array_key_exists( $field, $params ) ) {
-				$changes[ self::FIELDS[ $field ] ] = trim( (string) $request->get_param( $field ) );
+			if ( array_key_exists( $field, $values ) ) {
+				$changes[ self::FIELDS[ $field ] ] = trim( (string) $values[ $field ] );
 			}
 		}
 
-		if ( array_key_exists( 'email', $params ) ) {
-			$email = trim( (string) $request->get_param( 'email' ) );
+		if ( array_key_exists( 'email', $values ) ) {
+			$email = trim( (string) $values['email'] );
 			if ( '' !== $email && ! is_email( $email ) ) {
 				return new WP_Error( 'vpconn_invalid_email', 'Invalid email address.', [ 'status' => 400 ] );
 			}
@@ -303,29 +325,29 @@ class VPConn_Podcast_Info {
 			$changes['pp_enable_email'] = '1';
 		}
 
-		if ( array_key_exists( 'language', $params ) ) {
-			$lang = (string) $request->get_param( 'language' );
+		if ( array_key_exists( 'language', $values ) ) {
+			$lang = (string) $values['language'];
 			if ( '' !== $lang && ! array_key_exists( $lang, self::languages() ) ) {
 				return new WP_Error( 'vpconn_invalid_language', 'Unknown language code.', [ 'status' => 400 ] );
 			}
 			$changes['rss_language'] = $lang;
 		}
 
-		if ( array_key_exists( 'category', $params ) ) {
-			$cat = (string) $request->get_param( 'category' );
+		if ( array_key_exists( 'category', $values ) ) {
+			$cat = (string) $values['category'];
 			if ( '' !== $cat && ! array_key_exists( $cat, self::apple_categories() ) ) {
 				return new WP_Error( 'vpconn_invalid_category', 'Unknown Apple Podcasts category.', [ 'status' => 400 ] );
 			}
 			$changes['apple_cat_1'] = $cat;
 		}
 
-		if ( array_key_exists( 'explicit', $params ) ) {
+		if ( array_key_exists( 'explicit', $values ) ) {
 			// PowerPress: 1 = explicit, 2 = clean.
-			$changes['itunes_explicit'] = $request->get_param( 'explicit' ) ? '1' : '2';
+			$changes['itunes_explicit'] = $values['explicit'] ? '1' : '2';
 		}
 
-		if ( array_key_exists( 'artwork_id', $params ) ) {
-			$id   = (int) $request->get_param( 'artwork_id' );
+		if ( array_key_exists( 'artwork_id', $values ) ) {
+			$id   = (int) $values['artwork_id'];
 			$meta = wp_get_attachment_metadata( $id );
 			if ( ! wp_attachment_is_image( $id ) || empty( $meta['width'] ) ) {
 				return new WP_Error( 'vpconn_invalid_artwork', 'Not an image in the media library.', [ 'status' => 400 ] );
@@ -358,6 +380,6 @@ class VPConn_Podcast_Info {
 			update_option( $option, array_merge( $settings, $changes ) );
 		}
 
-		return $this->get_info( $request );
+		return true;
 	}
 }
