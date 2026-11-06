@@ -303,7 +303,7 @@ class VPConn_Podcast_Info {
 	 *                       category, explicit (bool), artwork_id (int), copyright,
 	 *                       type (episodic|serial) and website.
 	 */
-	public static function save_fields( string $slug, array $values ): true|WP_Error {
+	public static function save_fields( string $slug, array $values ): bool|WP_Error {
 		if ( ! function_exists( 'powerpress_apple_categories' ) ) {
 			return new WP_Error( 'vpconn_no_powerpress', 'PowerPress is not active.', [ 'status' => 409 ] );
 		}

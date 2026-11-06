@@ -3,7 +3,7 @@
  * Plugin Name: Connector for VozCaster
  * Plugin URI:  https://vozcaster.com
  * Description: You talk, VozCaster does the rest: it produces your podcast episodes and publishes them here with PowerPress, from the VozCaster app or Telegram.
- * Version:     1.17.2
+ * Version:     1.18.0
  * Requires at least: 6.3
  * Requires PHP: 8.0
  * Author:      Miguel Ángel Terrón Bote
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VPCONN_VERSION', '1.17.2' );
+define( 'VPCONN_VERSION', '1.18.0' );
 define( 'VPCONN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VPCONN_URL', plugin_dir_url( __FILE__ ) );
 define( 'VPCONN_BASENAME', plugin_basename( __FILE__ ) );
@@ -37,6 +37,7 @@ require_once VPCONN_DIR . 'includes/class-guided-setup.php';
 require_once VPCONN_DIR . 'includes/class-review.php';
 require_once VPCONN_DIR . 'includes/class-relay.php';
 require_once VPCONN_DIR . 'includes/class-access.php';
+require_once VPCONN_DIR . 'includes/class-roles.php';
 require_once VPCONN_DIR . 'includes/class-classes.php';
 require_once VPCONN_DIR . 'includes/class-frontend.php';
 
@@ -118,6 +119,7 @@ function vpconn_init(): void {
 	$assistant = new VPConn_Assistant();
 	$relay    = new VPConn_Relay();
 	$access   = new VPConn_Access();
+	$roles    = new VPConn_Roles();
 	$classes  = new VPConn_Classes();
 	$review   = new VPConn_Review();
 	$frontend = new VPConn_Frontend();
@@ -133,6 +135,7 @@ function vpconn_init(): void {
 	$assistant->register_hooks();
 	$relay->register_hooks();
 	$access->register_hooks();
+	$roles->register_hooks();
 	$classes->register_hooks();
 	$review->register_hooks();
 	$frontend->register_hooks();

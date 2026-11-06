@@ -1097,6 +1097,11 @@ class VPConn_Settings {
 			<h2><?php esc_html_e( 'Who can publish, in which podcast', 'connector-for-vozcaster' ); ?></h2>
 
 			<?php endif; ?>
+			<?php
+			// Creating a role stays on this page (also as a Guided setup step),
+			// so the new role can be given access in the table right away.
+			VPConn_Roles::render_box( $ctx ? VPConn_Frontend::current_url() : self::get_page_url( 'access' ) );
+			?>
 			<?php echo VPConn_Access::render( $ctx ? $ctx['next'] : self::get_page_url( 'access' ), $ctx ? __( 'Save and continue', 'connector-for-vozcaster' ) : null ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside. ?>
 			<p class="description">
 				<?php esc_html_e( 'Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin.', 'connector-for-vozcaster' ); ?>
