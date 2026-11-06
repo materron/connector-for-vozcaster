@@ -237,6 +237,7 @@ Service URLs and policies:
 = 1.18.0 =
 * New: create roles for your users from **VozCaster → Access**, without another plugin. A new role has only the permissions of Subscriber; give it access to each podcast in the table. Roles can be deleted when no user has them.
 * New: assign those roles to users as additional roles (Users → Edit user → VozCaster roles), so a teacher can belong to two podcasts.
+* Fix: the plugin could not be activated on PHP 8.0 and 8.1 ("Cannot use 'true' as class name"); 1.17.0 used a return type that needs PHP 8.2.
 
 = 1.17.2 =
 * Fix: an episode published from VozCaster now goes live only once its category, cover and audio are in place. Cache plugins that purge on publishing (FlyingPress, for one, only purges on an update) did not refresh the home and category pages, so the new episode did not show there until the cache expired.
