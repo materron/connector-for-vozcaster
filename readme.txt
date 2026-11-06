@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.17.2
+Stable tag: 1.18.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,7 +94,7 @@ If your site's address cannot be passed on automatically (for example, WordPress
 1. Upload the `connector-for-vozcaster` folder to `/wp-content/plugins/`, or install via **Plugins → Add New → Upload Plugin**.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Open the **VozCaster** menu and press **Connect in the app** or **Connect in Telegram**, then confirm.
-4. Optional: administrators find the settings in the same menu — **Episodes** (titles, signature, image style, AI notice), **Audio** (intro/outro), **Access** (roles and connected users) and **History**.
+4. Optional: administrators find the settings in the same menu — **Episodes** (titles, signature, image style, AI notice), **Audio** (intro/outro), **Access** (roles and connected users; you can also create roles here, without another plugin) and **History**.
 
 == Frequently Asked Questions ==
 
@@ -138,7 +138,7 @@ Until you save the table in **VozCaster → Access**, every role that can publis
 
 = Can people publish without access to wp-admin, for example the teachers of a school? =
 
-Yes. Create a role for them (for example "English teachers", a copy of Subscriber made with any role editor plugin) and give it access in **VozCaster → Access**. Then add the VozCaster blocks to a page: once logged in, each person sees there the buttons to connect, the episodes waiting for their review and their classes, and never needs to open wp-admin. Avoid giving access to the whole Subscriber role if anyone can register on your site.
+Yes. Create a role for them (for example "English teachers", created in **VozCaster → Access** with no other plugin) and give it access in **VozCaster → Access**. Then add the VozCaster blocks to a page: once logged in, each person sees there the buttons to connect, the episodes waiting for their review and their classes, and never needs to open wp-admin. Avoid giving access to the whole Subscriber role if anyone can register on your site.
 
 = Can I review episodes before they go live? =
 
@@ -233,6 +233,10 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.18.0 =
+* New: create roles for your users from **VozCaster → Access**, without another plugin. A new role has only the permissions of Subscriber; give it access to each podcast in the table. Roles can be deleted when no user has them.
+* New: assign those roles to users as additional roles (Users → Edit user → VozCaster roles), so a teacher can belong to two podcasts.
 
 = 1.17.2 =
 * Fix: an episode published from VozCaster now goes live only once its category, cover and audio are in place. Cache plugins that purge on publishing (FlyingPress, for one, only purges on an update) did not refresh the home and category pages, so the new episode did not show there until the cache expired.

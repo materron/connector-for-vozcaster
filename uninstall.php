@@ -16,6 +16,11 @@ delete_metadata( 'user', 0, 'vpconn_connect_notice_dismissed', '', true );
 delete_metadata( 'user', 0, 'vpconn_pending_token_hash', '', true );
 delete_metadata( 'user', 0, 'vpconn_pending_token_info', '', true );
 
+// Roles created from VozCaster → Access: only the list is deleted. The roles
+// themselves are intentionally kept, otherwise their users would be left
+// without any role.
+delete_option( 'vpconn_created_roles' );
+
 // AI notice settings and per-post flags.
 delete_option( 'vpconn_ai_notice_enabled' );
 delete_option( 'vpconn_ai_notice_text' );

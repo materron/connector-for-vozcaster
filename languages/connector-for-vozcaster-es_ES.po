@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.17.1\n"
+"Project-Id-Version: Connector for VozCaster 1.18.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "POT-Creation-Date: 2026-11-05T11:47:05+00:00\n"
 "PO-Revision-Date: 2026-11-05 13:00+0100\n"
@@ -2593,3 +2593,71 @@ msgid ""
 msgstr ""
 "Muestra los episodios que esperan la revisión del usuario, para escucharlos "
 "y publicarlos o devolverlos."
+
+#: includes/class-frontend.php
+msgid "Role created."
+msgstr "Perfil creado."
+
+#: includes/class-frontend.php
+msgid "A role with that name already exists."
+msgstr "Ya existe un perfil con ese nombre."
+
+#: includes/class-frontend.php
+msgid "Enter a valid role name (up to 60 characters)."
+msgstr "Escribe un nombre de perfil válido (hasta 60 caracteres)."
+
+#: includes/class-frontend.php
+msgid "Role deleted."
+msgstr "Perfil borrado."
+
+#: includes/class-frontend.php
+msgid "That role is in use: remove it from its users first."
+msgstr "Ese perfil está en uso: quítaselo antes a sus usuarios."
+
+#: includes/class-roles.php
+msgid "Roles for your users"
+msgstr "Perfiles para tus usuarios"
+
+#: includes/class-roles.php
+msgid "Create a role for each group of people (for example \"Teachers\" or \"English teachers\"). A new role only has the permissions of Subscriber: it can read the site and edit its own profile. Give it access to each podcast in the table below, and assign it to users from Users → Edit, or in their profile."
+msgstr "Crea un perfil para cada grupo de personas (por ejemplo «Profesores» o «Profesores de inglés»). Un perfil nuevo solo tiene los permisos de Suscriptor: puede leer el sitio y editar su propio perfil de usuario. Dale acceso a cada podcast en la tabla de abajo y asígnalo a los usuarios desde Usuarios → Editar, o en su perfil."
+
+#: includes/class-roles.php
+msgid "Role name"
+msgstr "Nombre del perfil"
+
+#: includes/class-roles.php
+msgid "Create role"
+msgstr "Crear perfil"
+
+#: includes/class-roles.php
+msgid "You have not created any role yet."
+msgstr "Todavía no has creado ningún perfil."
+
+#: includes/class-roles.php
+msgid "Slug"
+msgstr "Identificador"
+
+#: includes/class-roles.php
+msgid "Users"
+msgstr "Usuarios"
+
+#: includes/class-roles.php
+msgid "Delete this role?"
+msgstr "¿Borrar este perfil?"
+
+#: includes/class-roles.php
+msgid "A role can only be deleted when no user has it."
+msgstr "Un perfil solo se puede borrar cuando ningún usuario lo tiene."
+
+#: includes/class-roles.php
+msgid "VozCaster roles"
+msgstr "Perfiles de VozCaster"
+
+#: includes/class-roles.php
+msgid "Roles"
+msgstr "Perfiles"
+
+#: includes/class-roles.php
+msgid "A user can belong to several of these roles, for example to teach in two podcasts. They are added to the main role chosen above."
+msgstr "Un usuario puede tener varios de estos perfiles, por ejemplo para dar clase en dos podcasts. Se suman al perfil principal elegido arriba."

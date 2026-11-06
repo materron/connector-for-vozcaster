@@ -178,6 +178,11 @@ class VPConn_Frontend {
 			'returned'         => [ 'success', __( 'Episode returned to its author.', 'connector-for-vozcaster' ) ],
 			'access_saved'     => [ 'success', __( 'Access settings saved.', 'connector-for-vozcaster' ) ],
 			'review_gone'      => [ 'warning', __( 'That episode is no longer waiting for review.', 'connector-for-vozcaster' ) ],
+			'role_created'     => [ 'success', __( 'Role created.', 'connector-for-vozcaster' ) ],
+			'role_exists'      => [ 'error', __( 'A role with that name already exists.', 'connector-for-vozcaster' ) ],
+			'role_invalid'     => [ 'error', __( 'Enter a valid role name (up to 60 characters).', 'connector-for-vozcaster' ) ],
+			'role_deleted'     => [ 'success', __( 'Role deleted.', 'connector-for-vozcaster' ) ],
+			'role_in_use'      => [ 'error', __( 'That role is in use: remove it from its users first.', 'connector-for-vozcaster' ) ],
 			'forbidden'        => [ 'error', __( 'You are not allowed to do that.', 'connector-for-vozcaster' ) ],
 		];
 		if ( ! isset( $messages[ $key ] ) ) {

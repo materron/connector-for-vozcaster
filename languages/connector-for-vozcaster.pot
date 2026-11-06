@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.17.0\n"
+"Project-Id-Version: Connector for VozCaster 1.18.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2082,4 +2082,72 @@ msgstr ""
 #: blocks/review/block.json
 msgctxt "block description"
 msgid "Lists the episodes waiting for the logged-in user's review, to listen to them and publish or return them."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "Role created."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "A role with that name already exists."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "Enter a valid role name (up to 60 characters)."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "Role deleted."
+msgstr ""
+
+#: includes/class-frontend.php
+msgid "That role is in use: remove it from its users first."
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Roles for your users"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Create a role for each group of people (for example \"Teachers\" or \"English teachers\"). A new role only has the permissions of Subscriber: it can read the site and edit its own profile. Give it access to each podcast in the table below, and assign it to users from Users → Edit, or in their profile."
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Role name"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Create role"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "You have not created any role yet."
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Slug"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Users"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Delete this role?"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "A role can only be deleted when no user has it."
+msgstr ""
+
+#: includes/class-roles.php
+msgid "VozCaster roles"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "Roles"
+msgstr ""
+
+#: includes/class-roles.php
+msgid "A user can belong to several of these roles, for example to teach in two podcasts. They are added to the main role chosen above."
 msgstr ""
