@@ -113,7 +113,7 @@ class VPConn_Review {
 		}
 		$posts = get_posts(
 			[
-				'post_type'      => 'post',
+				'post_type'      => VPConn_Settings::episode_post_types(),
 				'post_status'    => 'pending',
 				'posts_per_page' => 100,
 				'orderby'        => 'date',

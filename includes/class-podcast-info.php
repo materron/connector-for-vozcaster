@@ -99,6 +99,11 @@ class VPConn_Podcast_Info {
 	 * Mirrors the order of VPConn_Settings::get_powerpress_feeds().
 	 */
 	private static function option_name( string $slug ): ?string {
+		$type_feed = VPConn_Settings::post_type_feed( $slug );
+		if ( $type_feed ) {
+			// One option per post type, holding every feed of that type.
+			return 'powerpress_posttype_' . $type_feed['post_type'];
+		}
 		if ( 'podcast' === $slug ) {
 			return false !== get_option( 'powerpress_feed_podcast', false ) ? 'powerpress_feed_podcast' : 'powerpress_feed';
 		}
@@ -117,6 +122,10 @@ class VPConn_Podcast_Info {
 
 	/** Public URL of a feed. */
 	private static function feed_url( string $slug, string $option ): string {
+		$type_feed = VPConn_Settings::post_type_feed( $slug );
+		if ( $type_feed ) {
+			return (string) get_post_type_archive_feed_link( $type_feed['post_type'], $type_feed['pp_slug'] );
+		}
 		if ( str_starts_with( $option, 'powerpress_cat_feed_' ) ) {
 			return get_category_feed_link( (int) substr( $option, strlen( 'powerpress_cat_feed_' ) ) );
 		}
@@ -147,7 +156,7 @@ class VPConn_Podcast_Info {
 		if ( null === $option ) {
 			return new WP_Error( 'vpconn_unknown_feed', 'Unknown feed.', [ 'status' => 404 ] );
 		}
-		$own   = (array) get_option( $option, [] );
+		$own   = self::own_settings( $slug, $option );
 		$base  = 'powerpress_feed' === $option ? $own : (array) get_option( 'powerpress_feed', [] );
 		$data  = [];
 		$inher = [];
@@ -209,13 +218,24 @@ class VPConn_Podcast_Info {
 		return $info;
 	}
 
+	/** A feed's own settings, without what it inherits from the main feed. */
+	private static function own_settings( string $slug, string $option ): array {
+		$type_feed = VPConn_Settings::post_type_feed( $slug );
+		if ( $type_feed ) {
+			$all = get_option( $option, [] );
+			return is_array( $all ) && is_array( $all[ $type_feed['pp_slug'] ] ?? null ) ? $all[ $type_feed['pp_slug'] ] : [];
+		}
+		return (array) get_option( $option, [] );
+	}
+
 	/** Published posts carrying an enclosure for this feed. */
 	private static function count_episodes( string $slug, string $option ): int {
-		$count = function ( array $extra ): int {
+		$type_feed = VPConn_Settings::post_type_feed( $slug );
+		$count     = function ( array $extra ) use ( $type_feed ): int {
 			$query = new WP_Query(
 				array_merge(
 					[
-						'post_type'      => 'post',
+						'post_type'      => $type_feed ? $type_feed['post_type'] : 'post',
 						'post_status'    => 'publish',
 						'posts_per_page' => 1,
 						'fields'         => 'ids',
@@ -225,6 +245,10 @@ class VPConn_Podcast_Info {
 			);
 			return (int) $query->found_posts;
 		};
+		if ( $type_feed ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One count per request, on demand.
+			return $count( [ 'meta_key' => VPConn_Settings::enclosure_meta_key( $slug ) ] );
+		}
 		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One count per request, on demand.
 		if ( str_starts_with( $option, 'powerpress_cat_feed_' ) ) {
 			return $count( [ 'meta_key' => 'enclosure', 'cat' => (int) substr( $option, strlen( 'powerpress_cat_feed_' ) ) ] );
@@ -401,8 +425,15 @@ class VPConn_Podcast_Info {
 		}
 
 		if ( $changes ) {
-			$settings = (array) get_option( $option, [] );
-			update_option( $option, array_merge( $settings, $changes ) );
+			$type_feed = VPConn_Settings::post_type_feed( $slug );
+			if ( $type_feed ) {
+				$all = (array) get_option( $option, [] );
+				$all[ $type_feed['pp_slug'] ] = array_merge( self::own_settings( $slug, $option ), $changes );
+				update_option( $option, $all );
+			} else {
+				$settings = (array) get_option( $option, [] );
+				update_option( $option, array_merge( $settings, $changes ) );
+			}
 		}
 
 		return true;

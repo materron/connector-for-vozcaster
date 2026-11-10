@@ -1328,12 +1328,124 @@ class VPConn_Settings {
 	 * read `enclosure`.
 	 */
 	public static function enclosure_meta_key( string $feed_slug ): string {
+		$type_feed = self::post_type_feed( $feed_slug );
+		if ( $type_feed ) {
+			return 'podcast' === $type_feed['pp_slug'] ? 'enclosure' : '_' . $type_feed['pp_slug'] . ':enclosure';
+		}
 		$general = get_option( 'powerpress_general', [] );
 		$custom  = is_array( $general ) && is_array( $general['custom_feeds'] ?? null ) ? $general['custom_feeds'] : [];
 		if ( 'podcast' !== $feed_slug && '' !== $feed_slug && isset( $custom[ $feed_slug ] ) ) {
 			return '_' . $feed_slug . ':enclosure';
 		}
 		return 'enclosure';
+	}
+
+
+	/**
+	 * Podcasts that PowerPress keeps in a post type of their own ("Post Type
+	 * Podcasting"): the post type's archive has its own feed, and its
+	 * episodes are entries of that post type, not blog posts.
+	 *
+	 * PowerPress lists them in `powerpress_posttype-podcasting` as
+	 * `{ feed slug: { post type: title } }`, and keeps each feed's settings
+	 * in `powerpress_posttype_{post type}[ feed slug ]`.
+	 *
+	 * VozCaster names each one `{post type}_{feed slug}`, so it never clashes
+	 * with the main feed or a channel that share the feed slug.
+	 *
+	 * @return array<int, array{slug: string, name: string, category_slug: null, post_type: string, pp_slug: string}>
+	 */
+	public static function post_type_feeds(): array {
+		$general = get_option( 'powerpress_general', [] );
+		if ( ! is_array( $general ) || empty( $general['posttype_podcasting'] ) ) {
+			return [];
+		}
+		$map = get_option( 'powerpress_posttype-podcasting', [] );
+		if ( ! is_array( $map ) ) {
+			return [];
+		}
+		$feeds = [];
+		foreach ( $map as $pp_slug => $types ) {
+			$pp_slug = sanitize_key( (string) $pp_slug );
+			if ( '' === $pp_slug || ! is_array( $types ) ) {
+				continue;
+			}
+			foreach ( $types as $post_type => $title ) {
+				$post_type = sanitize_key( (string) $post_type );
+				// Blog posts are covered by the main feed and the channels.
+				if ( '' === $post_type || 'post' === $post_type || ! post_type_exists( $post_type ) ) {
+					continue;
+				}
+				$settings = get_option( 'powerpress_posttype_' . $post_type, [] );
+				$name     = is_array( $settings ) && is_array( $settings[ $pp_slug ] ?? null ) ? (string) ( $settings[ $pp_slug ]['title'] ?? '' ) : '';
+				if ( '' === $name ) {
+					$object = get_post_type_object( $post_type );
+					$name   = is_string( $title ) && '' !== $title && $title !== $pp_slug ? $title : ( $object ? $object->labels->name : $post_type );
+				}
+				$feeds[] = [
+					'slug'          => $post_type . '_' . $pp_slug,
+					'name'          => $name,
+					'category_slug' => null,
+					'post_type'     => $post_type,
+					'pp_slug'       => $pp_slug,
+				];
+			}
+		}
+		return $feeds;
+	}
+
+	/** The post type podcast behind a VozCaster feed slug, or null. */
+	public static function post_type_feed( string $feed_slug ): ?array {
+		if ( '' === $feed_slug ) {
+			return null;
+		}
+		foreach ( self::post_type_feeds() as $feed ) {
+			if ( $feed['slug'] === $feed_slug ) {
+				return $feed;
+			}
+		}
+		return null;
+	}
+
+	/** Post type that holds a podcast's episodes: "post" unless PowerPress keeps it in its own type. */
+	public static function feed_post_type( string $feed_slug ): string {
+		$feed = self::post_type_feed( $feed_slug );
+		return $feed ? $feed['post_type'] : 'post';
+	}
+
+	/**
+	 * Every post type that can hold VozCaster episodes on this site.
+	 *
+	 * @return string[]
+	 */
+	public static function episode_post_types(): array {
+		return array_values( array_unique( array_merge( [ 'post' ], wp_list_pluck( self::post_type_feeds(), 'post_type' ) ) ) );
+	}
+
+	/**
+	 * A feed's own PowerPress settings: the main feed, a channel, a category
+	 * feed or a post type feed. Empty for an unknown feed.
+	 */
+	public static function feed_settings( string $feed_slug ): array {
+		$type_feed = self::post_type_feed( $feed_slug );
+		if ( $type_feed ) {
+			$all = get_option( 'powerpress_posttype_' . $type_feed['post_type'], [] );
+			return is_array( $all ) && is_array( $all[ $type_feed['pp_slug'] ] ?? null ) ? $all[ $type_feed['pp_slug'] ] : [];
+		}
+		if ( 'podcast' === $feed_slug || '' === $feed_slug ) {
+			$own = get_option( 'powerpress_feed_podcast', [] );
+			return is_array( $own ) && $own ? $own : (array) get_option( 'powerpress_feed', [] );
+		}
+		$own = get_option( 'powerpress_feed_' . $feed_slug, [] );
+		if ( is_array( $own ) && $own ) {
+			return $own;
+		}
+		$cat = get_term_by( 'slug', $feed_slug, 'category' );
+		if ( $cat ) {
+			$own = get_option( 'powerpress_cat_feed_' . $cat->term_id, [] );
+			return is_array( $own ) ? $own : [];
+		}
+		return [];
 	}
 
 	/**
@@ -1461,6 +1573,16 @@ class VPConn_Settings {
 				];
 				$added_slugs[] = $slug;
 			}
+		}
+
+		// Podcasts kept in a post type of their own.
+		foreach ( self::post_type_feeds() as $type_feed ) {
+			if ( in_array( $type_feed['slug'], $added_slugs, true ) ) {
+				continue;
+			}
+			$feeds[]         = $type_feed;
+			$added_slugs[]   = $type_feed['slug'];
+			$has_named_feeds = true;
 		}
 
 		// If the site uses only category-based feeds (no named custom feeds),
