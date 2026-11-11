@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.18.0\n"
+"Project-Id-Version: Connector for VozCaster 1.19.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-05T11:47:05+00:00\n"
+"POT-Creation-Date: 2026-11-11T05:56:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: connector-for-vozcaster\n"
@@ -60,7 +60,8 @@ msgid "Choose, for each role and podcast, whether its users publish directly, se
 msgstr ""
 
 #: includes/class-access.php:226
-#: includes/class-settings.php:1118
+#: includes/class-roles.php:181
+#: includes/class-settings.php:1123
 msgid "Role"
 msgstr ""
 
@@ -125,12 +126,12 @@ msgstr ""
 msgid "The scheduled date must be in the future."
 msgstr ""
 
-#: includes/class-api.php:1499
+#: includes/class-api.php:1550
 msgid "No file received."
 msgstr ""
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1536
+#: includes/class-api.php:1587
 #, php-format
 msgid "File type not allowed: %s"
 msgstr ""
@@ -343,7 +344,7 @@ msgstr ""
 
 #: includes/class-assistant.php:642
 #: includes/class-distribution.php:278
-#: includes/class-settings.php:1226
+#: includes/class-settings.php:1231
 msgid "Title"
 msgstr ""
 
@@ -354,7 +355,7 @@ msgstr ""
 
 #: includes/class-assistant.php:650
 #: includes/class-distribution.php:282
-#: includes/class-settings.php:1227
+#: includes/class-settings.php:1232
 msgid "Author"
 msgstr ""
 
@@ -446,7 +447,7 @@ msgstr ""
 
 #: includes/class-assistant.php:742
 #: includes/class-settings.php:460
-#: includes/class-settings.php:1100
+#: includes/class-settings.php:1105
 msgid "Save and continue"
 msgstr ""
 
@@ -861,7 +862,7 @@ msgid "Find my podcast"
 msgstr ""
 
 #: includes/class-distribution.php:343
-#: includes/class-settings.php:1228
+#: includes/class-settings.php:1233
 msgid "Status"
 msgstr ""
 
@@ -957,6 +958,26 @@ msgid "That episode is no longer waiting for review."
 msgstr ""
 
 #: includes/class-frontend.php:181
+msgid "Role created."
+msgstr ""
+
+#: includes/class-frontend.php:182
+msgid "A role with that name already exists."
+msgstr ""
+
+#: includes/class-frontend.php:183
+msgid "Enter a valid role name (up to 60 characters)."
+msgstr ""
+
+#: includes/class-frontend.php:184
+msgid "Role deleted."
+msgstr ""
+
+#: includes/class-frontend.php:185
+msgid "That role is in use: remove it from its users first."
+msgstr ""
+
+#: includes/class-frontend.php:186
 msgid "You are not allowed to do that."
 msgstr ""
 
@@ -1385,6 +1406,63 @@ msgstr ""
 msgid "Edit in WordPress"
 msgstr ""
 
+#: includes/class-roles.php:160
+msgid "Roles for your users"
+msgstr ""
+
+#: includes/class-roles.php:162
+msgid "Create a role for each group of people (for example \"Teachers\" or \"English teachers\"). A new role only has the permissions of Subscriber: it can read the site and edit its own profile. Give it access to each podcast in the table below, and assign it to users from Users → Edit, or in their profile."
+msgstr ""
+
+#: includes/class-roles.php:170
+#: includes/class-roles.php:171
+msgid "Role name"
+msgstr ""
+
+#: includes/class-roles.php:172
+msgid "Create role"
+msgstr ""
+
+#: includes/class-roles.php:176
+msgid "You have not created any role yet."
+msgstr ""
+
+#: includes/class-roles.php:182
+msgid "Slug"
+msgstr ""
+
+#: includes/class-roles.php:183
+msgid "Users"
+msgstr ""
+
+#: includes/class-roles.php:202
+msgid "Delete this role?"
+msgstr ""
+
+#: includes/class-roles.php:203
+#: includes/class-settings.php:856
+#: includes/class-settings.php:897
+#: includes/class-settings.php:939
+msgid "Delete"
+msgstr ""
+
+#: includes/class-roles.php:211
+msgid "A role can only be deleted when no user has it."
+msgstr ""
+
+#: includes/class-roles.php:231
+#: includes/class-roles.php:239
+msgid "VozCaster roles"
+msgstr ""
+
+#: includes/class-roles.php:234
+msgid "Roles"
+msgstr ""
+
+#: includes/class-roles.php:247
+msgid "A user can belong to several of these roles, for example to teach in two podcasts. They are added to the main role chosen above."
+msgstr ""
+
 #: includes/class-settings.php:45
 msgid "Select intro audio"
 msgstr ""
@@ -1739,12 +1817,6 @@ msgstr ""
 msgid "Delete the intro file?"
 msgstr ""
 
-#: includes/class-settings.php:856
-#: includes/class-settings.php:897
-#: includes/class-settings.php:939
-msgid "Delete"
-msgstr ""
-
 #: includes/class-settings.php:860
 msgid "To replace the intro, upload a new file:"
 msgstr ""
@@ -1908,79 +1980,79 @@ msgstr ""
 msgid "Who can publish, in which podcast"
 msgstr ""
 
-#: includes/class-settings.php:1102
+#: includes/class-settings.php:1107
 msgid "Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin."
 msgstr ""
 
-#: includes/class-settings.php:1105
+#: includes/class-settings.php:1110
 msgid "Connected users"
 msgstr ""
 
-#: includes/class-settings.php:1107
+#: includes/class-settings.php:1112
 msgid "Each authorized user connects their own account from VozCaster → Connect."
 msgstr ""
 
-#: includes/class-settings.php:1108
+#: includes/class-settings.php:1113
 msgid "Connect your account"
 msgstr ""
 
-#: includes/class-settings.php:1111
+#: includes/class-settings.php:1116
 msgid "Nobody has connected the bot to this site yet."
 msgstr ""
 
-#: includes/class-settings.php:1116
+#: includes/class-settings.php:1121
 msgid "Username"
 msgstr ""
 
-#: includes/class-settings.php:1117
+#: includes/class-settings.php:1122
 msgid "Name"
 msgstr ""
 
-#: includes/class-settings.php:1119
+#: includes/class-settings.php:1124
 msgid "Bot status"
 msgstr ""
 
-#: includes/class-settings.php:1137
+#: includes/class-settings.php:1142
 msgid "Connected"
 msgstr ""
 
-#: includes/class-settings.php:1139
+#: includes/class-settings.php:1144
 msgid "Role not authorized"
 msgstr ""
 
-#: includes/class-settings.php:1150
+#: includes/class-settings.php:1155
 msgid "Revoke access? The user will need to connect again."
 msgstr ""
 
-#: includes/class-settings.php:1151
+#: includes/class-settings.php:1156
 msgid "Revoke"
 msgstr ""
 
-#: includes/class-settings.php:1179
+#: includes/class-settings.php:1184
 msgid "PowerPress is not installed or not active. Episodes will be created without podcast data."
 msgstr ""
 
-#: includes/class-settings.php:1218
+#: includes/class-settings.php:1223
 msgid "Recent published episodes"
 msgstr ""
 
-#: includes/class-settings.php:1220
+#: includes/class-settings.php:1225
 msgid "No episodes have been published with the bot yet."
 msgstr ""
 
-#: includes/class-settings.php:1225
+#: includes/class-settings.php:1230
 msgid "Date"
 msgstr ""
 
-#: includes/class-settings.php:1229
+#: includes/class-settings.php:1234
 msgid "Link"
 msgstr ""
 
-#: includes/class-settings.php:1241
+#: includes/class-settings.php:1246
 msgid "View"
 msgstr ""
 
-#: includes/class-settings.php:1253
+#: includes/class-settings.php:1258
 msgid "Clear history"
 msgstr ""
 
@@ -2082,72 +2154,4 @@ msgstr ""
 #: blocks/review/block.json
 msgctxt "block description"
 msgid "Lists the episodes waiting for the logged-in user's review, to listen to them and publish or return them."
-msgstr ""
-
-#: includes/class-frontend.php
-msgid "Role created."
-msgstr ""
-
-#: includes/class-frontend.php
-msgid "A role with that name already exists."
-msgstr ""
-
-#: includes/class-frontend.php
-msgid "Enter a valid role name (up to 60 characters)."
-msgstr ""
-
-#: includes/class-frontend.php
-msgid "Role deleted."
-msgstr ""
-
-#: includes/class-frontend.php
-msgid "That role is in use: remove it from its users first."
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Roles for your users"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Create a role for each group of people (for example \"Teachers\" or \"English teachers\"). A new role only has the permissions of Subscriber: it can read the site and edit its own profile. Give it access to each podcast in the table below, and assign it to users from Users → Edit, or in their profile."
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Role name"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Create role"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "You have not created any role yet."
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Slug"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Users"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Delete this role?"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "A role can only be deleted when no user has it."
-msgstr ""
-
-#: includes/class-roles.php
-msgid "VozCaster roles"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "Roles"
-msgstr ""
-
-#: includes/class-roles.php
-msgid "A user can belong to several of these roles, for example to teach in two podcasts. They are added to the main role chosen above."
 msgstr ""
