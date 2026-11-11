@@ -1407,10 +1407,41 @@ class VPConn_Settings {
 		return null;
 	}
 
-	/** Post type that holds a podcast's episodes: "post" unless PowerPress keeps it in its own type. */
+	/**
+	 * Post type a custom channel is limited to, or '' if it takes blog posts.
+	 *
+	 * PowerPress lets a channel be tied to a post type ("Custom Post Type" in
+	 * the channel's settings, stored in `powerpress_feed_{slug}['custom_post_type']`):
+	 * its feed then only lists entries of that type, and the episode box only
+	 * shows up there. This replaces the deprecated "Post Type Podcasting".
+	 */
+	public static function channel_post_type( string $feed_slug ): string {
+		if ( '' === $feed_slug || 'podcast' === $feed_slug ) {
+			return '';
+		}
+		$general = get_option( 'powerpress_general', [] );
+		$custom  = is_array( $general ) && is_array( $general['custom_feeds'] ?? null ) ? $general['custom_feeds'] : [];
+		// With Post Type Podcasting on, PowerPress ignores the channel's post
+		// type when building its feed, so VozCaster does too.
+		if ( ! isset( $custom[ $feed_slug ] ) || ! empty( $general['posttype_podcasting'] ) ) {
+			return '';
+		}
+		$settings  = get_option( 'powerpress_feed_' . $feed_slug, [] );
+		$post_type = is_array( $settings ) ? sanitize_key( (string) ( $settings['custom_post_type'] ?? '' ) ) : '';
+		if ( '' === $post_type || 'post' === $post_type || ! post_type_exists( $post_type ) ) {
+			return '';
+		}
+		return $post_type;
+	}
+
+	/** Post type that holds a podcast's episodes: "post" unless PowerPress keeps it in another type. */
 	public static function feed_post_type( string $feed_slug ): string {
 		$feed = self::post_type_feed( $feed_slug );
-		return $feed ? $feed['post_type'] : 'post';
+		if ( $feed ) {
+			return $feed['post_type'];
+		}
+		$channel_type = self::channel_post_type( $feed_slug );
+		return '' !== $channel_type ? $channel_type : 'post';
 	}
 
 	/**
@@ -1419,7 +1450,16 @@ class VPConn_Settings {
 	 * @return string[]
 	 */
 	public static function episode_post_types(): array {
-		return array_values( array_unique( array_merge( [ 'post' ], wp_list_pluck( self::post_type_feeds(), 'post_type' ) ) ) );
+		$types   = array_merge( [ 'post' ], wp_list_pluck( self::post_type_feeds(), 'post_type' ) );
+		$general = get_option( 'powerpress_general', [] );
+		$custom  = is_array( $general ) && is_array( $general['custom_feeds'] ?? null ) ? $general['custom_feeds'] : [];
+		foreach ( array_keys( $custom ) as $slug ) {
+			$channel_type = self::channel_post_type( (string) $slug );
+			if ( '' !== $channel_type ) {
+				$types[] = $channel_type;
+			}
+		}
+		return array_values( array_unique( $types ) );
 	}
 
 	/**

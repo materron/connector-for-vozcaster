@@ -1,10 +1,10 @@
 === Connector for VozCaster ===
-Contributors: materron
+Contributors: materron, wajari
 Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.19.1
+Stable tag: 1.19.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,7 +104,7 @@ Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register
 
 = Can my episodes live outside the blog, in a post type of their own? =
 
-Yes. Register the post type (for example "podcast", with its own /podcast/ URLs) with your theme, a few lines of code or a plugin such as Custom Post Type UI, and turn on PowerPress's Post Type Podcasting for it. That podcast then shows up in VozCaster like any other: its episodes are created in that post type, with their own feed, and never appear in the blog.
+Yes. Register the post type (for example "podcast", with its own /podcast/ URLs) with your theme, a few lines of code or a plugin such as Custom Post Type UI. Then create a PowerPress channel and, in its settings, limit it to that post type ("Custom Post Type"). That podcast then shows up in VozCaster like any other: its episodes are created in that post type, in the channel's feed, and never appear in the blog. Podcasts set up with PowerPress's older Post Type Podcasting keep working too.
 
 = My hosting blocks VozCaster ("checking your browser"). Does it still work? =
 
@@ -237,6 +237,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.19.2 =
+* New: PowerPress channels limited to a post type ("Custom Post Type" in the channel settings) work with VozCaster. Episodes are created in that post type, so they show up in the channel's feed. This is the setup PowerPress supports now that Post Type Podcasting is deprecated. Thanks to Wajari Velásquez.
 
 = 1.19.1 =
 * Security: hardened the "sign in to WordPress" connection used by the VozCaster bot and app. Connecting now asks you to confirm on a page of your site, only the bot or app that started the connection can receive it, and the VozCaster token only works with VozCaster's own routes. Please update. Thanks to Ryan Fabella for the responsible disclosure through WPScan.

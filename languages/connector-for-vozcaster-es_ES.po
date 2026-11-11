@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.19.1\n"
+"Project-Id-Version: Connector for VozCaster 1.19.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
 "vozcaster\n"
 "POT-Creation-Date: 2026-11-11T09:42:09+00:00\n"
