@@ -231,11 +231,12 @@ class VPConn_Podcast_Info {
 	/** Published posts carrying an enclosure for this feed. */
 	private static function count_episodes( string $slug, string $option ): int {
 		$type_feed = VPConn_Settings::post_type_feed( $slug );
-		$count     = function ( array $extra ) use ( $type_feed ): int {
+		$post_type = VPConn_Settings::feed_post_type( $slug );
+		$count     = function ( array $extra ) use ( $post_type ): int {
 			$query = new WP_Query(
 				array_merge(
 					[
-						'post_type'      => $type_feed ? $type_feed['post_type'] : 'post',
+						'post_type'      => $post_type,
 						'post_status'    => 'publish',
 						'posts_per_page' => 1,
 						'fields'         => 'ids',
