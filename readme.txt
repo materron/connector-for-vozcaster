@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.19.0
+Stable tag: 1.19.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.19.1 =
+* Security: hardened the "sign in to WordPress" connection used by the VozCaster bot and app. Connecting now asks you to confirm on a page of your site, only the bot or app that started the connection can receive it, and the VozCaster token only works with VozCaster's own routes. Please update. Thanks to Ryan Fabella for the responsible disclosure through WPScan.
 
 = 1.19.0 =
 * New: podcasts that PowerPress keeps in a post type of their own (Post Type Podcasting) work with VozCaster. Episodes are created in that post type, so they get its URLs and its own feed and stay out of the blog. Numbering, the podcast details, review, chapters and the AI notice work there too.

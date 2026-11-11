@@ -21,6 +21,16 @@ class VPConn_Auth {
 	const OPTION_AUTHORIZED_ROLES     = 'vpconn_authorized_roles';
 	const USER_META_TOKEN_HASH        = 'vpconn_bot_token_hash';
 	const STATE_PATTERN               = '/^[a-f0-9]{32}$/';
+	// SHA-256 (hex) of the secret that only the client starting the web flow holds.
+	const CHALLENGE_PATTERN           = '/^[a-f0-9]{64}$/';
+
+	/**
+	 * Set when the current REST request was authenticated with X-VozPress-Token.
+	 * Such requests may only reach this plugin's own routes (see restrict_token_routes()).
+	 *
+	 * @var bool
+	 */
+	private static bool $token_request = false;
 
 	// Pre-1.8.0 storage, kept only so the upgrade routine can migrate it.
 	const LEGACY_OPTION_ALLOWED_USERS = 'vpconn_allowed_wp_users';
@@ -29,6 +39,8 @@ class VPConn_Auth {
 	public function register_hooks(): void {
 		// Autenticar peticiones REST via X-VozPress-Token.
 		add_filter( 'determine_current_user', [ $this, 'authenticate_via_token' ], 20 );
+		// The bot token is not a general WordPress credential: it only opens this plugin's routes.
+		add_filter( 'rest_pre_dispatch', [ $this, 'restrict_token_routes' ], 0, 3 );
 		// Gestionar callback post-login (página normal WP, no REST, para que las cookies funcionen).
 		add_action( 'init', [ $this, 'handle_auth_callback' ] );
 	}
@@ -53,7 +65,54 @@ class VPConn_Auth {
 			return $user_id;
 		}
 		$found = self::find_user_id_by_token( $token );
-		return $found ?: $user_id;
+		if ( $found ) {
+			self::$token_request = true;
+			return $found;
+		}
+		return $user_id;
+	}
+
+	/**
+	 * Rejects requests authenticated with X-VozPress-Token that target any route
+	 * outside this plugin (core users, posts, settings…). Since 1.19.1 the token
+	 * only works for what VozCaster needs.
+	 *
+	 * @param mixed           $result  Response to replace the requested one with, or null.
+	 * @param WP_REST_Server  $server  Server instance.
+	 * @param WP_REST_Request $request Request used to generate the response.
+	 * @return mixed
+	 */
+	public function restrict_token_routes( $result, $server, $request ) {
+		if ( ! self::$token_request || null !== $result ) {
+			return $result;
+		}
+		if ( self::is_token_route( (string) $request->get_route() ) ) {
+			return $result;
+		}
+		return new WP_Error(
+			'vpconn_token_route_forbidden',
+			__( 'The VozCaster token can only be used with the VozCaster connector routes.', 'connector-for-vozcaster' ),
+			[ 'status' => 403 ]
+		);
+	}
+
+	/**
+	 * Whether a REST route may be called with the VozCaster token.
+	 */
+	public static function is_token_route( string $route ): bool {
+		$route = '/' . ltrim( $route, '/' );
+		if ( '/vozpress/v1' === $route || str_starts_with( $route, '/vozpress/v1/' ) ) {
+			return true;
+		}
+		/**
+		 * Filters the extra REST routes (exact match) that accept the VozCaster token.
+		 *
+		 * @since 1.19.1
+		 *
+		 * @param string[] $routes Default: the AI mode route of the VozCaster licenses plugin.
+		 */
+		$extra = (array) apply_filters( 'vpconn_token_extra_routes', [ '/vozcaster/v1/ai-mode' ] );
+		return in_array( $route, $extra, true );
 	}
 
 	// -------------------------------------------------------------------------
@@ -217,54 +276,99 @@ class VPConn_Auth {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Inicia el flujo: guarda el state y redirige al login de WordPress.
-	 * Llamado desde el endpoint REST GET /auth/iniciar.
+	 * Starts the web flow: stores the state and redirects to the WordPress login.
+	 * Called from the REST endpoint GET /auth/iniciar.
+	 *
+	 * $challenge is the SHA-256 (hex) of a secret that only the client starting
+	 * the flow knows; /auth/estado hands the token over only to whoever presents
+	 * that secret, so someone who merely knows the state cannot collect it.
 	 */
-	public static function initiate( string $state, int $telegram_id ): void {
+	public static function initiate( string $state, int $telegram_id, string $challenge = '' ): void {
 		// Accounts created in the VozCaster app have negative ids (they never
 		// clash with a Telegram one); 0 is the only invalid id.
-		if ( ! preg_match( self::STATE_PATTERN, $state ) || 0 === $telegram_id ) {
+		if ( ! preg_match( self::STATE_PATTERN, $state ) || 0 === $telegram_id
+			|| ! preg_match( self::CHALLENGE_PATTERN, $challenge ) ) {
 			status_header( 400 );
 			wp_die(
-				esc_html__( 'Invalid parameters.', 'connector-for-vozcaster' ),
+				esc_html__( 'Invalid parameters. If you use the VozCaster bot or app, try connecting again.', 'connector-for-vozcaster' ),
 				esc_html__( 'Error', 'connector-for-vozcaster' ),
 				[ 'response' => 400 ]
 			);
 		}
 
-		// Guardar telegram_id asociado a este state (TTL: 10 min).
-		set_transient( 'vpconn_pending_' . $state, $telegram_id, 10 * MINUTE_IN_SECONDS );
+		// A state is registered only once: nobody can overwrite a pending flow.
+		if ( false === get_transient( 'vpconn_pending_' . $state ) ) {
+			set_transient(
+				'vpconn_pending_' . $state,
+				[
+					'telegram_id' => $telegram_id,
+					'challenge'   => $challenge,
+				],
+				10 * MINUTE_IN_SECONDS
+			);
+		}
 
-		// URL de callback en el front-end (no REST) para que las cookies de sesión funcionen.
-		$callback_url = add_query_arg( 'vpconn_auth', $state, home_url( '/' ) );
-
-		wp_safe_redirect( wp_login_url( $callback_url ) );
+		// Front-end callback (not REST) so that the session cookies work.
+		wp_safe_redirect( wp_login_url( self::callback_url( $state ) ) );
 		exit;
 	}
 
 	/**
-	 * Gestiona el callback tras el login de WordPress.
-	 * Se activa cuando la URL contiene ?vpconn_auth=STATE.
-	 * En este punto el usuario ya tiene la cookie de sesión de WP activa.
+	 * Returns the token for /auth/estado once the user has approved the
+	 * connection, and only to the client that holds the secret.
+	 *
+	 * @return array{status: string, token?: string, wp_username?: string}|WP_Error
+	 */
+	public static function collect_result( string $state, string $verifier ): array|WP_Error {
+		if ( ! preg_match( self::STATE_PATTERN, $state ) || ! preg_match( '/^[a-f0-9]{32,128}$/', $verifier ) ) {
+			return new WP_Error( 'vpconn_invalid_parameters', __( 'Invalid parameters.', 'connector-for-vozcaster' ), [ 'status' => 400 ] );
+		}
+		$result = get_transient( 'vpconn_auth_result_' . $state );
+		if ( ! is_array( $result ) ) {
+			return [ 'status' => 'pending' ];
+		}
+		if ( ! hash_equals( (string) ( $result['challenge'] ?? '' ), hash( 'sha256', $verifier ) ) ) {
+			return new WP_Error( 'vpconn_invalid_verifier', __( 'This connection was started by someone else.', 'connector-for-vozcaster' ), [ 'status' => 403 ] );
+		}
+		// Single use.
+		delete_transient( 'vpconn_auth_result_' . $state );
+		return [
+			'status'      => 'ok',
+			'token'       => $result['token'],
+			'wp_username' => $result['wp_username'],
+		];
+	}
+
+	private static function callback_url( string $state ): string {
+		return add_query_arg( 'vpconn_auth', $state, home_url( '/' ) );
+	}
+
+	private static function nonce_action( string $state ): string {
+		return 'vpconn_auth_confirm_' . $state;
+	}
+
+	/**
+	 * Handles the callback after the WordPress login (?vpconn_auth=STATE).
+	 *
+	 * Opening the link only shows what is about to happen; the token is issued
+	 * after the user presses "Connect" (a POST protected by a nonce).
 	 */
 	public function handle_auth_callback(): void {
-		// Public OAuth-like callback after WP login. $state is a single-use 32-hex
-		// random token validated against a server-side transient, so it is the CSRF
-		// protection here; a form nonce does not apply to this flow.
+		// The state only identifies the pending flow; the action that issues the
+		// token is the POST below, which is checked with a nonce.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$state = isset( $_GET['vpconn_auth'] ) ? sanitize_text_field( wp_unslash( $_GET['vpconn_auth'] ) ) : '';
 		if ( ! $state || ! preg_match( self::STATE_PATTERN, $state ) ) {
 			return;
 		}
 
-		// Si el usuario no está logueado, redirigir al login de nuevo con este callback.
 		if ( ! is_user_logged_in() ) {
-			wp_safe_redirect( wp_login_url( add_query_arg( 'vpconn_auth', $state, home_url( '/' ) ) ) );
+			wp_safe_redirect( wp_login_url( self::callback_url( $state ) ) );
 			exit;
 		}
 
-		$telegram_id = (int) get_transient( 'vpconn_pending_' . $state );
-		if ( ! $telegram_id ) {
+		$pending = get_transient( 'vpconn_pending_' . $state );
+		if ( ! is_array( $pending ) || empty( $pending['telegram_id'] ) || empty( $pending['challenge'] ) ) {
 			$page = self::auth_page(
 				'⚠️ ' . esc_html__( 'Link expired', 'connector-for-vozcaster' ),
 				esc_html__( 'This authorization link has expired (10 minutes).', 'connector-for-vozcaster' ),
@@ -300,21 +404,40 @@ class VPConn_Auth {
 			wp_die( $page, esc_html__( 'VozCaster — Not authorized', 'connector-for-vozcaster' ), [ 'response' => 403 ] );
 		}
 
-		// Generar token personal para este usuario.
+		$method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_key( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+		if ( 'POST' !== $method || ! isset( $_POST['vpconn_confirm'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted HTML built by confirm_page(); all dynamic values are escaped within.
+			wp_die( self::confirm_page( $state, $user ), esc_html__( 'VozCaster — Confirm the connection', 'connector-for-vozcaster' ), [ 'response' => 200 ] );
+		}
+
+		$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, self::nonce_action( $state ) ) ) {
+			$page = self::auth_page(
+				'⚠️ ' . esc_html__( 'Link expired', 'connector-for-vozcaster' ),
+				esc_html__( 'This confirmation could not be verified. Open the link again from the bot or the app.', 'connector-for-vozcaster' ),
+				'',
+				'#e65c00'
+			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is trusted HTML built by auth_page(); all dynamic values are escaped within.
+			wp_die( $page, esc_html__( 'VozCaster — Link expired', 'connector-for-vozcaster' ), [ 'response' => 403 ] );
+		}
+
+		// Single use: the pending flow is consumed before the token exists.
+		delete_transient( 'vpconn_pending_' . $state );
+
 		$token = self::generate_user_token( $user->ID );
 
-		// Guardar resultado para que el bot lo recoja via polling (TTL: 10 min).
+		// Kept for the client that started the flow to collect via /auth/estado (TTL: 10 min).
 		set_transient(
 			'vpconn_auth_result_' . $state,
 			[
 				'token'       => $token,
 				'wp_username' => $user->user_login,
-				'telegram_id' => $telegram_id,
+				'telegram_id' => (int) $pending['telegram_id'],
+				'challenge'   => (string) $pending['challenge'],
 			],
 			10 * MINUTE_IN_SECONDS
 		);
-
-		delete_transient( 'vpconn_pending_' . $state );
 
 		$page = self::auth_page(
 			'✅ ' . esc_html__( 'Connected!', 'connector-for-vozcaster' ),
@@ -328,6 +451,33 @@ class VPConn_Auth {
 		);
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $page is trusted HTML built by auth_page(); all dynamic values are escaped within.
 		wp_die( $page, esc_html__( 'VozCaster — Connection completed', 'connector-for-vozcaster' ), [ 'response' => 200 ] );
+	}
+
+	/**
+	 * The page that asks the user to approve the connection explicitly.
+	 */
+	private static function confirm_page( string $state, WP_User $user ): string {
+		$site = wp_parse_url( home_url(), PHP_URL_HOST );
+
+		return '<div style="font-family:sans-serif;text-align:center;padding:2em;max-width:480px;margin:auto">'
+			. '<h2>🎙️ ' . esc_html__( 'Connect VozCaster to this site?', 'connector-for-vozcaster' ) . '</h2>'
+			. '<p>' . sprintf(
+				/* translators: 1: the user's display name, 2: the site's domain. Both wrapped in <strong> tags. */
+				esc_html__( 'VozCaster will be able to publish podcast episodes as %1$s on %2$s.', 'connector-for-vozcaster' ),
+				'<strong>' . esc_html( $user->display_name ) . '</strong>',
+				'<strong>' . esc_html( (string) $site ) . '</strong>'
+			) . '</p>'
+			. '<p style="background:#fff8e5;border-left:4px solid #dba617;padding:.7em 1em;text-align:left">'
+			. esc_html__( 'Only continue if you have just asked for this connection yourself, from the VozCaster bot or app. If someone sent you this link, close this page.', 'connector-for-vozcaster' )
+			. '</p>'
+			. '<form method="post" action="' . esc_url( self::callback_url( $state ) ) . '" style="margin-top:1.5em">'
+			. wp_nonce_field( self::nonce_action( $state ), '_wpnonce', false, false )
+			. '<input type="hidden" name="vpconn_confirm" value="1">'
+			. '<button type="submit" style="background:#2e276b;color:#fff;border:0;padding:.65em 1.6em;border-radius:6px;font-weight:bold;font-size:1rem;cursor:pointer">'
+			. esc_html__( 'Connect', 'connector-for-vozcaster' ) . '</button> '
+			. '<a href="' . esc_url( home_url( '/' ) ) . '" style="margin-left:1em">' . esc_html__( 'Cancel', 'connector-for-vozcaster' ) . '</a>'
+			. '</form>'
+			. '</div>';
 	}
 
 	/**
