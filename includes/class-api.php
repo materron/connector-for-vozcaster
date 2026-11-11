@@ -45,6 +45,11 @@ class VPConn_API {
 						'required' => true,
 						'type'     => 'integer',
 					],
+					'challenge'   => [
+						'required'          => false,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
 				],
 			]
 		);
@@ -58,8 +63,13 @@ class VPConn_API {
 				'callback'            => [ $this, 'auth_estado' ],
 				'permission_callback' => '__return_true',
 				'args'                => [
-					'state' => [
+					'state'    => [
 						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'verifier' => [
+						'required'          => false,
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_text_field',
 					],
@@ -475,42 +485,33 @@ class VPConn_API {
 	}
 
 	/**
-	 * GET /auth/iniciar?state=STATE&telegram_id=TID
-	 * Guarda el state y redirige al login de WordPress.
-	 * El navegador del usuario sigue la redirección; tras el login vuelve al callback.
+	 * GET /auth/iniciar?state=STATE&telegram_id=TID&challenge=SHA256(VERIFIER)
+	 * Stores the state and redirects to the WordPress login.
 	 */
 	public function auth_iniciar( WP_REST_Request $request ): void {
-		$state       = $request->get_param( 'state' );
-		$telegram_id = (int) $request->get_param( 'telegram_id' );
-		VPConn_Auth::initiate( $state, $telegram_id );
-		// initiate() llama a wp_redirect() + exit; nunca llega aquí.
+		VPConn_Auth::initiate(
+			(string) $request->get_param( 'state' ),
+			(int) $request->get_param( 'telegram_id' ),
+			(string) $request->get_param( 'challenge' )
+		);
+		// initiate() redirects and exits.
 	}
 
 	/**
-	 * GET /auth/estado?state=STATE
-	 * Polling: devuelve {status:"pending"} hasta que el usuario complete el login,
-	 * luego {status:"ok", token:"...", wp_username:"..."} una sola vez.
+	 * GET /auth/estado?state=STATE&verifier=VERIFIER
+	 * Polling: {status:"pending"} until the user approves the connection, then
+	 * {status:"ok", token, wp_username} once, only for the holder of the verifier.
 	 */
-	public function auth_estado( WP_REST_Request $request ): WP_REST_Response {
-		$state  = $request->get_param( 'state' );
-		$result = get_transient( 'vpconn_auth_result_' . $state );
-
-		if ( ! $result ) {
-			$response = new WP_REST_Response( [ 'status' => 'pending' ], 200 );
-		} else {
-			// Consumir el transient — solo se puede recoger una vez.
-			delete_transient( 'vpconn_auth_result_' . $state );
-			$response = new WP_REST_Response(
-				[
-					'status'      => 'ok',
-					'token'       => $result['token'],
-					'wp_username' => $result['wp_username'],
-				],
-				200
-			);
+	public function auth_estado( WP_REST_Request $request ): WP_REST_Response|WP_Error {
+		$result = VPConn_Auth::collect_result(
+			(string) $request->get_param( 'state' ),
+			(string) $request->get_param( 'verifier' )
+		);
+		if ( is_wp_error( $result ) ) {
+			return $result;
 		}
-
-		// Evitar que LiteSpeed Cache u otros proxies cacheen esta respuesta.
+		$response = new WP_REST_Response( $result, 200 );
+		// Keep LiteSpeed Cache and other proxies from caching this response.
 		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate' );
 		$response->header( 'Pragma', 'no-cache' );
 		return $response;
