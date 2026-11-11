@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.18.0
+Stable tag: 1.19.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -101,6 +101,10 @@ If your site's address cannot be passed on automatically (for example, WordPress
 = Does it work with PowerPress? =
 
 Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register episode metadata, enclosures, season and episode numbers.
+
+= Can my episodes live outside the blog, in a post type of their own? =
+
+Yes. Register the post type (for example "podcast", with its own /podcast/ URLs) with your theme, a few lines of code or a plugin such as Custom Post Type UI, and turn on PowerPress's Post Type Podcasting for it. That podcast then shows up in VozCaster like any other: its episodes are created in that post type, with their own feed, and never appear in the blog.
 
 = My hosting blocks VozCaster ("checking your browser"). Does it still work? =
 
@@ -233,6 +237,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.19.0 =
+* New: podcasts that PowerPress keeps in a post type of their own (Post Type Podcasting) work with VozCaster. Episodes are created in that post type, so they get its URLs and its own feed and stay out of the blog. Numbering, the podcast details, review, chapters and the AI notice work there too.
 
 = 1.18.0 =
 * New: create roles for your users from **VozCaster → Access**, without another plugin. A new role has only the permissions of Subscriber; give it access to each podcast in the table. Roles can be deleted when no user has them.

@@ -139,7 +139,7 @@ class VPConn_Chapters {
 			return $content;
 		}
 		$post = get_post();
-		if ( ! $post || 'post' !== $post->post_type ) {
+		if ( ! $post || ! in_array( $post->post_type, VPConn_Settings::episode_post_types(), true ) ) {
 			return $content;
 		}
 		$chapters = get_post_meta( $post->ID, self::META, true );

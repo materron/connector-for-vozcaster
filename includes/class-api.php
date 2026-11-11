@@ -1086,7 +1086,9 @@ class VPConn_API {
 			'post_content' => $content,
 			'post_excerpt' => $excerpt,
 			'post_status'  => self::insert_status( $status ),
-			'post_type'    => 'post',
+			// A podcast PowerPress keeps in its own post type gets its
+			// episodes there, out of the blog.
+			'post_type'    => VPConn_Settings::feed_post_type( $feed_slug ),
 		];
 
 		if ( $scheduled_at ) {
@@ -1354,11 +1356,12 @@ class VPConn_API {
 		// (i.e., real podcast episodes with audio): a custom channel's own meta,
 		// or "enclosure" within the feed's category.
 		$meta_key   = VPConn_Settings::enclosure_meta_key( $feed_slug );
-		$cat        = 'enclosure' === $meta_key ? get_term_by( 'slug', $feed_slug, 'category' ) : false;
+		$post_type  = VPConn_Settings::feed_post_type( $feed_slug );
+		$cat        = 'enclosure' === $meta_key && 'post' === $post_type ? get_term_by( 'slug', $feed_slug, 'category' ) : false;
 		// Pending (held for review) and scheduled episodes count too, so two
 		// episodes waiting for approval never get the same number.
 		$query_args = [
-			'post_type'      => 'post',
+			'post_type'      => $post_type,
 			'post_status'    => [ 'publish', 'pending', 'future' ],
 			'posts_per_page' => 500,
 			// ID breaks ties between episodes created in the same second.
@@ -1483,6 +1486,10 @@ class VPConn_API {
 		if ( '' === $category_slug ) {
 			return;
 		}
+		// A post type without categories (a podcast of its own) gets none.
+		if ( ! is_object_in_taxonomy( (string) get_post_type( $post_id ), 'category' ) ) {
+			return;
+		}
 		$cat = get_term_by( 'slug', $category_slug, 'category' );
 		if ( ! $cat ) {
 			return;
@@ -1496,9 +1503,12 @@ class VPConn_API {
 	 */
 	private function get_podcast_cover_id( string $feed_slug = 'podcast' ): int {
 		// PowerPress guarda la URL del artwork en la opción de canal de cada feed.
-		$feed_options = get_option( 'powerpress_feed_' . $feed_slug, [] );
-		if ( empty( $feed_options ) || ! is_array( $feed_options ) ) {
+		$feed_options = VPConn_Settings::post_type_feed( $feed_slug ) ? VPConn_Settings::feed_settings( $feed_slug ) : get_option( 'powerpress_feed_' . $feed_slug, [] );
+		if ( empty( $feed_options['itunes_image'] ) && empty( $feed_options['image'] ) ) {
 			$feed_options = get_option( 'powerpress_feed_podcast', [] );
+		}
+		if ( empty( $feed_options ) || ! is_array( $feed_options ) ) {
+			$feed_options = get_option( 'powerpress_feed', [] );
 		}
 		if ( empty( $feed_options ) || ! is_array( $feed_options ) ) {
 			$feed_options = get_option( 'powerpress_general', [] );
@@ -1688,13 +1698,10 @@ class VPConn_API {
 		if ( $transcript_url ) {
 			// PowerPress reads the transcript (<podcast:transcript>) from these
 			// same episode data, in the language of the podcast.
-			$feed_options = get_option( 'powerpress_feed_' . $feed_slug, [] );
-			if ( 'podcast' === $feed_slug && ! $feed_options ) {
+			$feed_options = VPConn_Settings::feed_settings( $feed_slug );
+			if ( empty( $feed_options['rss_language'] ) ) {
+				// Like PowerPress: an empty field inherits the main feed's.
 				$feed_options = get_option( 'powerpress_feed', [] );
-			}
-			$cat = $feed_options ? false : get_term_by( 'slug', $feed_slug, 'category' );
-			if ( $cat ) {
-				$feed_options = get_option( 'powerpress_cat_feed_' . $cat->term_id, [] );
 			}
 			$extra['pci_transcript']          = 1;
 			$extra['pci_transcript_url']      = $transcript_url;
