@@ -240,6 +240,7 @@ Service URLs and policies:
 
 = 1.20.0 =
 * New: a user can be connected from several places at once, for example the VozCaster app and Telegram, or two phones. Each one has its own connection, and connecting again from one of them no longer disconnects the others. Up to 5 connections per user; Revoke still removes them all.
+* Security: Revoke now also cancels connections that were registered while the hosting blocked VozCaster and had not been used yet.
 
 = 1.19.2 =
 * New: PowerPress channels limited to a post type ("Custom Post Type" in the channel settings) work with VozCaster. Episodes are created in that post type, so they show up in the channel's feed. This is the setup PowerPress supports now that Post Type Podcasting is deprecated. Thanks to Wajari Velásquez.

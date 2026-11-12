@@ -186,7 +186,7 @@ class VPConn_Auth {
 		$clients = self::get_token_clients( $user_id );
 
 		if ( isset( $clients[ $client ] ) ) {
-			delete_user_meta( $user_id, self::USER_META_TOKEN_HASH, $clients[ $client ]['hash'] );
+			self::delete_token_hash( $user_id, $clients[ $client ]['hash'] );
 			unset( $clients[ $client ] );
 		}
 
@@ -200,7 +200,7 @@ class VPConn_Auth {
 		uasort( $clients, static fn( $a, $b ) => $a['created'] <=> $b['created'] );
 		while ( count( $clients ) > self::MAX_TOKENS_PER_USER ) {
 			$oldest = array_key_first( $clients );
-			delete_user_meta( $user_id, self::USER_META_TOKEN_HASH, $clients[ $oldest ]['hash'] );
+			self::delete_token_hash( $user_id, $clients[ $oldest ]['hash'] );
 			unset( $clients[ $oldest ] );
 		}
 
@@ -217,7 +217,13 @@ class VPConn_Auth {
 	private static function get_token_clients( int $user_id ): array {
 		$clients = get_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, true );
 		$clients = is_array( $clients ) ? $clients : [];
-		$hashes  = array_map( 'strval', (array) get_user_meta( $user_id, self::USER_META_TOKEN_HASH ) );
+		// Only well-formed hashes count (an empty value must never reach delete_user_meta()).
+		$hashes = array_values(
+			array_filter(
+				array_map( 'strval', (array) get_user_meta( $user_id, self::USER_META_TOKEN_HASH ) ),
+				static fn( $hash ) => (bool) preg_match( '/^[a-f0-9]{64}$/', $hash )
+			)
+		);
 
 		// Keep only entries whose token still exists.
 		$clients = array_filter(
@@ -225,13 +231,24 @@ class VPConn_Auth {
 			static fn( $entry ) => is_array( $entry ) && in_array( (string) ( $entry['hash'] ?? '' ), $hashes, true )
 		);
 		$known = array_column( $clients, 'hash' );
-		foreach ( array_values( array_diff( $hashes, $known ) ) as $i => $hash ) {
-			$clients[ 'legacy-' . $i ] = [
+		foreach ( array_diff( $hashes, $known ) as $hash ) {
+			// Keyed by hash, so two untracked rows never share a slot.
+			$clients[ 'legacy-' . substr( $hash, 0, 16 ) ] = [
 				'hash'    => $hash,
 				'created' => 0,
 			];
 		}
 		return $clients;
+	}
+
+	/**
+	 * Deletes one token row by its hash. Never with an empty or malformed value,
+	 * which would make delete_user_meta() remove every token of the user.
+	 */
+	private static function delete_token_hash( int $user_id, string $hash ): void {
+		if ( preg_match( '/^[a-f0-9]{64}$/', $hash ) ) {
+			delete_user_meta( $user_id, self::USER_META_TOKEN_HASH, $hash );
+		}
 	}
 
 	/**
@@ -249,6 +266,9 @@ class VPConn_Auth {
 	public static function revoke_user_token( int $user_id ): void {
 		delete_user_meta( $user_id, self::USER_META_TOKEN_HASH );
 		delete_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS );
+		// Connections registered through VozCaster's copy that were not used yet.
+		delete_user_meta( $user_id, VPConn_Relay::META_PENDING );
+		delete_user_meta( $user_id, VPConn_Relay::META_PENDING_INFO );
 	}
 
 	public static function has_token( int $user_id ): bool {
