@@ -4,11 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.19.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-"
-"vozcaster\n"
-"POT-Creation-Date: 2026-11-11T09:42:09+00:00\n"
-"PO-Revision-Date: 2026-11-05 13:00+0100\n"
+"Project-Id-Version: Connector for VozCaster 1.20.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
+"POT-Creation-Date: 2026-11-12T09:18:20+00:00\n"
+"PO-Revision-Date: 2026-11-12 10:30+0100\n"
 "Last-Translator: Miguel Ángel Terrón <info@potencia.pro>\n"
 "Language-Team: Spanish <info@potencia.pro>\n"
 "Language: es_ES\n"
@@ -29,13 +28,8 @@ msgstr "https://vozcaster.com"
 
 #. Description of the plugin
 #: connector-for-vozcaster.php
-msgid ""
-"You talk, VozCaster does the rest: it produces your podcast episodes and "
-"publishes them here with PowerPress, from the VozCaster app or Telegram."
-msgstr ""
-"Tú hablas, del resto se ocupa VozCaster: produce los episodios de tu podcast "
-"y los publica aquí con PowerPress, desde la app de VozCaster o desde "
-"Telegram."
+msgid "You talk, VozCaster does the rest: it produces your podcast episodes and publishes them here with PowerPress, from the VozCaster app or Telegram."
+msgstr "Tú hablas, del resto se ocupa VozCaster: produce los episodios de tu podcast y los publica aquí con PowerPress, desde la app de VozCaster o desde Telegram."
 
 #. Author of the plugin
 #: connector-for-vozcaster.php
@@ -48,11 +42,8 @@ msgid "https://potencia.pro"
 msgstr "https://potencia.pro"
 
 #: includes/class-access.php:200
-msgid ""
-"Only the people who manage VozCaster on this site can change who publishes."
-msgstr ""
-"Solo las personas que gestionan VozCaster en este sitio pueden cambiar quién "
-"publica."
+msgid "Only the people who manage VozCaster on this site can change who publishes."
+msgstr "Solo las personas que gestionan VozCaster en este sitio pueden cambiar quién publica."
 
 #: includes/class-access.php:209
 msgid "—"
@@ -67,18 +58,8 @@ msgid "With review"
 msgstr "Con revisión"
 
 #: includes/class-access.php:217
-msgid ""
-"Choose, for each role and podcast, whether its users publish directly, send "
-"their episodes for review, or cannot use that podcast. Whoever publishes "
-"directly in a podcast reviews what is sent to it and can create classes in "
-"it. Users connect with their usual WordPress account; their password never "
-"goes through VozCaster."
-msgstr ""
-"Elige, para cada perfil y podcast, si sus usuarios publican directamente, "
-"envían sus episodios a revisión o no pueden usar ese podcast. Quien publica "
-"directamente en un podcast revisa lo que se le envía y puede crear clases en "
-"él. Cada usuario se conecta con su cuenta de WordPress de siempre; su "
-"contraseña nunca pasa por VozCaster."
+msgid "Choose, for each role and podcast, whether its users publish directly, send their episodes for review, or cannot use that podcast. Whoever publishes directly in a podcast reviews what is sent to it and can create classes in it. Users connect with their usual WordPress account; their password never goes through VozCaster."
+msgstr "Elige, para cada perfil y podcast, si sus usuarios publican directamente, envían sus episodios a revisión o no pueden usar ese podcast. Quien publica directamente en un podcast revisa lo que se le envía y puede crear clases en él. Cada usuario se conecta con su cuenta de WordPress de siempre; su contraseña nunca pasa por VozCaster."
 
 #: includes/class-access.php:226 includes/class-roles.php:181
 #: includes/class-settings.php:1123
@@ -90,28 +71,16 @@ msgid "Manages VozCaster"
 msgstr "Gestiona VozCaster"
 
 #: includes/class-access.php:269
-msgid ""
-"Administrators always publish everywhere. \"Manages VozCaster\" lets a role "
-"change this table and the classes of every podcast, without being a "
-"WordPress administrator; only administrators can change that column."
-msgstr ""
-"Los administradores publican siempre en todo. «Gestiona VozCaster» permite a "
-"un perfil cambiar esta tabla y las clases de todos los podcasts sin ser "
-"administrador de WordPress; esa columna solo la cambian los administradores."
+msgid "Administrators always publish everywhere. \"Manages VozCaster\" lets a role change this table and the classes of every podcast, without being a WordPress administrator; only administrators can change that column."
+msgstr "Los administradores publican siempre en todo. «Gestiona VozCaster» permite a un perfil cambiar esta tabla y las clases de todos los podcasts sin ser administrador de WordPress; esa columna solo la cambian los administradores."
 
 #: includes/class-access.php:270
 msgid "Save access settings"
 msgstr "Guardar ajustes de acceso"
 
 #: includes/class-ai-notice.php:60
-msgid ""
-"The content of this post was generated automatically with artificial "
-"intelligence from the audio transcript. It may contain errors or "
-"inaccuracies."
-msgstr ""
-"El contenido de esta entrada se ha generado automáticamente con inteligencia "
-"artificial a partir de la transcripción del audio. Puede contener errores o "
-"imprecisiones."
+msgid "The content of this post was generated automatically with artificial intelligence from the audio transcript. It may contain errors or inaccuracies."
+msgstr "El contenido de esta entrada se ha generado automáticamente con inteligencia artificial a partir de la transcripción del audio. Puede contener errores o imprecisiones."
 
 #. translators: 1: link to the VozCaster website, 2: "Try it free" link to the same website.
 #: includes/class-ai-notice.php:127
@@ -138,14 +107,11 @@ msgstr "Ocultar el aviso de IA en esta entrada"
 
 #: includes/class-ai-notice.php:161
 msgid "The AI notice is turned off for the whole site in VozCaster → Episodes."
-msgstr ""
-"El aviso de IA está desactivado para todo el sitio en VozCaster → Episodios."
+msgstr "El aviso de IA está desactivado para todo el sitio en VozCaster → Episodios."
 
 #: includes/class-api.php:750
 msgid "The title pattern must include {title}, where the episode title goes."
-msgstr ""
-"El formato del título debe incluir {title} (o {titulo}), donde va el título "
-"del episodio."
+msgstr "El formato del título debe incluir {title} (o {titulo}), donde va el título del episodio."
 
 #: includes/class-api.php:760
 msgid "That attachment is not an image."
@@ -187,9 +153,7 @@ msgstr "Usar esta imagen"
 
 #: includes/class-assistant.php:159
 msgid "Empty fields are filled in. Review them, change what you like and save."
-msgstr ""
-"Se han rellenado los campos vacíos. Revísalos, cambia lo que quieras y "
-"guarda."
+msgstr "Se han rellenado los campos vacíos. Revísalos, cambia lo que quieras y guarda."
 
 #: includes/class-assistant.php:160
 msgid "Nothing to fill in: every field already has a value."
@@ -221,42 +185,24 @@ msgid "You are not allowed to do this."
 msgstr "No tienes permiso para hacer esto."
 
 #: includes/class-assistant.php:350
-msgid ""
-"PowerPress could not be downloaded from WordPress.org. Try again, or install "
-"it from Plugins → Add New."
-msgstr ""
-"No se ha podido descargar PowerPress de WordPress.org. Inténtalo de nuevo o "
-"instálalo desde Plugins → Añadir nuevo plugin."
+msgid "PowerPress could not be downloaded from WordPress.org. Try again, or install it from Plugins → Add New."
+msgstr "No se ha podido descargar PowerPress de WordPress.org. Inténtalo de nuevo o instálalo desde Plugins → Añadir nuevo plugin."
 
 #: includes/class-assistant.php:358
-msgid ""
-"PowerPress could not be installed from here. Install it from Plugins → Add "
-"New and come back."
-msgstr ""
-"No se ha podido instalar PowerPress desde aquí. Instálalo desde Plugins → "
-"Añadir nuevo plugin y vuelve."
+msgid "PowerPress could not be installed from here. Install it from Plugins → Add New and come back."
+msgstr "No se ha podido instalar PowerPress desde aquí. Instálalo desde Plugins → Añadir nuevo plugin y vuelve."
 
 #: includes/class-assistant.php:366
-msgid ""
-"PowerPress is installed but could not be activated. Activate it from the "
-"Plugins page."
-msgstr ""
-"PowerPress está instalado, pero no se ha podido activar. Actívalo desde la "
-"página de Plugins."
+msgid "PowerPress is installed but could not be activated. Activate it from the Plugins page."
+msgstr "PowerPress está instalado, pero no se ha podido activar. Actívalo desde la página de Plugins."
 
 #: includes/class-assistant.php:421
-msgid ""
-"The VozCaster cover could not be added to your media library. Choose your "
-"own cover instead."
-msgstr ""
-"No se ha podido añadir la portada de VozCaster a tu biblioteca de medios. "
-"Elige tu propia portada."
+msgid "The VozCaster cover could not be added to your media library. Choose your own cover instead."
+msgstr "No se ha podido añadir la portada de VozCaster a tu biblioteca de medios. Elige tu propia portada."
 
 #: includes/class-assistant.php:431
 msgid "That email address does not look right. Check it and try again."
-msgstr ""
-"Esa dirección de correo electrónico no parece correcta. Revísala e inténtalo "
-"de nuevo."
+msgstr "Esa dirección de correo electrónico no parece correcta. Revísala e inténtalo de nuevo."
 
 #: includes/class-assistant.php:432
 msgid "Choose the language from the list."
@@ -277,11 +223,8 @@ msgstr "Esa dirección web no parece correcta. Debe empezar por https://"
 #. translators: 1: minimum size in pixels, 2: maximum size in pixels.
 #: includes/class-assistant.php:438
 #, php-format
-msgid ""
-"The cover must be square, between %1$d and %2$d px. Choose another image."
-msgstr ""
-"La portada tiene que ser cuadrada, de entre %1$d y %2$d px. Elige otra "
-"imagen."
+msgid "The cover must be square, between %1$d and %2$d px. Choose another image."
+msgstr "La portada tiene que ser cuadrada, de entre %1$d y %2$d px. Elige otra imagen."
 
 #: includes/class-assistant.php:443
 msgid "Your podcast data could not be saved. Please try again."
@@ -297,12 +240,8 @@ msgid "Getting started"
 msgstr "Primeros pasos"
 
 #: includes/class-assistant.php:492
-msgid ""
-"The basics in a few minutes: your podcast data for Apple Podcasts and "
-"Spotify, the connection with VozCaster, and your first recording."
-msgstr ""
-"Lo básico en pocos minutos: los datos de tu podcast para Apple Podcasts y "
-"Spotify, la conexión con VozCaster y tu primera grabación."
+msgid "The basics in a few minutes: your podcast data for Apple Podcasts and Spotify, the connection with VozCaster, and your first recording."
+msgstr "Lo básico en pocos minutos: los datos de tu podcast para Apple Podcasts y Spotify, la conexión con VozCaster y tu primera grabación."
 
 #: includes/class-assistant.php:495 includes/class-distribution.php:351
 msgid "Open"
@@ -317,15 +256,8 @@ msgid "Guided setup"
 msgstr "Configuración guiada"
 
 #: includes/class-assistant.php:501
-msgid ""
-"All the settings, explained one by one: your podcast, titles, writing style, "
-"intro and outro, who can publish, groups and reviewers, and the platforms. "
-"Skip what you do not need and come back any time."
-msgstr ""
-"Todos los ajustes, explicados uno a uno: tu podcast, los títulos, el estilo "
-"de escritura, la intro y el outro, quién puede publicar, los grupos y "
-"revisores, y las plataformas. Sáltate lo que no necesites y vuelve cuando "
-"quieras."
+msgid "All the settings, explained one by one: your podcast, titles, writing style, intro and outro, who can publish, groups and reviewers, and the platforms. Skip what you do not need and come back any time."
+msgstr "Todos los ajustes, explicados uno a uno: tu podcast, los títulos, el estilo de escritura, la intro y el outro, quién puede publicar, los grupos y revisores, y las plataformas. Sáltate lo que no necesites y vuelve cuando quieras."
 
 #: includes/class-assistant.php:504
 msgid "Resume"
@@ -350,14 +282,8 @@ msgid "Welcome to VozCaster"
 msgstr "Te damos la bienvenida a VozCaster"
 
 #: includes/class-assistant.php:556
-msgid ""
-"You talk, VozCaster does the rest: send a voice note and it turns it into a "
-"podcast episode published on this site. No rush and nothing to break: we "
-"will set up the essentials together."
-msgstr ""
-"Tú hablas, del resto se ocupa VozCaster: envía una nota de voz y la "
-"convierte en un episodio de podcast publicado en este sitio. Sin prisas y "
-"sin nada que romper: vamos a configurar lo esencial paso a paso."
+msgid "You talk, VozCaster does the rest: send a voice note and it turns it into a podcast episode published on this site. No rush and nothing to break: we will set up the essentials together."
+msgstr "Tú hablas, del resto se ocupa VozCaster: envía una nota de voz y la convierte en un episodio de podcast publicado en este sitio. Sin prisas y sin nada que romper: vamos a configurar lo esencial paso a paso."
 
 #: includes/class-assistant.php:559
 msgid "PowerPress is active: it is the plugin that builds your podcast feed."
@@ -368,11 +294,8 @@ msgid "Next"
 msgstr "Siguiente"
 
 #: includes/class-assistant.php:562
-msgid ""
-"First we need PowerPress, the free plugin that builds your podcast feed."
-msgstr ""
-"Primero necesitamos PowerPress, el plugin gratuito que crea el feed de tu "
-"podcast."
+msgid "First we need PowerPress, the free plugin that builds your podcast feed."
+msgstr "Primero necesitamos PowerPress, el plugin gratuito que crea el feed de tu podcast."
 
 #: includes/class-assistant.php:568
 msgid "Activate PowerPress"
@@ -383,12 +306,8 @@ msgid "Install and activate PowerPress"
 msgstr "Instalar y activar PowerPress"
 
 #: includes/class-assistant.php:572
-msgid ""
-"Your account cannot install plugins. Ask the site administrator to install "
-"and activate PowerPress, then come back."
-msgstr ""
-"Tu cuenta no puede instalar plugins. Pide a quien administra el sitio que "
-"instale y active PowerPress, y vuelve."
+msgid "Your account cannot install plugins. Ask the site administrator to install and activate PowerPress, then come back."
+msgstr "Tu cuenta no puede instalar plugins. Pide a quien administra el sitio que instale y active PowerPress, y vuelve."
 
 #: includes/class-assistant.php:592
 msgid "The podcast data could not be read."
@@ -400,27 +319,19 @@ msgid "Your podcast"
 msgstr "Tu podcast"
 
 #: includes/class-assistant.php:621
-msgid ""
-"This is what Apple Podcasts, Spotify and the other apps show about your "
-"podcast. You can change all of it later."
-msgstr ""
-"Esto es lo que Apple Podcasts, Spotify y las demás apps muestran de tu "
-"podcast. Puedes cambiarlo todo más adelante."
+msgid "This is what Apple Podcasts, Spotify and the other apps show about your podcast. You can change all of it later."
+msgstr "Esto es lo que Apple Podcasts, Spotify y las demás apps muestran de tu podcast. Puedes cambiarlo todo más adelante."
 
 #: includes/class-assistant.php:625
 msgid "Fill in with default data"
 msgstr "Rellenar con datos por defecto"
 
 #: includes/class-assistant.php:628
-msgid ""
-"Fills in only the empty fields, so you can see them and change them. Nothing "
-"is saved until you press Save and continue."
-msgstr ""
-"Rellena solo los campos vacíos, para que puedas verlos y cambiarlos. No se "
-"guarda nada hasta que pulses Guardar y continuar."
+msgid "Fills in only the empty fields, so you can see them and change them. Nothing is saved until you press Save and continue."
+msgstr "Rellena solo los campos vacíos, para que puedas verlos y cambiarlos. No se guarda nada hasta que pulses Guardar y continuar."
 
 #: includes/class-assistant.php:642 includes/class-distribution.php:278
-#: includes/class-settings.php:1231
+#: includes/class-settings.php:1239
 msgid "Title"
 msgstr "Título"
 
@@ -429,7 +340,7 @@ msgid "Description"
 msgstr "Descripción"
 
 #: includes/class-assistant.php:650 includes/class-distribution.php:282
-#: includes/class-settings.php:1232
+#: includes/class-settings.php:1240
 msgid "Author"
 msgstr "Autor"
 
@@ -438,12 +349,8 @@ msgid "Email"
 msgstr "Correo electrónico"
 
 #: includes/class-assistant.php:657
-msgid ""
-"It appears in your public feed, and Apple uses it to check that the podcast "
-"is yours."
-msgstr ""
-"Aparece en tu feed público y Apple lo usa para comprobar que el podcast es "
-"tuyo."
+msgid "It appears in your public feed, and Apple uses it to check that the podcast is yours."
+msgstr "Aparece en tu feed público y Apple lo usa para comprobar que el podcast es tuyo."
 
 #: includes/class-assistant.php:661
 msgid "Language"
@@ -458,12 +365,8 @@ msgid "Apple Podcasts category"
 msgstr "Categoría de Apple Podcasts"
 
 #: includes/class-assistant.php:680
-msgid ""
-"We picked a general category: review it and choose the one that fits your "
-"podcast best."
-msgstr ""
-"Hemos elegido una categoría general: revísala y elige la que mejor encaje "
-"con tu podcast."
+msgid "We picked a general category: review it and choose the one that fits your podcast best."
+msgstr "Hemos elegido una categoría general: revísala y elige la que mejor encaje con tu podcast."
 
 #: includes/class-assistant.php:684
 msgid "Explicit content"
@@ -495,8 +398,7 @@ msgstr "— Sin definir —"
 
 #: includes/class-assistant.php:704
 msgid "Episodic: newest episode first (most podcasts)"
-msgstr ""
-"Episódico: primero el episodio más reciente (la mayoría de los podcasts)"
+msgstr "Episódico: primero el episodio más reciente (la mayoría de los podcasts)"
 
 #: includes/class-assistant.php:705
 msgid "Serial: episodes are meant to be heard in order"
@@ -507,12 +409,8 @@ msgid "Website address"
 msgstr "Dirección del sitio web"
 
 #: includes/class-assistant.php:713
-msgid ""
-"Optional. The page your feed links to. Leave it empty to use the home page "
-"of this site."
-msgstr ""
-"Opcional. La página a la que enlaza tu feed. Déjalo vacío para usar la "
-"página de inicio de este sitio."
+msgid "Optional. The page your feed links to. Leave it empty to use the home page of this site."
+msgstr "Opcional. La página a la que enlaza tu feed. Déjalo vacío para usar la página de inicio de este sitio."
 
 #: includes/class-assistant.php:718
 msgid "Cover"
@@ -549,41 +447,27 @@ msgstr "Saltar este paso"
 msgid "Back"
 msgstr "Volver"
 
-#: includes/class-assistant.php:760 includes/class-auth.php:477
+#: includes/class-assistant.php:760 includes/class-auth.php:562
 #: includes/class-guided-setup.php:102 includes/class-guided-setup.php:103
 #: includes/class-pairing.php:118
 msgid "Connect"
 msgstr "Conectar"
 
 #: includes/class-assistant.php:761
-msgid ""
-"Link this site with VozCaster so you can send voice notes from your phone. "
-"Pick where you prefer to record. It opens in a new tab; come back here when "
-"you are done."
-msgstr ""
-"Enlaza este sitio con VozCaster para enviar notas de voz desde el móvil. "
-"Elige dónde prefieres grabar. Se abre en una pestaña nueva; vuelve aquí "
-"cuando termines."
+msgid "Link this site with VozCaster so you can send voice notes from your phone. Pick where you prefer to record. It opens in a new tab; come back here when you are done."
+msgstr "Enlaza este sitio con VozCaster para enviar notas de voz desde el móvil. Elige dónde prefieres grabar. Se abre en una pestaña nueva; vuelve aquí cuando termines."
 
 #: includes/class-assistant.php:764
 msgid "Connected ✓ Your account is linked with VozCaster."
 msgstr "Conectado ✓ Tu cuenta está enlazada con VozCaster."
 
 #: includes/class-assistant.php:768
-msgid ""
-"Your account cannot send episodes to a podcast of this site yet. Ask the "
-"site administrator for access."
-msgstr ""
-"Tu cuenta todavía no puede enviar episodios a un podcast de este sitio. Pide "
-"acceso a quien administra el sitio."
+msgid "Your account cannot send episodes to a podcast of this site yet. Ask the site administrator for access."
+msgstr "Tu cuenta todavía no puede enviar episodios a un podcast de este sitio. Pide acceso a quien administra el sitio."
 
 #: includes/class-assistant.php:770 includes/class-pairing.php:208
-msgid ""
-"The address of this site cannot be passed to the bot automatically. Open the "
-"bot, send /conectar and paste this address:"
-msgstr ""
-"La dirección de este sitio no se puede pasar al bot automáticamente. Abre el "
-"bot, envía /conectar y pega esta dirección:"
+msgid "The address of this site cannot be passed to the bot automatically. Open the bot, send /conectar and paste this address:"
+msgstr "La dirección de este sitio no se puede pasar al bot automáticamente. Abre el bot, envía /conectar y pega esta dirección:"
 
 #: includes/class-assistant.php:772 includes/class-assistant.php:810
 #: includes/class-pairing.php:213 includes/class-pairing.php:273
@@ -609,9 +493,7 @@ msgstr "App web"
 
 #: includes/class-assistant.php:782
 msgid "Record in the browser of your phone or computer, no Telegram needed."
-msgstr ""
-"Graba desde el navegador del móvil o del ordenador, sin necesidad de "
-"Telegram."
+msgstr "Graba desde el navegador del móvil o del ordenador, sin necesidad de Telegram."
 
 #: includes/class-assistant.php:783 includes/class-pairing.php:192
 #: includes/class-pairing.php:285
@@ -619,12 +501,8 @@ msgid "Connect in the app"
 msgstr "Conectar en la app"
 
 #: includes/class-assistant.php:787
-msgid ""
-"Waiting for the connection… this page updates by itself. Each link works "
-"once and expires in 15 minutes."
-msgstr ""
-"Esperando la conexión… esta página se actualiza sola. Cada enlace sirve una "
-"vez y caduca en 15 minutos."
+msgid "Waiting for the connection… this page updates by itself. Each link works once and expires in 15 minutes."
+msgstr "Esperando la conexión… esta página se actualiza sola. Cada enlace sirve una vez y caduca en 15 minutos."
 
 #: includes/class-assistant.php:806
 msgid "Start recording"
@@ -635,24 +513,16 @@ msgid "Congratulations, you are all set!"
 msgstr "¡Enhorabuena, ya está todo listo!"
 
 #: includes/class-assistant.php:808
-msgid ""
-"Send your first voice note to the bot, or record it in the app. VozCaster "
-"will do the rest."
-msgstr ""
-"Envía tu primera nota de voz al bot o grábala en la app. VozCaster se "
-"ocupará del resto."
+msgid "Send your first voice note to the bot, or record it in the app. VozCaster will do the rest."
+msgstr "Envía tu primera nota de voz al bot o grábala en la app. VozCaster se ocupará del resto."
 
 #: includes/class-assistant.php:811
 msgid "Open the app"
 msgstr "Abrir la app"
 
 #: includes/class-assistant.php:818
-msgid ""
-"To send your podcast to Apple Podcasts, Spotify and the other platforms, you "
-"need at least one published episode. Record the first one and come back."
-msgstr ""
-"Para enviar tu podcast a Apple Podcasts, Spotify y las demás plataformas "
-"necesitas al menos un episodio publicado. Graba el primero y vuelve."
+msgid "To send your podcast to Apple Podcasts, Spotify and the other platforms, you need at least one published episode. Record the first one and come back."
+msgstr "Para enviar tu podcast a Apple Podcasts, Spotify y las demás plataformas necesitas al menos un episodio publicado. Graba el primero y vuelve."
 
 #: includes/class-assistant.php:824 includes/class-guided-setup.php:251
 msgid "Back to Assistants"
@@ -673,147 +543,128 @@ msgid "Check again"
 msgstr "Volver a comprobar"
 
 #: includes/class-assistant.php:849
-msgid ""
-"Your podcast still uses the VozCaster default cover. It is better to set "
-"your own before sending it to the platforms (VozCaster → Assistants → "
-"Getting started, step 2)."
-msgstr ""
-"Tu podcast todavía usa la portada por defecto de VozCaster. Es mejor poner "
-"la tuya antes de enviarlo a las plataformas (VozCaster → Asistentes → "
-"Primeros pasos, paso 2)."
+msgid "Your podcast still uses the VozCaster default cover. It is better to set your own before sending it to the platforms (VozCaster → Assistants → Getting started, step 2)."
+msgstr "Tu podcast todavía usa la portada por defecto de VozCaster. Es mejor poner la tuya antes de enviarlo a las plataformas (VozCaster → Asistentes → Primeros pasos, paso 2)."
 
 #: includes/class-assistant.php:851
-msgid ""
-"Your first episode is out. Send your feed to each platform once; after that "
-"they pick up every new episode by themselves."
-msgstr ""
-"Tu primer episodio ya ha salido. Envía tu feed una vez a cada plataforma; "
-"después, cada una recoge sola todos los episodios nuevos."
+msgid "Your first episode is out. Send your feed to each platform once; after that they pick up every new episode by themselves."
+msgstr "Tu primer episodio ya ha salido. Envía tu feed una vez a cada plataforma; después, cada una recoge sola todos los episodios nuevos."
 
 #: includes/class-assistant.php:889
 msgid "Your first episode is out: time to send your podcast to the platforms."
-msgstr ""
-"Tu primer episodio ya ha salido: es el momento de enviar tu podcast a las "
-"plataformas."
+msgstr "Tu primer episodio ya ha salido: es el momento de enviar tu podcast a las plataformas."
 
 #: includes/class-assistant.php:892 includes/class-pairing.php:405
 msgid "Dismiss"
 msgstr "Descartar"
 
-#: includes/class-auth.php:94
-msgid ""
-"The VozCaster token can only be used with the VozCaster connector routes."
+#: includes/class-auth.php:99
+msgid "The VozCaster token can only be used with the VozCaster connector routes."
 msgstr "El token de VozCaster solo se puede usar con las rutas del conector de VozCaster."
 
-#: includes/class-auth.php:293
-msgid ""
-"Invalid parameters. If you use the VozCaster bot or app, try connecting "
-"again."
+#: includes/class-auth.php:378
+msgid "Invalid parameters. If you use the VozCaster bot or app, try connecting again."
 msgstr "Parámetros no válidos. Si usas el bot o la aplicación de VozCaster, vuelve a intentar la conexión."
 
-#: includes/class-auth.php:294
+#: includes/class-auth.php:379
 msgid "Error"
 msgstr "Error"
 
-#: includes/class-auth.php:324
+#: includes/class-auth.php:409
 msgid "Invalid parameters."
 msgstr "Parámetros inválidos."
 
-#: includes/class-auth.php:331
+#: includes/class-auth.php:416
 msgid "This connection was started by someone else."
 msgstr "Esta conexión la inició otra persona."
 
-#: includes/class-auth.php:373 includes/class-auth.php:416
+#: includes/class-auth.php:458 includes/class-auth.php:501
 msgid "Link expired"
 msgstr "Enlace caducado"
 
-#: includes/class-auth.php:374
+#: includes/class-auth.php:459
 msgid "This authorization link has expired (10 minutes)."
 msgstr "El enlace de autorización ha caducado (10 minutos)."
 
 #. translators: %s: the /conectar bot command, wrapped in a <code> tag.
-#: includes/class-auth.php:377
+#: includes/class-auth.php:462
 #, php-format
 msgid "Go back to the bot and use %s again."
 msgstr "Vuelve al bot y usa %s de nuevo."
 
-#: includes/class-auth.php:383 includes/class-auth.php:422
+#: includes/class-auth.php:468 includes/class-auth.php:507
 msgid "VozCaster — Link expired"
 msgstr "VozCaster — Enlace caducado"
 
-#: includes/class-auth.php:390
+#: includes/class-auth.php:475
 msgid "Not authorized"
 msgstr "No autorizado"
 
 #. translators: %s: the WordPress username, wrapped in a <strong> tag.
-#: includes/class-auth.php:393
+#: includes/class-auth.php:478
 #, php-format
 msgid "The role of %s is not authorized to publish from VozCaster."
 msgstr "El perfil de %s no está autorizado a publicar desde VozCaster."
 
 #. translators: %s: the plugin settings location, wrapped in an <em> tag.
-#: includes/class-auth.php:398
+#: includes/class-auth.php:483
 #, php-format
 msgid "Ask the administrator to authorize your role under %s."
 msgstr "Pide al administrador que autorice tu perfil en %s."
 
-#: includes/class-auth.php:399
+#: includes/class-auth.php:484
 msgid "VozCaster → Access"
 msgstr "VozCaster → Acceso"
 
-#: includes/class-auth.php:404
+#: includes/class-auth.php:489
 msgid "VozCaster — Not authorized"
 msgstr "VozCaster — No autorizado"
 
-#: includes/class-auth.php:410
+#: includes/class-auth.php:495
 msgid "VozCaster — Confirm the connection"
 msgstr "VozCaster — Confirma la conexión"
 
-#: includes/class-auth.php:417
-msgid ""
-"This confirmation could not be verified. Open the link again from the bot or "
-"the app."
+#: includes/class-auth.php:502
+msgid "This confirmation could not be verified. Open the link again from the bot or the app."
 msgstr "No se ha podido verificar esta confirmación. Vuelve a abrir el enlace desde el bot o la aplicación."
 
-#: includes/class-auth.php:443
+#: includes/class-auth.php:528
 msgid "Connected!"
 msgstr "¡Conectado!"
 
 #. translators: %s: the user's display name, wrapped in a <strong> tag.
-#: includes/class-auth.php:446
+#: includes/class-auth.php:531
 #, php-format
 msgid "Hello, %s."
 msgstr "Hola, %s."
 
-#: includes/class-auth.php:449
+#: includes/class-auth.php:534
 msgid "You can now go back to the Telegram bot and continue."
 msgstr "Ya puedes volver al bot de Telegram y continuar."
 
-#: includes/class-auth.php:453
+#: includes/class-auth.php:538
 msgid "VozCaster — Connection completed"
 msgstr "VozCaster — Conexión completada"
 
-#: includes/class-auth.php:463
+#: includes/class-auth.php:548
 msgid "Connect VozCaster to this site?"
 msgstr "¿Conectar VozCaster con este sitio?"
 
 #. translators: 1: the user's display name, 2: the site's domain. Both wrapped in <strong> tags.
-#: includes/class-auth.php:466
+#: includes/class-auth.php:551
 #, php-format
 msgid "VozCaster will be able to publish podcast episodes as %1$s on %2$s."
 msgstr "VozCaster podrá publicar episodios del podcast como %1$s en %2$s."
 
-#: includes/class-auth.php:471
-msgid ""
-"Only continue if you have just asked for this connection yourself, from the "
-"VozCaster bot or app. If someone sent you this link, close this page."
+#: includes/class-auth.php:556
+msgid "Only continue if you have just asked for this connection yourself, from the VozCaster bot or app. If someone sent you this link, close this page."
 msgstr "Continúa solo si acabas de pedir tú esta conexión desde el bot o la aplicación de VozCaster. Si alguien te ha enviado este enlace, cierra esta página."
 
-#: includes/class-auth.php:478
+#: includes/class-auth.php:563
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: includes/class-auth.php:501
+#: includes/class-auth.php:586
 msgid "Back to the Telegram bot"
 msgstr "Volver al bot de Telegram"
 
@@ -830,22 +681,12 @@ msgid "Give the class a name."
 msgstr "Ponle un nombre a la clase."
 
 #: includes/class-classes.php:194
-msgid ""
-"You do not publish directly in any podcast of this site, so you cannot "
-"manage classes."
-msgstr ""
-"No publicas directamente en ningún podcast de este sitio, así que no puedes "
-"gestionar clases."
+msgid "You do not publish directly in any podcast of this site, so you cannot manage classes."
+msgstr "No publicas directamente en ningún podcast de este sitio, así que no puedes gestionar clases."
 
 #: includes/class-classes.php:200
-msgid ""
-"A class groups the episodes of a group of students inside a podcast. They "
-"are published in the podcast as usual and also have their own page. What a "
-"student sends for review reaches the teachers of their class."
-msgstr ""
-"Una clase agrupa los episodios de un grupo de alumnos dentro de un podcast. "
-"Se publican en el podcast como siempre y además tienen su propia página. Lo "
-"que un alumno envía a revisión les llega a los profesores de su clase."
+msgid "A class groups the episodes of a group of students inside a podcast. They are published in the podcast as usual and also have their own page. What a student sends for review reaches the teachers of their class."
+msgstr "Una clase agrupa los episodios de un grupo de alumnos dentro de un podcast. Se publican en el podcast como siempre y además tienen su propia página. Lo que un alumno envía a revisión les llega a los profesores de su clase."
 
 #: includes/class-classes.php:208
 msgid "No classes yet."
@@ -884,8 +725,7 @@ msgstr "Guardar"
 
 #: includes/class-classes.php:242
 msgid "Nobody: reviews go to everyone who publishes in the podcast."
-msgstr ""
-"Nadie: las revisiones les llegan a todos los que publican en el podcast."
+msgstr "Nadie: las revisiones les llegan a todos los que publican en el podcast."
 
 #: includes/class-classes.php:250
 msgid "Restore"
@@ -908,66 +748,36 @@ msgid "Create class"
 msgstr "Crear clase"
 
 #: includes/class-distribution.php:43
-msgid ""
-"Spotify for Creators → add an existing podcast with its RSS feed. A code is "
-"sent to the owner email of the feed."
-msgstr ""
-"Spotify for Creators → añadir un podcast que ya existe, con su feed RSS. "
-"Llega un código al correo electrónico del propietario del feed."
+msgid "Spotify for Creators → add an existing podcast with its RSS feed. A code is sent to the owner email of the feed."
+msgstr "Spotify for Creators → añadir un podcast que ya existe, con su feed RSS. Llega un código al correo electrónico del propietario del feed."
 
 #: includes/class-distribution.php:49
-msgid ""
-"Podcasts Connect with your Apple Account → add a show with an RSS feed. "
-"Apple reviews it, usually within a few days. Many other apps take their "
-"catalogue from Apple."
-msgstr ""
-"Podcasts Connect con tu cuenta de Apple → añadir un programa con feed RSS. "
-"Apple lo revisa, normalmente en unos días. Muchas otras apps sacan su "
-"catálogo de Apple."
+msgid "Podcasts Connect with your Apple Account → add a show with an RSS feed. Apple reviews it, usually within a few days. Many other apps take their catalogue from Apple."
+msgstr "Podcasts Connect con tu cuenta de Apple → añadir un programa con feed RSS. Apple lo revisa, normalmente en unos días. Muchas otras apps sacan su catálogo de Apple."
 
 #: includes/class-distribution.php:55
-msgid ""
-"YouTube Studio → Create → Submit RSS feed. A code is sent to the owner email "
-"of the feed; each episode becomes a video with the podcast artwork."
-msgstr ""
-"YouTube Studio → Crear → Enviar feed RSS. Llega un código al correo "
-"electrónico del propietario del feed; cada episodio se convierte en un vídeo "
-"con la carátula del podcast."
+msgid "YouTube Studio → Create → Submit RSS feed. A code is sent to the owner email of the feed; each episode becomes a video with the podcast artwork."
+msgstr "YouTube Studio → Crear → Enviar feed RSS. Llega un código al correo electrónico del propietario del feed; cada episodio se convierte en un vídeo con la carátula del podcast."
 
 #: includes/class-distribution.php:61
-msgid ""
-"iVoox Podcasters → create a new show → \"Do you already have a show?\" → "
-"paste the feed."
-msgstr ""
-"iVoox Podcasters → crear nuevo programa → «¿Ya tienes un programa?» → pega "
-"el feed."
+msgid "iVoox Podcasters → create a new show → \"Do you already have a show?\" → paste the feed."
+msgstr "iVoox Podcasters → crear nuevo programa → «¿Ya tienes un programa?» → pega el feed."
 
 #: includes/class-distribution.php:67
-msgid ""
-"Amazon Music for Podcasters → add your podcast with its RSS feed. Also "
-"reaches Audible."
-msgstr ""
-"Amazon Music for Podcasters → añade tu podcast con su feed RSS. Llega "
-"también a Audible."
+msgid "Amazon Music for Podcasters → add your podcast with its RSS feed. Also reaches Audible."
+msgstr "Amazon Music for Podcasters → añade tu podcast con su feed RSS. Llega también a Audible."
 
 #: includes/class-distribution.php:73
-msgid ""
-"Paste the feed, no account needed. It feeds many independent podcast apps."
-msgstr ""
-"Pega el feed, sin crear cuenta. Alimenta a muchas apps de podcast "
-"independientes."
+msgid "Paste the feed, no account needed. It feeds many independent podcast apps."
+msgstr "Pega el feed, sin crear cuenta. Alimenta a muchas apps de podcast independientes."
 
 #: includes/class-distribution.php:79
 msgid "Paste the feed, no account needed."
 msgstr "Pega el feed, sin crear cuenta."
 
 #: includes/class-distribution.php:85
-msgid ""
-"Creator Studio → Claim ownership → paste the feed. A link is sent to the "
-"owner email of the feed."
-msgstr ""
-"Creator Studio → Claim ownership → pega el feed. Llega un enlace al correo "
-"electrónico del propietario del feed."
+msgid "Creator Studio → Claim ownership → paste the feed. A link is sent to the owner email of the feed."
+msgstr "Creator Studio → Claim ownership → pega el feed. Llega un enlace al correo electrónico del propietario del feed."
 
 #: includes/class-distribution.php:91
 msgid "Deezer for Podcasters → add your podcast with its RSS feed."
@@ -1006,16 +816,8 @@ msgid "At least one published episode"
 msgstr "Al menos un episodio publicado"
 
 #: includes/class-distribution.php:290
-msgid ""
-"Submit your podcast feed to each platform once; after that they pick up "
-"every new episode by themselves. They are ordered by importance. Mark each "
-"one as you go, so you can see at a glance where your podcast is still "
-"missing."
-msgstr ""
-"Envía el feed de tu podcast a cada plataforma una sola vez; a partir de ahí "
-"recogen solas cada episodio nuevo. Están ordenadas por importancia. Marca "
-"cada una según avances, para ver de un vistazo dónde falta todavía tu "
-"podcast."
+msgid "Submit your podcast feed to each platform once; after that they pick up every new episode by themselves. They are ordered by importance. Mark each one as you go, so you can see at a glance where your podcast is still missing."
+msgstr "Envía el feed de tu podcast a cada plataforma una sola vez; a partir de ahí recogen solas cada episodio nuevo. Están ordenadas por importancia. Marca cada una según avances, para ver de un vistazo dónde falta todavía tu podcast."
 
 #: includes/class-distribution.php:296
 msgid "Podcast:"
@@ -1042,12 +844,8 @@ msgid "Ready to submit?"
 msgstr "¿Listo para enviar?"
 
 #: includes/class-distribution.php:321
-msgid ""
-"Platforms reject feeds with missing data. Fill them in from the bot with /"
-"podcast, or in PowerPress → Settings."
-msgstr ""
-"Las plataformas rechazan los feeds con datos incompletos. Complétalos desde "
-"el bot con /podcast, o en PowerPress → Ajustes."
+msgid "Platforms reject feeds with missing data. Fill them in from the bot with /podcast, or in PowerPress → Settings."
+msgstr "Las plataformas rechazan los feeds con datos incompletos. Complétalos desde el bot con /podcast, o en PowerPress → Ajustes."
 
 #: includes/class-distribution.php:324
 msgid "Platforms"
@@ -1061,7 +859,7 @@ msgstr "Enviar"
 msgid "Find my podcast"
 msgstr "Buscar mi podcast"
 
-#: includes/class-distribution.php:343 includes/class-settings.php:1233
+#: includes/class-distribution.php:343 includes/class-settings.php:1241
 msgid "Status"
 msgstr "Estado"
 
@@ -1070,14 +868,8 @@ msgid "Link to the podcast page (optional)"
 msgstr "Enlace a la ficha del podcast (opcional)"
 
 #: includes/class-distribution.php:360
-msgid ""
-"The VozCaster bot checks Apple Podcasts by itself and marks it as live when "
-"your feed appears there. Use /difundir in the bot to see this list on your "
-"phone."
-msgstr ""
-"El bot de VozCaster comprueba Apple Podcasts por su cuenta y lo marca como "
-"publicado cuando tu feed aparece allí. Usa /difundir en el bot para ver esta "
-"lista en el móvil."
+msgid "The VozCaster bot checks Apple Podcasts by itself and marks it as live when your feed appears there. Use /difundir in the bot to see this list on your phone."
+msgstr "El bot de VozCaster comprueba Apple Podcasts por su cuenta y lo marca como publicado cuando tu feed aparece allí. Usa /difundir en el bot para ver esta lista en el móvil."
 
 #: includes/class-frontend.php:41 includes/class-frontend.php:46
 msgid "VozCaster — Review"
@@ -1133,12 +925,8 @@ msgid "Class saved."
 msgstr "Clase guardada."
 
 #: includes/class-frontend.php:175
-msgid ""
-"The class could not be created. Check that its name is not already used in "
-"this podcast."
-msgstr ""
-"No se ha podido crear la clase. Comprueba que su nombre no esté ya usado en "
-"este podcast."
+msgid "The class could not be created. Check that its name is not already used in this podcast."
+msgstr "No se ha podido crear la clase. Comprueba que su nombre no esté ya usado en este podcast."
 
 #: includes/class-frontend.php:176
 msgid "Episode published."
@@ -1189,101 +977,52 @@ msgid "Which podcast do you want to set up?"
 msgstr "¿Qué podcast quieres configurar?"
 
 #: includes/class-guided-setup.php:38
-msgid ""
-"This site has more than one podcast. Choose the one to set up now; the steps "
-"about its data and its platforms will work on it. You can change it at any "
-"time from the top of this page."
-msgstr ""
-"Este sitio tiene más de un podcast. Elige el que quieres configurar ahora; "
-"los pasos sobre sus datos y sus plataformas se aplicarán a él. Puedes "
-"cambiarlo en cualquier momento desde la parte de arriba de esta página."
+msgid "This site has more than one podcast. Choose the one to set up now; the steps about its data and its platforms will work on it. You can change it at any time from the top of this page."
+msgstr "Este sitio tiene más de un podcast. Elige el que quieres configurar ahora; los pasos sobre sus datos y sus plataformas se aplicarán a él. Puedes cambiarlo en cualquier momento desde la parte de arriba de esta página."
 
 #: includes/class-guided-setup.php:44
-msgid ""
-"This is the identity of your podcast: the name, description, cover and "
-"category that Apple Podcasts, Spotify and the other apps show. Without them "
-"your feed is incomplete and the platforms may reject it. The fields at the "
-"bottom (copyright, type and website) are optional."
-msgstr ""
-"Esta es la identidad de tu podcast: el nombre, la descripción, la portada y "
-"la categoría que muestran Apple Podcasts, Spotify y las demás apps. Sin "
-"ellos tu feed está incompleto y las plataformas pueden rechazarlo. Los "
-"campos de abajo (copyright, tipo y sitio web) son opcionales."
+msgid "This is the identity of your podcast: the name, description, cover and category that Apple Podcasts, Spotify and the other apps show. Without them your feed is incomplete and the platforms may reject it. The fields at the bottom (copyright, type and website) are optional."
+msgstr "Esta es la identidad de tu podcast: el nombre, la descripción, la portada y la categoría que muestran Apple Podcasts, Spotify y las demás apps. Sin ellos tu feed está incompleto y las plataformas pueden rechazarlo. Los campos de abajo (copyright, tipo y sitio web) son opcionales."
 
 #: includes/class-guided-setup.php:49 includes/class-settings.php:476
 msgid "Episode titles"
 msgstr "Títulos de los episodios"
 
 #: includes/class-guided-setup.php:50
-msgid ""
-"Here you choose how the title of each episode is built: a prefix such as "
-"«Episode», the season and how episodes are counted. If you leave it as it "
-"is, episodes get the title the AI writes, without a prefix or a number."
-msgstr ""
-"Aquí eliges cómo se forma el título de cada episodio: un prefijo como "
-"«Episodio», la temporada y cómo se cuentan los episodios. Si lo dejas como "
-"está, los episodios llevan el título que escribe la IA, sin prefijo ni "
-"número."
+msgid "Here you choose how the title of each episode is built: a prefix such as «Episode», the season and how episodes are counted. If you leave it as it is, episodes get the title the AI writes, without a prefix or a number."
+msgstr "Aquí eliges cómo se forma el título de cada episodio: un prefijo como «Episodio», la temporada y cómo se cuentan los episodios. Si lo dejas como está, los episodios llevan el título que escribe la IA, sin prefijo ni número."
 
 #: includes/class-guided-setup.php:55 includes/class-settings.php:597
 msgid "How your podcast writes"
 msgstr "Cómo escribe tu podcast"
 
 #: includes/class-guided-setup.php:56
-msgid ""
-"VozCaster can write the title, excerpt, post and chapters of each episode "
-"with AI. A style guide tells it how your podcast sounds: serious, funny, "
-"formal, relaxed. If you leave it empty, the AI copies the tone it hears in "
-"your recording."
-msgstr ""
-"VozCaster puede escribir con IA el título, el extracto, la entrada y los "
-"capítulos de cada episodio. Una guía de estilo le dice cómo suena tu "
-"podcast: serio, divertido, formal, desenfadado. Si la dejas vacía, la IA "
-"imita el tono que oye en tu grabación."
+msgid "VozCaster can write the title, excerpt, post and chapters of each episode with AI. A style guide tells it how your podcast sounds: serious, funny, formal, relaxed. If you leave it empty, the AI copies the tone it hears in your recording."
+msgstr "VozCaster puede escribir con IA el título, el extracto, la entrada y los capítulos de cada episodio. Una guía de estilo le dice cómo suena tu podcast: serio, divertido, formal, desenfadado. Si la dejas vacía, la IA imita el tono que oye en tu grabación."
 
 #: includes/class-guided-setup.php:61 includes/class-settings.php:651
 msgid "Post footer (signature)"
 msgstr "Pie de entrada (firma)"
 
 #: includes/class-guided-setup.php:62
-msgid ""
-"A text that VozCaster adds at the end of every post it publishes: who you "
-"are, how to contact you, where to subscribe. If you leave it empty, nothing "
-"is added."
-msgstr ""
-"Un texto que VozCaster añade al final de cada entrada que publica: quién "
-"eres, cómo contactar contigo, dónde suscribirse. Si lo dejas vacío, no se "
-"añade nada."
+msgid "A text that VozCaster adds at the end of every post it publishes: who you are, how to contact you, where to subscribe. If you leave it empty, nothing is added."
+msgstr "Un texto que VozCaster añade al final de cada entrada que publica: quién eres, cómo contactar contigo, dónde suscribirse. Si lo dejas vacío, no se añade nada."
 
 #: includes/class-guided-setup.php:67
 msgid "Cover images"
 msgstr "Imágenes de portada"
 
 #: includes/class-guided-setup.php:68
-msgid ""
-"Episode covers can be drawn with AI. You can ask for a recurring element in "
-"all of them (an orange cat with headphones, say) and give a reference image "
-"whose style the covers copy. By default each cover is inspired only by the "
-"text of the episode."
-msgstr ""
-"Las portadas de los episodios se pueden dibujar con IA. Puedes pedir un "
-"elemento que se repita en todas (un gato naranja con auriculares, por "
-"ejemplo) y dar una imagen de referencia cuyo estilo copien las portadas. Por "
-"defecto, cada portada se inspira solo en el texto del episodio."
+msgid "Episode covers can be drawn with AI. You can ask for a recurring element in all of them (an orange cat with headphones, say) and give a reference image whose style the covers copy. By default each cover is inspired only by the text of the episode."
+msgstr "Las portadas de los episodios se pueden dibujar con IA. Puedes pedir un elemento que se repita en todas (un gato naranja con auriculares, por ejemplo) y dar una imagen de referencia cuyo estilo copien las portadas. Por defecto, cada portada se inspira solo en el texto del episodio."
 
 #: includes/class-guided-setup.php:73 includes/class-settings.php:767
 msgid "AI content notice"
 msgstr "Aviso de contenido generado con IA"
 
 #: includes/class-guided-setup.php:74
-msgid ""
-"When a post is written with AI, a short notice says so, which your readers "
-"will appreciate. It is on by default. You can change its wording and "
-"position, and turn on a small «Published with VozCaster» credit."
-msgstr ""
-"Cuando una entrada se escribe con IA, un breve aviso lo indica, algo que tus "
-"lectores agradecerán. Está activado por defecto. Puedes cambiar su texto y "
-"su posición, y activar una pequeña mención «Publicado con VozCaster»."
+msgid "When a post is written with AI, a short notice says so, which your readers will appreciate. It is on by default. You can change its wording and position, and turn on a small «Published with VozCaster» credit."
+msgstr "Cuando una entrada se escribe con IA, un breve aviso lo indica, algo que tus lectores agradecerán. Está activado por defecto. Puedes cambiar su texto y su posición, y activar una pequeña mención «Publicado con VozCaster»."
 
 #: includes/class-guided-setup.php:78 includes/class-guided-setup.php:84
 #: includes/class-settings.php:62
@@ -1295,85 +1034,40 @@ msgid "Intro, outro and separator"
 msgstr "Intro, outro y sonido de corte"
 
 #: includes/class-guided-setup.php:80
-msgid ""
-"The intro and the outro are short pieces of music that open and close every "
-"episode. The separator is a short sound used between the parts of an episode "
-"recorded in several audios. Without them, your episodes have just your voice "
-"and several audios are joined with a one-second pause."
-msgstr ""
-"La intro y el outro son piezas cortas de música que abren y cierran cada "
-"episodio. El sonido de corte es un sonido breve que se usa entre las partes "
-"de un episodio grabado en varios audios. Sin ellos, tus episodios llevan "
-"solo tu voz y los audios se unen con una pausa de un segundo."
+msgid "The intro and the outro are short pieces of music that open and close every episode. The separator is a short sound used between the parts of an episode recorded in several audios. Without them, your episodes have just your voice and several audios are joined with a one-second pause."
+msgstr "La intro y el outro son piezas cortas de música que abren y cierran cada episodio. El sonido de corte es un sonido breve que se usa entre las partes de un episodio grabado en varios audios. Sin ellos, tus episodios llevan solo tu voz y los audios se unen con una pausa de un segundo."
 
 #: includes/class-guided-setup.php:85
 msgid "Music mix"
 msgstr "Mezcla de la música"
 
 #: includes/class-guided-setup.php:86
-msgid ""
-"How the music blends with your voice: when the intro starts to fade, how "
-"loud it stays under your voice and when the outro comes in. The defaults "
-"suit most music and you can change them later. It only matters if you "
-"uploaded an intro or an outro."
-msgstr ""
-"Cómo se mezcla la música con tu voz: cuándo empieza a bajar la intro, a qué "
-"volumen se queda bajo tu voz y cuándo entra el outro. Los valores por "
-"defecto sirven para casi cualquier música y puedes cambiarlos más adelante. "
-"Solo importa si has subido una intro o un outro."
+msgid "How the music blends with your voice: when the intro starts to fade, how loud it stays under your voice and when the outro comes in. The defaults suit most music and you can change them later. It only matters if you uploaded an intro or an outro."
+msgstr "Cómo se mezcla la música con tu voz: cuándo empieza a bajar la intro, a qué volumen se queda bajo tu voz y cuándo entra el outro. Los valores por defecto sirven para casi cualquier música y puedes cambiarlos más adelante. Solo importa si has subido una intro o un outro."
 
 #: includes/class-guided-setup.php:90 includes/class-guided-setup.php:91
 msgid "Who can publish"
 msgstr "Quién puede publicar"
 
 #: includes/class-guided-setup.php:92
-msgid ""
-"Choose who can publish in each podcast of this site, and who only sends "
-"episodes for review before they go out. By default every role that can "
-"publish posts (administrators, editors, authors) publishes directly. If you "
-"work alone, you can keep it as it is."
-msgstr ""
-"Elige quién puede publicar en cada podcast de este sitio y quién solo envía "
-"episodios a revisión antes de que salgan. Por defecto, todos los perfiles "
-"que pueden publicar entradas (administradores, editores, autores) publican "
-"directamente. Si nadie más publica contigo, puedes dejarlo como está."
+msgid "Choose who can publish in each podcast of this site, and who only sends episodes for review before they go out. By default every role that can publish posts (administrators, editors, authors) publishes directly. If you work alone, you can keep it as it is."
+msgstr "Elige quién puede publicar en cada podcast de este sitio y quién solo envía episodios a revisión antes de que salgan. Por defecto, todos los perfiles que pueden publicar entradas (administradores, editores, autores) publican directamente. Si nadie más publica contigo, puedes dejarlo como está."
 
 #: includes/class-guided-setup.php:96 includes/class-guided-setup.php:97
 msgid "Groups and reviewers"
 msgstr "Grupos y revisores"
 
 #: includes/class-guided-setup.php:98
-msgid ""
-"A podcast can have groups, each one with its own reviewers: the sections of "
-"a team or the members of an association, for example. What a member sends "
-"for review reaches the reviewers of their group, and each group gets its own "
-"page and feed. If you do not need groups, skip this step; you can add them "
-"later."
-msgstr ""
-"Un podcast puede tener grupos, cada uno con sus propios revisores: las "
-"secciones de un equipo o los miembros de una asociación, por ejemplo. Lo que "
-"un miembro envía a revisión llega a los revisores de su grupo, y cada grupo "
-"tiene su propia página y su propio feed. Si no necesitas grupos, sáltate "
-"este paso; puedes añadirlos más adelante."
+msgid "A podcast can have groups, each one with its own reviewers: the sections of a team or the members of an association, for example. What a member sends for review reaches the reviewers of their group, and each group gets its own page and feed. If you do not need groups, skip this step; you can add them later."
+msgstr "Un podcast puede tener grupos, cada uno con sus propios revisores: las secciones de un equipo o los miembros de una asociación, por ejemplo. Lo que un miembro envía a revisión llega a los revisores de su grupo, y cada grupo tiene su propia página y su propio feed. Si no necesitas grupos, sáltate este paso; puedes añadirlos más adelante."
 
 #: includes/class-guided-setup.php:104
-msgid ""
-"Link your account with VozCaster so you can send voice notes from Telegram "
-"or from the web app. It takes one click and you can connect again whenever "
-"you want."
-msgstr ""
-"Enlaza tu cuenta con VozCaster para enviar notas de voz desde Telegram o "
-"desde la app web. Basta un clic y puedes volver a conectarla cuando quieras."
+msgid "Link your account with VozCaster so you can send voice notes from Telegram or from the web app. It takes one click and you can connect again whenever you want."
+msgstr "Enlaza tu cuenta con VozCaster para enviar notas de voz desde Telegram o desde la app web. Basta un clic y puedes volver a conectarla cuando quieras."
 
 #: includes/class-guided-setup.php:110
-msgid ""
-"When your podcast has at least one published episode, you can send its feed "
-"to Apple Podcasts, Spotify and the rest. You do it once per platform; after "
-"that they pick up every new episode by themselves."
-msgstr ""
-"Cuando tu podcast tenga al menos un episodio publicado, podrás enviar su "
-"feed a Apple Podcasts, Spotify y las demás. Se hace una vez por plataforma; "
-"después, cada una recoge sola todos los episodios nuevos."
+msgid "When your podcast has at least one published episode, you can send its feed to Apple Podcasts, Spotify and the rest. You do it once per platform; after that they pick up every new episode by themselves."
+msgstr "Cuando tu podcast tenga al menos un episodio publicado, podrás enviar su feed a Apple Podcasts, Spotify y las demás. Se hace una vez por plataforma; después, cada una recoge sola todos los episodios nuevos."
 
 #: includes/class-guided-setup.php:307
 msgid "All steps"
@@ -1402,9 +1096,7 @@ msgid "Set up this podcast"
 msgstr "Configurar este podcast"
 
 #: includes/class-guided-setup.php:364
-msgid ""
-"This assistant does not create podcasts or channels: that is done in "
-"PowerPress."
+msgid "This assistant does not create podcasts or channels: that is done in PowerPress."
 msgstr "Este asistente no crea podcasts ni canales: eso se hace en PowerPress."
 
 #: includes/class-guided-setup.php:365
@@ -1422,75 +1114,40 @@ msgid "Connect with VozCaster"
 msgstr "Conectar con VozCaster"
 
 #: includes/class-pairing.php:161
-msgid ""
-"You talk, VozCaster does the rest: it cleans your audio, writes the post, "
-"makes the cover and publishes the episode on this site. Connect your account "
-"once, then record in the VozCaster app or in Telegram."
-msgstr ""
-"Tú hablas, del resto se ocupa VozCaster: limpia el audio, escribe la "
-"entrada, crea la portada y publica el episodio en este sitio. Conecta tu "
-"cuenta una vez y graba en la app de VozCaster o en Telegram."
+msgid "You talk, VozCaster does the rest: it cleans your audio, writes the post, makes the cover and publishes the episode on this site. Connect your account once, then record in the VozCaster app or in Telegram."
+msgstr "Tú hablas, del resto se ocupa VozCaster: limpia el audio, escribe la entrada, crea la portada y publica el episodio en este sitio. Conecta tu cuenta una vez y graba en la app de VozCaster o en Telegram."
 
 #: includes/class-pairing.php:166
-msgid ""
-"PowerPress is not active. Install and activate it before connecting, so "
-"episodes reach your podcast feed."
-msgstr ""
-"PowerPress no está activo. Instálalo y actívalo antes de conectar, para que "
-"los episodios lleguen al feed de tu podcast."
+msgid "PowerPress is not active. Install and activate it before connecting, so episodes reach your podcast feed."
+msgstr "PowerPress no está activo. Instálalo y actívalo antes de conectar, para que los episodios lleguen al feed de tu podcast."
 
 #: includes/class-pairing.php:172
-msgid ""
-"Your account is already connected to the bot. Connecting again replaces the "
-"previous connection, and with several podcasts it switches the one you "
-"publish to."
-msgstr ""
-"Tu cuenta ya está conectada al bot. Si vuelves a conectar, se sustituye la "
-"conexión anterior y, si hay varios podcasts, cambias a aquel en el que "
-"publicas."
+msgid "Your account is already connected to VozCaster. You can also connect from another place (the app, Telegram, another phone): each connection works on its own. With several podcasts, connecting again switches the one you publish to."
+msgstr "Tu cuenta ya está conectada a VozCaster. También puedes conectarte desde otro lugar (la app, Telegram, otro móvil): cada conexión funciona por su cuenta. Si hay varios podcasts, al volver a conectar cambias a aquel en el que publicas."
 
 #: includes/class-pairing.php:204
-msgid ""
-"The app opens in a new tab, ready to record from your phone or computer; you "
-"can add it to your home screen. Telegram opens the bot instead: press Start "
-"and confirm there. Each link works once and expires in 15 minutes."
-msgstr ""
-"La app se abre en una pestaña nueva, lista para grabar desde el móvil o el "
-"ordenador; puedes añadirla a la pantalla de inicio. Telegram abre el bot: "
-"pulsa Iniciar y confirma allí. Cada enlace sirve una vez y caduca en 15 "
-"minutos."
+msgid "The app opens in a new tab, ready to record from your phone or computer; you can add it to your home screen. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
+msgstr "La app se abre en una pestaña nueva, lista para grabar desde el móvil o el ordenador; puedes añadirla a la pantalla de inicio. Telegram abre el bot: pulsa Iniciar y confirma allí. Cada enlace sirve una vez y caduca en 15 minutos."
 
 #: includes/class-pairing.php:239
-msgid ""
-"Log in with your account on this site to connect it with the VozCaster bot "
-"and publish podcast episodes from Telegram."
-msgstr ""
-"Accede con tu cuenta de este sitio para conectarla con el bot de VozCaster y "
-"publicar episodios de podcast desde Telegram."
+msgid "Log in with your account on this site to connect it with the VozCaster bot and publish podcast episodes from Telegram."
+msgstr "Accede con tu cuenta de este sitio para conectarla con el bot de VozCaster y publicar episodios de podcast desde Telegram."
 
 #: includes/class-pairing.php:249
-msgid ""
-"Your account is not authorized to publish from VozCaster yet. Ask the site "
-"administrator for access."
-msgstr ""
-"Tu cuenta todavía no está autorizada para publicar desde VozCaster. Pide "
-"acceso a quien administra el sitio."
+msgid "Your account is not authorized to publish from VozCaster yet. Ask the site administrator for access."
+msgstr "Tu cuenta todavía no está autorizada para publicar desde VozCaster. Pide acceso a quien administra el sitio."
 
 #: includes/class-pairing.php:259
-msgid ""
-"Your account cannot send episodes to any podcast of this site yet. Ask the "
-"site administrator for access."
-msgstr ""
-"Tu cuenta aún no puede enviar episodios a ningún podcast de este sitio. Pide "
-"acceso a quien lo administra."
+msgid "Your account cannot send episodes to any podcast of this site yet. Ask the site administrator for access."
+msgstr "Tu cuenta aún no puede enviar episodios a ningún podcast de este sitio. Pide acceso a quien lo administra."
 
 #: includes/class-pairing.php:264
 msgid "Your account is already connected to the bot."
 msgstr "Tu cuenta ya está conectada al bot."
 
 #: includes/class-pairing.php:264
-msgid "Connecting again replaces the previous connection."
-msgstr "Si vuelves a conectar, se sustituye la conexión anterior."
+msgid "You can also connect from another place (the app, Telegram, another phone): each connection works on its own."
+msgstr "También puedes conectarte desde otro lugar (la app, Telegram, otro móvil): cada conexión funciona por su cuenta."
 
 #: includes/class-pairing.php:270
 msgid "Open the bot, send /conectar and paste this address:"
@@ -1509,14 +1166,8 @@ msgid "Connect «%s» in Telegram"
 msgstr "Conectar «%s» en Telegram"
 
 #: includes/class-pairing.php:303
-msgid ""
-"The app opens in a new tab, ready to record from your phone or computer. "
-"Telegram opens the bot instead: press Start and confirm there. Each link "
-"works once and expires in 15 minutes."
-msgstr ""
-"La app se abre en una pestaña nueva, lista para grabar desde el móvil o el "
-"ordenador. Telegram abre el bot: pulsa Iniciar y confirma allí. Cada enlace "
-"sirve una vez y caduca en 15 minutos."
+msgid "The app opens in a new tab, ready to record from your phone or computer. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
+msgstr "La app se abre en una pestaña nueva, lista para grabar desde el móvil o el ordenador. Telegram abre el bot: pulsa Iniciar y confirma allí. Cada enlace sirve una vez y caduca en 15 minutos."
 
 #: includes/class-pairing.php:316
 msgid "Your role is not authorized to publish from VozCaster."
@@ -1527,11 +1178,8 @@ msgid "Set up your podcast in a few minutes."
 msgstr "Configura tu podcast en pocos minutos."
 
 #: includes/class-pairing.php:393
-msgid ""
-"A short guide takes you through the essentials and connects your account "
-"with VozCaster."
-msgstr ""
-"Una guía breve te lleva por lo esencial y conecta tu cuenta con VozCaster."
+msgid "A short guide takes you through the essentials and connects your account with VozCaster."
+msgstr "Una guía breve te lleva por lo esencial y conecta tu cuenta con VozCaster."
 
 #: includes/class-pairing.php:395
 msgid "Publish your podcast from Telegram."
@@ -1592,12 +1240,8 @@ msgid "This link is no longer valid"
 msgstr "Este enlace ya no sirve"
 
 #: includes/class-relay.php:382
-msgid ""
-"It was already used, or it expired. If something is still waiting, VozCaster "
-"will send you a new link."
-msgstr ""
-"Ya se usó o ha caducado. Si queda algo esperando, VozCaster te enviará un "
-"enlace nuevo."
+msgid "It was already used, or it expired. If something is still waiting, VozCaster will send you a new link."
+msgstr "Ya se usó o ha caducado. Si queda algo esperando, VozCaster te enviará un enlace nuevo."
 
 #: includes/class-relay.php:384
 msgid "Nothing is waiting"
@@ -1624,12 +1268,8 @@ msgid "Your changes in VozCaster are ready to be applied"
 msgstr "Tus cambios en VozCaster están listos para aplicarse"
 
 #: includes/class-relay.php:402
-msgid ""
-"We collect it from here because your hosting blocks direct connections from "
-"VozCaster: your browser can reach your site, VozCaster cannot."
-msgstr ""
-"Lo recogemos desde aquí porque tu hosting bloquea las conexiones directas de "
-"VozCaster: tu navegador puede llegar a tu sitio, VozCaster no."
+msgid "We collect it from here because your hosting blocks direct connections from VozCaster: your browser can reach your site, VozCaster cannot."
+msgstr "Lo recogemos desde aquí porque tu hosting bloquea las conexiones directas de VozCaster: tu navegador puede llegar a tu sitio, VozCaster no."
 
 #: includes/class-relay.php:407
 msgid "Publish now"
@@ -1644,12 +1284,8 @@ msgid "Apply now"
 msgstr "Aplicar ahora"
 
 #: includes/class-relay.php:421
-msgid ""
-"To skip this step next time, ask your hosting to let VozCaster reach /wp-"
-"json/vozpress/ on your site."
-msgstr ""
-"Para ahorrarte este paso la próxima vez, pide a tu hosting que deje a "
-"VozCaster llegar a /wp-json/vozpress/ de tu sitio."
+msgid "To skip this step next time, ask your hosting to let VozCaster reach /wp-json/vozpress/ on your site."
+msgstr "Para ahorrarte este paso la próxima vez, pide a tu hosting que deje a VozCaster llegar a /wp-json/vozpress/ de tu sitio."
 
 #: includes/class-review.php:149 includes/class-review.php:181
 msgid "You cannot review this episode."
@@ -1665,8 +1301,7 @@ msgstr "[%1$s] Episodio de podcast pendiente de revisión: %2$s"
 #: includes/class-review.php:267
 #, php-format
 msgid ""
-"%1$s has sent a new episode with VozCaster and it is waiting for your "
-"review:\n"
+"%1$s has sent a new episode with VozCaster and it is waiting for your review:\n"
 "\n"
 "%2$s\n"
 "%3$s\n"
@@ -1674,8 +1309,7 @@ msgid ""
 "Listen to it and publish it or return it here:\n"
 "%4$s"
 msgstr ""
-"%1$s ha enviado un episodio nuevo con VozCaster y está esperando tu "
-"revisión:\n"
+"%1$s ha enviado un episodio nuevo con VozCaster y está esperando tu revisión:\n"
 "\n"
 "%2$s\n"
 "%3$s\n"
@@ -1704,8 +1338,7 @@ msgstr ""
 "%s"
 
 #: includes/class-review.php:296
-msgid ""
-"Your episode has been approved and will be published on its scheduled date."
+msgid "Your episode has been approved and will be published on its scheduled date."
 msgstr "Tu episodio está aprobado y se publicará en la fecha programada."
 
 #. translators: 1: site name, 2: post title.
@@ -1731,12 +1364,8 @@ msgstr ""
 "Vuelve a grabarlo y envíalo con VozCaster cuando esté listo."
 
 #: includes/class-review.php:320
-msgid ""
-"You do not publish directly in any podcast of this site, so you have nothing "
-"to review."
-msgstr ""
-"No publicas directamente en ningún podcast de este sitio, así que no tienes "
-"nada que revisar."
+msgid "You do not publish directly in any podcast of this site, so you have nothing to review."
+msgstr "No publicas directamente en ningún podcast de este sitio, así que no tienes nada que revisar."
 
 #: includes/class-review.php:327
 msgid "Nothing waiting for review. 🎉"
@@ -1777,18 +1406,8 @@ msgid "Roles for your users"
 msgstr "Perfiles para tus usuarios"
 
 #: includes/class-roles.php:162
-msgid ""
-"Create a role for each group of people (for example \"Teachers\" or "
-"\"English teachers\"). A new role only has the permissions of Subscriber: it "
-"can read the site and edit its own profile. Give it access to each podcast "
-"in the table below, and assign it to users from Users → Edit, or in their "
-"profile."
-msgstr ""
-"Crea un perfil para cada grupo de personas (por ejemplo «Profesores» o "
-"«Profesores de inglés»). Un perfil nuevo solo tiene los permisos de "
-"Suscriptor: puede leer el sitio y editar su propio perfil de usuario. Dale "
-"acceso a cada podcast en la tabla de abajo y asígnalo a los usuarios desde "
-"Usuarios → Editar, o en su perfil."
+msgid "Create a role for each group of people (for example \"Teachers\" or \"English teachers\"). A new role only has the permissions of Subscriber: it can read the site and edit its own profile. Give it access to each podcast in the table below, and assign it to users from Users → Edit, or in their profile."
+msgstr "Crea un perfil para cada grupo de personas (por ejemplo «Profesores» o «Profesores de inglés»). Un perfil nuevo solo tiene los permisos de Suscriptor: puede leer el sitio y editar su propio perfil de usuario. Dale acceso a cada podcast en la tabla de abajo y asígnalo a los usuarios desde Usuarios → Editar, o en su perfil."
 
 #: includes/class-roles.php:170 includes/class-roles.php:171
 msgid "Role name"
@@ -1832,12 +1451,8 @@ msgid "Roles"
 msgstr "Perfiles"
 
 #: includes/class-roles.php:247
-msgid ""
-"A user can belong to several of these roles, for example to teach in two "
-"podcasts. They are added to the main role chosen above."
-msgstr ""
-"Un usuario puede tener varios de estos perfiles, por ejemplo para dar clase "
-"en dos podcasts. Se suman al perfil principal elegido arriba."
+msgid "A user can belong to several of these roles, for example to teach in two podcasts. They are added to the main role chosen above."
+msgstr "Un usuario puede tener varios de estos perfiles, por ejemplo para dar clase en dos podcasts. Se suman al perfil principal elegido arriba."
 
 #: includes/class-settings.php:45
 msgid "Select intro audio"
@@ -1901,15 +1516,11 @@ msgstr "Archivo de outro subido correctamente."
 
 #: includes/class-settings.php:359
 msgid "Error uploading intro file. Please make sure it is a valid audio file."
-msgstr ""
-"Error al subir el archivo de intro. Asegúrate de que es un archivo de audio "
-"válido."
+msgstr "Error al subir el archivo de intro. Asegúrate de que es un archivo de audio válido."
 
 #: includes/class-settings.php:360
 msgid "Error uploading outro file. Please make sure it is a valid audio file."
-msgstr ""
-"Error al subir el archivo de outro. Asegúrate de que es un archivo de audio "
-"válido."
+msgstr "Error al subir el archivo de outro. Asegúrate de que es un archivo de audio válido."
 
 #: includes/class-settings.php:361
 msgid "Separator sound deleted."
@@ -1920,12 +1531,8 @@ msgid "Separator sound uploaded successfully."
 msgstr "Sonido de corte subido correctamente."
 
 #: includes/class-settings.php:363
-msgid ""
-"Error uploading the separator sound. Please make sure it is a valid audio "
-"file."
-msgstr ""
-"Error al subir el sonido de corte. Asegúrate de que es un archivo de audio "
-"válido."
+msgid "Error uploading the separator sound. Please make sure it is a valid audio file."
+msgstr "Error al subir el sonido de corte. Asegúrate de que es un archivo de audio válido."
 
 #: includes/class-settings.php:364
 msgid "Episode history cleared."
@@ -1952,12 +1559,8 @@ msgid "Writing style saved."
 msgstr "Estilo de escritura guardado."
 
 #: includes/class-settings.php:370
-msgid ""
-"The title pattern must include {title}, where the episode title goes. "
-"Nothing was saved."
-msgstr ""
-"El formato del título debe incluir {title} (o {titulo}), donde va el título "
-"del episodio. No se ha guardado nada."
+msgid "The title pattern must include {title}, where the episode title goes. Nothing was saved."
+msgstr "El formato del título debe incluir {title} (o {titulo}), donde va el título del episodio. No se ha guardado nada."
 
 #: includes/class-settings.php:416
 msgid "VozCaster — Episodes"
@@ -1972,28 +1575,16 @@ msgid "VozCaster — History"
 msgstr "VozCaster — Historial"
 
 #: includes/class-settings.php:478
-msgid ""
-"Define the prefix prepended to the number and title of each episode. Can "
-"also be changed from VozCaster, with /settings in Telegram."
-msgstr ""
-"Define el prefijo que se antepone al número y al título de cada episodio. "
-"También se puede cambiar desde VozCaster, con /settings en Telegram."
+msgid "Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram."
+msgstr "Define el prefijo que se antepone al número y al título de cada episodio. También se puede cambiar desde VozCaster, con /settings en Telegram."
 
 #: includes/class-settings.php:490
 msgid "Title pattern"
 msgstr "Formato del título"
 
 #: includes/class-settings.php:500
-msgid ""
-"Optional. When set, it replaces the prefix below. Placeholders: {title} (the "
-"episode title, required), {season}, {episode} (number within the season) and "
-"{number} (the number the prefix would use). The Spanish names {titulo}, "
-"{temporada}, {episodio} and {numero} work too."
-msgstr ""
-"Opcional. Si lo rellenas, sustituye al prefijo de abajo. Huecos: {titulo} "
-"(el título del episodio, obligatorio), {temporada}, {episodio} (número "
-"dentro de la temporada) y {numero} (el número que usaría el prefijo). "
-"También valen en inglés: {title}, {season}, {episode} y {number}."
+msgid "Optional. When set, it replaces the prefix below. Placeholders: {title} (the episode title, required), {season}, {episode} (number within the season) and {number} (the number the prefix would use). The Spanish names {titulo}, {temporada}, {episodio} and {numero} work too."
+msgstr "Opcional. Si lo rellenas, sustituye al prefijo de abajo. Huecos: {titulo} (el título del episodio, obligatorio), {temporada}, {episodio} (número dentro de la temporada) y {numero} (el número que usaría el prefijo). También valen en inglés: {title}, {season}, {episode} y {number}."
 
 #: includes/class-settings.php:506
 msgid "Title prefix"
@@ -2004,12 +1595,8 @@ msgid "E.g.: Chapter, Episode, Ep."
 msgstr "Ej.: Capítulo, Episodio, Ep."
 
 #: includes/class-settings.php:516
-msgid ""
-"Empty = no prefix. With prefix and no season: «Chapter 15: Title». With "
-"season: «Chapter T2E15: Title»."
-msgstr ""
-"Vacío = sin prefijo. Con prefijo y sin temporada: «Capítulo 15: Título». Con "
-"temporada: «Capítulo T2E15: Título»."
+msgid "Empty = no prefix. With prefix and no season: «Chapter 15: Title». With season: «Chapter T2E15: Title»."
+msgstr "Vacío = sin prefijo. Con prefijo y sin temporada: «Capítulo 15: Título». Con temporada: «Capítulo T2E15: Título»."
 
 #: includes/class-settings.php:521
 msgid "Include season number"
@@ -2042,18 +1629,8 @@ msgid "Changing this is a big change:"
 msgstr "Cambiar esto es un cambio importante:"
 
 #: includes/class-settings.php:555
-msgid ""
-"the next episode is numbered within the target season (E1 if it has no "
-"published episodes yet, otherwise it continues from the last one published "
-"in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, "
-"Spotify). Moving to a season below the latest published episode also "
-"requires editing that episode in PowerPress."
-msgstr ""
-"el próximo episodio se numera dentro de la temporada de destino (E1 si aún "
-"no tiene episodios publicados, o si no continúa desde el último publicado en "
-"ella) y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, "
-"Spotify). Pasar a una temporada por debajo del último episodio publicado "
-"requiere editar además ese episodio en PowerPress."
+msgid "the next episode is numbered within the target season (E1 if it has no published episodes yet, otherwise it continues from the last one published in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, Spotify). Moving to a season below the latest published episode also requires editing that episode in PowerPress."
+msgstr "el próximo episodio se numera dentro de la temporada de destino (E1 si aún no tiene episodios publicados, o si no continúa desde el último publicado en ella) y cambia la etiqueta <itunes:season> del feed RSS (Apple Podcasts, Spotify). Pasar a una temporada por debajo del último episodio publicado requiere editar además ese episodio en PowerPress."
 
 #: includes/class-settings.php:561
 msgid "Chapter numbering in title"
@@ -2072,87 +1649,52 @@ msgid "Global sequential number (inferred from the previous post title)"
 msgstr "Número secuencial global (inferido del título de la entrada anterior)"
 
 #: includes/class-settings.php:576
-msgid ""
-"Example: «Chapter 38: Title». PowerPress still uses the chapter within the "
-"season internally."
-msgstr ""
-"Ejemplo: «Capítulo 38: Título». PowerPress sigue usando internamente el "
-"capítulo dentro de la temporada."
+msgid "Example: «Chapter 38: Title». PowerPress still uses the chapter within the season internally."
+msgstr "Ejemplo: «Capítulo 38: Título». PowerPress sigue usando internamente el capítulo dentro de la temporada."
 
 #: includes/class-settings.php:582
 msgid "Save title settings"
 msgstr "Guardar ajustes de títulos"
 
 #: includes/class-settings.php:599
-msgid ""
-"A style guide for the AI that writes the title, excerpt, post and chapters: "
-"tone, humour, register, words to use or avoid. Without it, the AI copies the "
-"tone it hears. You can also change it from VozCaster, with /tono in Telegram."
-msgstr ""
-"Una guía de estilo para la IA que escribe el título, el extracto, la entrada "
-"y los capítulos: tono, humor, registro, palabras que usar o evitar. Sin "
-"ella, la IA imita el tono que oye. También puedes cambiarla desde VozCaster, "
-"con /tono en Telegram."
+msgid "A style guide for the AI that writes the title, excerpt, post and chapters: tone, humour, register, words to use or avoid. Without it, the AI copies the tone it hears. You can also change it from VozCaster, with /tono in Telegram."
+msgstr "Una guía de estilo para la IA que escribe el título, el extracto, la entrada y los capítulos: tono, humor, registro, palabras que usar o evitar. Sin ella, la IA imita el tono que oye. También puedes cambiarla desde VozCaster, con /tono en Telegram."
 
 #: includes/class-settings.php:611
 msgid "Style guide"
 msgstr "Guía de estilo"
 
 #: includes/class-settings.php:617
-msgid ""
-"e.g. Extremely irreverent, like the hosts. Swear words are fine. Keep the "
-"running jokes and the nicknames."
-msgstr ""
-"p. ej. Extremadamente irreverente, como los presentadores. Los tacos valen. "
-"Respeta las bromas recurrentes y los motes."
+msgid "e.g. Extremely irreverent, like the hosts. Swear words are fine. Keep the running jokes and the nicknames."
+msgstr "p. ej. Extremadamente irreverente, como los presentadores. Los tacos valen. Respeta las bromas recurrentes y los motes."
 
 #: includes/class-settings.php:620
-msgid ""
-"Up to 1,000 characters. It shapes the voice only: the AI still writes in the "
-"language of the episode and never invents facts."
-msgstr ""
-"Hasta 1.000 caracteres. Solo cambia la voz: la IA sigue escribiendo en el "
-"idioma del episodio y nunca se inventa nada."
+msgid "Up to 1,000 characters. It shapes the voice only: the AI still writes in the language of the episode and never invents facts."
+msgstr "Hasta 1.000 caracteres. Solo cambia la voz: la IA sigue escribiendo en el idioma del episodio y nunca se inventa nada."
 
 #: includes/class-settings.php:629
 msgid "Show the chapter list at the end of each post"
 msgstr "Mostrar la lista de capítulos al final de cada entrada"
 
 #: includes/class-settings.php:632
-msgid ""
-"With AI, the bot splits each episode into chapters with their times. They "
-"always go to the feed (podcast apps show them); this only decides whether "
-"the post lists them too."
-msgstr ""
-"Con IA, el bot divide cada episodio en capítulos con sus tiempos. Siempre "
-"van al feed (las apps de podcast los muestran); esto solo decide si la "
-"entrada también los muestra."
+msgid "With AI, the bot splits each episode into chapters with their times. They always go to the feed (podcast apps show them); this only decides whether the post lists them too."
+msgstr "Con IA, el bot divide cada episodio en capítulos con sus tiempos. Siempre van al feed (las apps de podcast los muestran); esto solo decide si la entrada también los muestra."
 
 #: includes/class-settings.php:637
 msgid "Save writing style"
 msgstr "Guardar estilo de escritura"
 
 #: includes/class-settings.php:653
-msgid ""
-"HTML or Gutenberg block markup appended automatically to every post "
-"published by VozCaster. You can also edit it from VozCaster, with /firma in "
-"Telegram."
-msgstr ""
-"Código HTML o de bloques de Gutenberg que se añade automáticamente al final "
-"de cada entrada publicada por VozCaster. También se puede editar desde "
-"VozCaster, con /firma en Telegram."
+msgid "HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram."
+msgstr "Código HTML o de bloques de Gutenberg que se añade automáticamente al final de cada entrada publicada por VozCaster. También se puede editar desde VozCaster, con /firma en Telegram."
 
 #: includes/class-settings.php:665
 msgid "Footer content"
 msgstr "Contenido del pie"
 
 #: includes/class-settings.php:675
-msgid ""
-"Accepts raw HTML and Gutenberg block comments. Appended verbatim after the "
-"episode content. Leave empty to disable."
-msgstr ""
-"Acepta HTML en bruto y comentarios de bloques de Gutenberg. Se añade tal "
-"cual al final del contenido del episodio. Déjalo vacío para desactivarlo."
+msgid "Accepts raw HTML and Gutenberg block comments. Appended verbatim after the episode content. Leave empty to disable."
+msgstr "Acepta HTML en bruto y comentarios de bloques de Gutenberg. Se añade tal cual al final del contenido del episodio. Déjalo vacío para desactivarlo."
 
 #: includes/class-settings.php:680
 msgid "Save footer"
@@ -2163,12 +1705,8 @@ msgid "Image style"
 msgstr "Estilo de imagen"
 
 #: includes/class-settings.php:698
-msgid ""
-"A recurring element for every AI-generated cover of this podcast. You can "
-"also change it from VozCaster, with /estilo in Telegram."
-msgstr ""
-"Un elemento que se repite en todas las portadas generadas con IA de este "
-"podcast. También se puede cambiar desde VozCaster, con /estilo en Telegram."
+msgid "A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram."
+msgstr "Un elemento que se repite en todas las portadas generadas con IA de este podcast. También se puede cambiar desde VozCaster, con /estilo en Telegram."
 
 #: includes/class-settings.php:710
 msgid "Style text"
@@ -2179,12 +1717,8 @@ msgid "e.g. An orange cat wearing studio headphones"
 msgstr "p. ej. Un gato naranja con auriculares de estudio"
 
 #: includes/class-settings.php:722
-msgid ""
-"An element that appears in every cover of this podcast, woven into the scene "
-"of each episode. Leave empty to disable."
-msgstr ""
-"Un elemento que aparece en todas las portadas de este podcast, integrado en "
-"la escena de cada episodio. Déjalo vacío para desactivarlo."
+msgid "An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable."
+msgstr "Un elemento que aparece en todas las portadas de este podcast, integrado en la escena de cada episodio. Déjalo vacío para desactivarlo."
 
 #: includes/class-settings.php:727
 msgid "Save image style"
@@ -2195,14 +1729,8 @@ msgid "Style reference image"
 msgstr "Imagen de referencia del estilo"
 
 #: includes/class-settings.php:732
-msgid ""
-"Generated covers take the style of this image (technique, colours, mood), "
-"never its subject. You can also send it from Telegram: a photo with the "
-"caption /referencia."
-msgstr ""
-"Las portadas generadas toman el estilo de esta imagen (técnica, colores, "
-"ambiente), nunca su contenido. También puedes enviarla desde Telegram: una "
-"foto con el texto /referencia."
+msgid "Generated covers take the style of this image (technique, colours, mood), never its subject. You can also send it from Telegram: a photo with the caption /referencia."
+msgstr "Las portadas generadas toman el estilo de esta imagen (técnica, colores, ambiente), nunca su contenido. También puedes enviarla desde Telegram: una foto con el texto /referencia."
 
 #: includes/class-settings.php:743
 msgid "Change image"
@@ -2217,16 +1745,8 @@ msgid "Remove"
 msgstr "Quitar"
 
 #: includes/class-settings.php:769
-msgid ""
-"When the bot writes the text of a post with AI, a short notice is shown with "
-"it so readers know. It is added when the post is displayed, so changes here "
-"apply to every post published from the bot. It can also be hidden on a "
-"single post from the editor."
-msgstr ""
-"Cuando el bot escribe con IA el texto de una entrada, se muestra con él un "
-"breve aviso para que los lectores lo sepan. Se añade al mostrar la entrada, "
-"así que los cambios de aquí se aplican a todas las entradas publicadas desde "
-"el bot. También se puede ocultar en una entrada concreta desde el editor."
+msgid "When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor."
+msgstr "Cuando el bot escribe con IA el texto de una entrada, se muestra con él un breve aviso para que los lectores lo sepan. Se añade al mostrar la entrada, así que los cambios de aquí se aplican a todas las entradas publicadas desde el bot. También se puede ocultar en una entrada concreta desde el editor."
 
 #: includes/class-settings.php:780
 msgid "Show the AI notice"
@@ -2241,12 +1761,8 @@ msgid "Notice text"
 msgstr "Texto del aviso"
 
 #: includes/class-settings.php:794
-msgid ""
-"Leave it empty to use the default text (shown greyed out in the box), in the "
-"language of the site. Basic HTML such as links is allowed."
-msgstr ""
-"Déjalo vacío para usar el texto por defecto (el que se ve en gris dentro de "
-"la caja), en el idioma del sitio. Se admite HTML básico, como enlaces."
+msgid "Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed."
+msgstr "Déjalo vacío para usar el texto por defecto (el que se ve en gris dentro de la caja), en el idioma del sitio. Se admite HTML básico, como enlaces."
 
 #: includes/class-settings.php:799
 msgid "Position"
@@ -2265,17 +1781,12 @@ msgid "VozCaster credit"
 msgstr "Crédito de VozCaster"
 
 #: includes/class-settings.php:813
-msgid ""
-"Show a \"Published with VozCaster\" line with a link under posts published "
-"from the bot"
-msgstr ""
-"Mostrar una línea «Publicado con VozCaster» con enlace bajo las entradas "
-"publicadas desde el bot"
+msgid "Show a \"Published with VozCaster\" line with a link under posts published from the bot"
+msgstr "Mostrar una línea «Publicado con VozCaster» con enlace bajo las entradas publicadas desde el bot"
 
 #: includes/class-settings.php:815
 msgid "Off by default. Turning it on helps VozCaster grow — thank you!"
-msgstr ""
-"Desactivado por defecto. Activarlo ayuda a que VozCaster crezca. ¡Gracias!"
+msgstr "Desactivado por defecto. Activarlo ayuda a que VozCaster crezca. ¡Gracias!"
 
 #: includes/class-settings.php:819
 msgid "Save notice settings"
@@ -2286,14 +1797,8 @@ msgid "Intro, outro &amp; separator"
 msgstr "Intro, outro y sonido de corte"
 
 #: includes/class-settings.php:837
-msgid ""
-"Upload your intro, outro and separator audio files here. They can also be "
-"uploaded from VozCaster: in the app (Site music and timings) or in the "
-"Telegram bot (Intro/Outro menu)."
-msgstr ""
-"Sube aquí los audios de la intro, el outro y el sonido de corte. También se "
-"pueden subir desde VozCaster: en la app (Música y tiempos de la web) o en el "
-"bot de Telegram (menú Intro/Outro)."
+msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu)."
+msgstr "Sube aquí los audios de la intro, el outro y el sonido de corte. También se pueden subir desde VozCaster: en la app (Música y tiempos de la web) o en el bot de Telegram (menú Intro/Outro)."
 
 #: includes/class-settings.php:843
 msgid "Intro"
@@ -2361,14 +1866,8 @@ msgid "Separator sound"
 msgstr "Sonido de corte"
 
 #: includes/class-settings.php:927
-msgid ""
-"Short sound played between the sections of an episode recorded in several "
-"audios (for example, interviews at an event). Without it, sections are "
-"joined with a one-second pause."
-msgstr ""
-"Sonido corto que suena entre las partes de un episodio grabado en varios "
-"audios (por ejemplo, entrevistas en un evento). Sin él, las partes se unen "
-"con una pausa de un segundo."
+msgid "Short sound played between the sections of an episode recorded in several audios (for example, interviews at an event). Without it, sections are joined with a one-second pause."
+msgstr "Sonido corto que suena entre las partes de un episodio grabado en varios audios (por ejemplo, entrevistas en un evento). Sin él, las partes se unen con una pausa de un segundo."
 
 #: includes/class-settings.php:938
 msgid "Delete the separator sound?"
@@ -2399,12 +1898,8 @@ msgid "Audio mix settings (intro/outro)"
 msgstr "Ajustes de mezcla de audio (intro/outro)"
 
 #: includes/class-settings.php:989
-msgid ""
-"Define how intro and outro music is mixed with the podcast audio. These are "
-"the default values and can be changed from VozCaster."
-msgstr ""
-"Define cómo se mezclan la intro y el outro con el audio del podcast. Son los "
-"valores por defecto y se pueden cambiar desde VozCaster."
+msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster."
+msgstr "Define cómo se mezclan la intro y el outro con el audio del podcast. Son los valores por defecto y se pueden cambiar desde VozCaster."
 
 #: includes/class-settings.php:1001
 msgid "Intro duck-in second"
@@ -2415,24 +1910,16 @@ msgid "seconds"
 msgstr "segundos"
 
 #: includes/class-settings.php:1009
-msgid ""
-"The intro plays at 100% until this second. From here it starts fading down "
-"and the podcast voice fades in."
-msgstr ""
-"La intro suena al 100% hasta este segundo. A partir de aquí empieza a bajar "
-"y la voz del podcast entra en fade-in."
+msgid "The intro plays at 100% until this second. From here it starts fading down and the podcast voice fades in."
+msgstr "La intro suena al 100% hasta este segundo. A partir de aquí empieza a bajar y la voz del podcast entra en fade-in."
 
 #: includes/class-settings.php:1014
 msgid "Intro volume under podcast"
 msgstr "Volumen de la intro bajo el podcast"
 
 #: includes/class-settings.php:1022
-msgid ""
-"Volume to which the intro fades during duck-in, before reaching 0. Example: "
-"30 = intro fades to 30% while the voice comes in."
-msgstr ""
-"Volumen al que baja la intro durante el duck, antes de llegar a 0. Ejemplo: "
-"30 = la intro baja al 30% mientras entra la voz."
+msgid "Volume to which the intro fades during duck-in, before reaching 0. Example: 30 = intro fades to 30% while the voice comes in."
+msgstr "Volumen al que baja la intro durante el duck, antes de llegar a 0. Ejemplo: 30 = la intro baja al 30% mientras entra la voz."
 
 #: includes/class-settings.php:1027
 msgid "Second at which intro reaches 0"
@@ -2443,12 +1930,8 @@ msgid "seconds (empty = until the end of the intro file)"
 msgstr "segundos (vacío = hasta el final del archivo de intro)"
 
 #: includes/class-settings.php:1036
-msgid ""
-"Exact second at which the intro reaches silence. If left empty, the fade "
-"lasts until the end of the intro file."
-msgstr ""
-"Segundo exacto en el que la intro llega al silencio. Si se deja vacío, el "
-"fade dura hasta el final del archivo de intro."
+msgid "Exact second at which the intro reaches silence. If left empty, the fade lasts until the end of the intro file."
+msgstr "Segundo exacto en el que la intro llega al silencio. Si se deja vacío, el fade dura hasta el final del archivo de intro."
 
 #: includes/class-settings.php:1041
 msgid "Knee: seconds to reach duck volume"
@@ -2459,40 +1942,24 @@ msgid "seconds after duck start (empty = linear)"
 msgstr "segundos después del inicio del duck (vacío = lineal)"
 
 #: includes/class-settings.php:1051
-msgid ""
-"Seconds after the duck start at which the intro has already dropped to the "
-"duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by "
-"a long gentle tail. The outro uses the exact mirror curve automatically. "
-"Leave empty for a linear fade."
-msgstr ""
-"Segundos después del inicio del duck en los que la intro ya ha bajado al % "
-"del duck. Un valor corto (ej. 1) da una caída inicial rápida seguida de una "
-"cola larga y suave. El outro usa automáticamente la curva espejo exacta. "
-"Déjalo vacío para un fade lineal."
+msgid "Seconds after the duck start at which the intro has already dropped to the duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by a long gentle tail. The outro uses the exact mirror curve automatically. Leave empty for a linear fade."
+msgstr "Segundos después del inicio del duck en los que la intro ya ha bajado al % del duck. Un valor corto (ej. 1) da una caída inicial rápida seguida de una cola larga y suave. El outro usa automáticamente la curva espejo exacta. Déjalo vacío para un fade lineal."
 
 #: includes/class-settings.php:1057
 msgid "Seconds before end for outro fade-in"
 msgstr "Segundos antes del final para el fade-in del outro"
 
 #: includes/class-settings.php:1065
-msgid ""
-"The outro starts playing in the background this many seconds before the "
-"podcast voice ends. When the voice ends, it rises to 100%."
-msgstr ""
-"El outro empieza a sonar en segundo plano estos segundos antes de que "
-"termine la voz del podcast. Cuando la voz acaba, sube al 100%."
+msgid "The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%."
+msgstr "El outro empieza a sonar en segundo plano estos segundos antes de que termine la voz del podcast. Cuando la voz acaba, sube al 100%."
 
 #: includes/class-settings.php:1070
 msgid "Outro volume under podcast"
 msgstr "Volumen del outro bajo el podcast"
 
 #: includes/class-settings.php:1078
-msgid ""
-"Maximum volume of the outro while the podcast voice is still playing. When "
-"the voice ends, the outro rises to 100%."
-msgstr ""
-"Volumen máximo del outro mientras la voz del podcast sigue sonando. Cuando "
-"la voz acaba, el outro sube al 100%."
+msgid "Maximum volume of the outro while the podcast voice is still playing. When the voice ends, the outro rises to 100%."
+msgstr "Volumen máximo del outro mientras la voz del podcast sigue sonando. Cuando la voz acaba, el outro sube al 100%."
 
 #: includes/class-settings.php:1082
 msgid "Save mix settings"
@@ -2503,23 +1970,16 @@ msgid "Who can publish, in which podcast"
 msgstr "Quién puede publicar, y en qué podcast"
 
 #: includes/class-settings.php:1107
-msgid ""
-"Tip: the VozCaster blocks (connect, classes, review and access) let your "
-"users do all this from a page of your site, without opening wp-admin."
-msgstr ""
-"Consejo: con los bloques de VozCaster (conectar, clases, revisar y acceso) "
-"tus usuarios pueden hacer todo esto desde una página de tu sitio, sin abrir "
-"wp-admin."
+msgid "Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin."
+msgstr "Consejo: con los bloques de VozCaster (conectar, clases, revisar y acceso) tus usuarios pueden hacer todo esto desde una página de tu sitio, sin abrir wp-admin."
 
 #: includes/class-settings.php:1110
 msgid "Connected users"
 msgstr "Usuarios conectados"
 
 #: includes/class-settings.php:1112
-msgid ""
-"Each authorized user connects their own account from VozCaster → Connect."
-msgstr ""
-"Cada usuario autorizado conecta su propia cuenta desde VozCaster → Conectar."
+msgid "Each authorized user connects their own account from VozCaster → Connect."
+msgstr "Cada usuario autorizado conecta su propia cuenta desde VozCaster → Conectar."
 
 #: includes/class-settings.php:1113
 msgid "Connect your account"
@@ -2541,85 +2001,73 @@ msgstr "Nombre"
 msgid "Bot status"
 msgstr "Estado del bot"
 
-#: includes/class-settings.php:1142
+#. translators: %d: number of places (app, Telegram, other phones) the user is connected from.
+#: includes/class-settings.php:1147
+#, php-format
+msgid "Connected from %d place"
+msgid_plural "Connected from %d places"
+msgstr[0] "Conectado desde %d lugar"
+msgstr[1] "Conectado desde %d lugares"
+
+#: includes/class-settings.php:1148
 msgid "Connected"
 msgstr "Conectado"
 
-#: includes/class-settings.php:1144
+#: includes/class-settings.php:1152
 msgid "Role not authorized"
 msgstr "Perfil no autorizado"
 
-#: includes/class-settings.php:1155
+#: includes/class-settings.php:1163
 msgid "Revoke access? The user will need to connect again."
 msgstr "¿Revocar el acceso? El usuario tendrá que volver a conectarse."
 
-#: includes/class-settings.php:1156
+#: includes/class-settings.php:1164
 msgid "Revoke"
 msgstr "Revocar"
 
-#: includes/class-settings.php:1184
-msgid ""
-"PowerPress is not installed or not active. Episodes will be created without "
-"podcast data."
-msgstr ""
-"PowerPress no está instalado o no está activo. Los episodios se crearán sin "
-"datos de podcast."
+#: includes/class-settings.php:1192
+msgid "PowerPress is not installed or not active. Episodes will be created without podcast data."
+msgstr "PowerPress no está instalado o no está activo. Los episodios se crearán sin datos de podcast."
 
-#: includes/class-settings.php:1223
+#: includes/class-settings.php:1231
 msgid "Recent published episodes"
 msgstr "Episodios publicados recientes"
 
-#: includes/class-settings.php:1225
+#: includes/class-settings.php:1233
 msgid "No episodes have been published with the bot yet."
 msgstr "Aún no se ha publicado ningún episodio con el bot."
 
-#: includes/class-settings.php:1230
+#: includes/class-settings.php:1238
 msgid "Date"
 msgstr "Fecha"
 
-#: includes/class-settings.php:1234
+#: includes/class-settings.php:1242
 msgid "Link"
 msgstr "Enlace"
 
-#: includes/class-settings.php:1246
+#: includes/class-settings.php:1254
 msgid "View"
 msgstr "Ver"
 
-#: includes/class-settings.php:1258
+#: includes/class-settings.php:1266
 msgid "Clear history"
 msgstr "Borrar historial"
 
 #: blocks/index.js:17
-msgid ""
-"Each logged-in user sees the buttons to connect their account to the "
-"VozCaster app or Telegram, for the podcasts they may publish in."
-msgstr ""
-"Cada usuario que ha accedido ve los botones para conectar su cuenta a la app "
-"de VozCaster o a Telegram, para los podcasts en los que puede publicar."
+msgid "Each logged-in user sees the buttons to connect their account to the VozCaster app or Telegram, for the podcasts they may publish in."
+msgstr "Cada usuario que ha accedido ve los botones para conectar su cuenta a la app de VozCaster o a Telegram, para los podcasts en los que puede publicar."
 
 #: blocks/index.js:18
-msgid ""
-"Teachers see the classes of their podcasts here, create new ones and choose "
-"who reviews each class."
-msgstr ""
-"Aquí el profesorado ve las clases de sus podcasts, crea otras nuevas y elige "
-"quién revisa cada una."
+msgid "Teachers see the classes of their podcasts here, create new ones and choose who reviews each class."
+msgstr "Aquí el profesorado ve las clases de sus podcasts, crea otras nuevas y elige quién revisa cada una."
 
 #: blocks/index.js:19
-msgid ""
-"Reviewers see the episodes waiting for them here, listen to them and publish "
-"them or return them with a comment."
-msgstr ""
-"Aquí quien revisa ve los episodios que le esperan, los escucha y los publica "
-"o los devuelve con un comentario."
+msgid "Reviewers see the episodes waiting for them here, listen to them and publish them or return them with a comment."
+msgstr "Aquí quien revisa ve los episodios que le esperan, los escucha y los publica o los devuelve con un comentario."
 
 #: blocks/index.js:20
-msgid ""
-"The people who manage VozCaster choose here who publishes in each podcast "
-"and who needs a review."
-msgstr ""
-"Aquí quienes gestionan VozCaster eligen quién publica en cada podcast y "
-"quién necesita revisión."
+msgid "The people who manage VozCaster choose here who publishes in each podcast and who needs a review."
+msgstr "Aquí quienes gestionan VozCaster eligen quién publica en cada podcast y quién necesita revisión."
 
 #: blocks/index.js:25
 msgid "VozCaster classes"
@@ -2656,12 +2104,8 @@ msgstr "Acceso a VozCaster"
 
 #: blocks/access/block.json
 msgctxt "block description"
-msgid ""
-"Lets the people who manage VozCaster choose who publishes in each podcast "
-"and who needs a review."
-msgstr ""
-"Permite a quienes gestionan VozCaster elegir quién publica en cada podcast y "
-"quién necesita revisión."
+msgid "Lets the people who manage VozCaster choose who publishes in each podcast and who needs a review."
+msgstr "Permite a quienes gestionan VozCaster elegir quién publica en cada podcast y quién necesita revisión."
 
 #: blocks/access/block.json blocks/classes/block.json blocks/connect/block.json
 #: blocks/review/block.json
@@ -2682,12 +2126,8 @@ msgstr "Clases de VozCaster"
 
 #: blocks/classes/block.json
 msgctxt "block description"
-msgid ""
-"Lets teachers create the classes of their podcasts and choose who reviews "
-"each one."
-msgstr ""
-"Permite al profesorado crear las clases de sus podcasts y elegir quién "
-"revisa cada una."
+msgid "Lets teachers create the classes of their podcasts and choose who reviews each one."
+msgstr "Permite al profesorado crear las clases de sus podcasts y elegir quién revisa cada una."
 
 #: blocks/connect/block.json
 msgctxt "block title"
@@ -2696,12 +2136,8 @@ msgstr "Conectar con VozCaster"
 
 #: blocks/connect/block.json
 msgctxt "block description"
-msgid ""
-"Lets each logged-in user connect their account to the VozCaster app or "
-"Telegram bot."
-msgstr ""
-"Permite que cada usuario que ha accedido conecte su cuenta a la app o al bot "
-"de Telegram de VozCaster."
+msgid "Lets each logged-in user connect their account to the VozCaster app or Telegram bot."
+msgstr "Permite que cada usuario que ha accedido conecte su cuenta a la app o al bot de Telegram de VozCaster."
 
 #: blocks/review/block.json
 msgctxt "block title"
@@ -2710,9 +2146,8 @@ msgstr "Revisión de VozCaster"
 
 #: blocks/review/block.json
 msgctxt "block description"
-msgid ""
-"Lists the episodes waiting for the logged-in user's review, to listen to "
-"them and publish or return them."
-msgstr ""
-"Muestra los episodios que esperan la revisión del usuario, para escucharlos "
-"y publicarlos o devolverlos."
+msgid "Lists the episodes waiting for the logged-in user's review, to listen to them and publish or return them."
+msgstr "Muestra los episodios que esperan la revisión del usuario, para escucharlos y publicarlos o devolverlos."
+
+#~ msgid "Connecting again replaces the previous connection."
+#~ msgstr "Si vuelves a conectar, se sustituye la conexión anterior."

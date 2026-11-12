@@ -169,7 +169,7 @@ class VPConn_Pairing {
 
 			<?php if ( $connected ) : ?>
 				<div class="notice notice-success inline"><p>
-					<?php esc_html_e( 'Your account is already connected to the bot. Connecting again replaces the previous connection, and with several podcasts it switches the one you publish to.', 'connector-for-vozcaster' ); ?>
+					<?php esc_html_e( 'Your account is already connected to VozCaster. You can also connect from another place (the app, Telegram, another phone): each connection works on its own. With several podcasts, connecting again switches the one you publish to.', 'connector-for-vozcaster' ); ?>
 				</p></div>
 			<?php endif; ?>
 
@@ -261,7 +261,7 @@ class VPConn_Pairing {
 		}
 
 		if ( VPConn_Auth::has_token( $user_id ) ) {
-			echo '<p><strong>' . esc_html__( 'Your account is already connected to the bot.', 'connector-for-vozcaster' ) . '</strong> ' . esc_html__( 'Connecting again replaces the previous connection.', 'connector-for-vozcaster' ) . '</p>';
+			echo '<p><strong>' . esc_html__( 'Your account is already connected to the bot.', 'connector-for-vozcaster' ) . '</strong> ' . esc_html__( 'You can also connect from another place (the app, Telegram, another phone): each connection works on its own.', 'connector-for-vozcaster' ) . '</p>';
 		}
 
 		if ( null === self::get_encoded_host() ) {
@@ -528,7 +528,7 @@ class VPConn_Pairing {
 		VPConn_Relay::forget_pending_code( $resolved['user']->ID, $code );
 
 		$data          = self::describe( $resolved['user'], $resolved['feed'] );
-		$data['token'] = VPConn_Auth::generate_user_token( $resolved['user']->ID );
+		$data['token'] = VPConn_Auth::generate_user_token( $resolved['user']->ID, VPConn_Auth::client_key( (int) $request->get_param( 'telegram_id' ) ) );
 
 		$response = new WP_REST_Response( $data );
 		$response->header( 'Cache-Control', 'no-store, no-cache' );

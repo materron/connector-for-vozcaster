@@ -149,7 +149,7 @@ class VPConn_Relay {
 		if ( ! $entry || (int) ( $entry['expires'] ?? 0 ) < time() ) {
 			return false;
 		}
-		update_user_meta( $user_id, VPConn_Auth::USER_META_TOKEN_HASH, $hash );
+		VPConn_Auth::add_token_hash( $user_id, $hash, 'relay' );
 		delete_user_meta( $user_id, self::META_PENDING );
 		delete_user_meta( $user_id, self::META_PENDING_INFO );
 		return $user_id;
