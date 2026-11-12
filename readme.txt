@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.20.0
+Stable tag: 1.21.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -237,6 +237,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.21.0 =
+* New: users can see where they are connected (Telegram, the app…), when each connection was made and last used, and disconnect any of them, or all at once, from VozCaster → Connect or the connect block. Useful after losing a phone, without asking the administrator.
 
 = 1.20.0 =
 * New: a user can be connected from several places at once, for example the VozCaster app and Telegram, or two phones. Each one has its own connection, and connecting again from one of them no longer disconnects the others. Up to 5 connections per user; Revoke still removes them all.

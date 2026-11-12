@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.20.0\n"
+"Project-Id-Version: Connector for VozCaster 1.21.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-12T09:18:20+00:00\n"
+"POT-Creation-Date: 2026-11-12T09:58:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: connector-for-vozcaster\n"
@@ -92,7 +92,8 @@ msgid "Try it free"
 msgstr ""
 
 #: includes/class-ai-notice.php:143
-#: includes/class-pairing.php:108
+#: includes/class-pairing.php:109
+#: includes/class-pairing.php:245
 #: includes/class-settings.php:81
 #: includes/class-settings.php:82
 msgid "VozCaster"
@@ -242,7 +243,7 @@ msgstr ""
 
 #: includes/class-assistant.php:491
 #: includes/class-assistant.php:521
-#: includes/class-pairing.php:401
+#: includes/class-pairing.php:495
 msgid "Getting started"
 msgstr ""
 
@@ -470,10 +471,10 @@ msgid "Back"
 msgstr ""
 
 #: includes/class-assistant.php:760
-#: includes/class-auth.php:562
+#: includes/class-auth.php:664
 #: includes/class-guided-setup.php:102
 #: includes/class-guided-setup.php:103
-#: includes/class-pairing.php:118
+#: includes/class-pairing.php:119
 msgid "Connect"
 msgstr ""
 
@@ -490,14 +491,14 @@ msgid "Your account cannot send episodes to a podcast of this site yet. Ask the 
 msgstr ""
 
 #: includes/class-assistant.php:770
-#: includes/class-pairing.php:208
+#: includes/class-pairing.php:210
 msgid "The address of this site cannot be passed to the bot automatically. Open the bot, send /conectar and paste this address:"
 msgstr ""
 
 #: includes/class-assistant.php:772
 #: includes/class-assistant.php:810
-#: includes/class-pairing.php:213
-#: includes/class-pairing.php:273
+#: includes/class-pairing.php:215
+#: includes/class-pairing.php:367
 msgid "Open the bot in Telegram"
 msgstr ""
 
@@ -510,8 +511,8 @@ msgid "Send voice notes to the VozCaster bot. Press Start and confirm there."
 msgstr ""
 
 #: includes/class-assistant.php:778
-#: includes/class-pairing.php:193
-#: includes/class-pairing.php:290
+#: includes/class-pairing.php:195
+#: includes/class-pairing.php:384
 msgid "Connect in Telegram"
 msgstr ""
 
@@ -524,8 +525,8 @@ msgid "Record in the browser of your phone or computer, no Telegram needed."
 msgstr ""
 
 #: includes/class-assistant.php:783
-#: includes/class-pairing.php:192
-#: includes/class-pairing.php:285
+#: includes/class-pairing.php:194
+#: includes/class-pairing.php:379
 msgid "Connect in the app"
 msgstr ""
 
@@ -588,7 +589,7 @@ msgid "Your first episode is out: time to send your podcast to the platforms."
 msgstr ""
 
 #: includes/class-assistant.php:892
-#: includes/class-pairing.php:405
+#: includes/class-pairing.php:499
 msgid "Dismiss"
 msgstr ""
 
@@ -596,111 +597,111 @@ msgstr ""
 msgid "The VozCaster token can only be used with the VozCaster connector routes."
 msgstr ""
 
-#: includes/class-auth.php:378
+#: includes/class-auth.php:480
 msgid "Invalid parameters. If you use the VozCaster bot or app, try connecting again."
 msgstr ""
 
-#: includes/class-auth.php:379
+#: includes/class-auth.php:481
 msgid "Error"
 msgstr ""
 
-#: includes/class-auth.php:409
+#: includes/class-auth.php:511
 msgid "Invalid parameters."
 msgstr ""
 
-#: includes/class-auth.php:416
+#: includes/class-auth.php:518
 msgid "This connection was started by someone else."
 msgstr ""
 
-#: includes/class-auth.php:458
-#: includes/class-auth.php:501
+#: includes/class-auth.php:560
+#: includes/class-auth.php:603
 msgid "Link expired"
 msgstr ""
 
-#: includes/class-auth.php:459
+#: includes/class-auth.php:561
 msgid "This authorization link has expired (10 minutes)."
 msgstr ""
 
 #. translators: %s: the /conectar bot command, wrapped in a <code> tag.
-#: includes/class-auth.php:462
+#: includes/class-auth.php:564
 #, php-format
 msgid "Go back to the bot and use %s again."
 msgstr ""
 
-#: includes/class-auth.php:468
-#: includes/class-auth.php:507
+#: includes/class-auth.php:570
+#: includes/class-auth.php:609
 msgid "VozCaster — Link expired"
 msgstr ""
 
-#: includes/class-auth.php:475
+#: includes/class-auth.php:577
 msgid "Not authorized"
 msgstr ""
 
 #. translators: %s: the WordPress username, wrapped in a <strong> tag.
-#: includes/class-auth.php:478
+#: includes/class-auth.php:580
 #, php-format
 msgid "The role of %s is not authorized to publish from VozCaster."
 msgstr ""
 
 #. translators: %s: the plugin settings location, wrapped in an <em> tag.
-#: includes/class-auth.php:483
+#: includes/class-auth.php:585
 #, php-format
 msgid "Ask the administrator to authorize your role under %s."
 msgstr ""
 
-#: includes/class-auth.php:484
+#: includes/class-auth.php:586
 msgid "VozCaster → Access"
 msgstr ""
 
-#: includes/class-auth.php:489
+#: includes/class-auth.php:591
 msgid "VozCaster — Not authorized"
 msgstr ""
 
-#: includes/class-auth.php:495
+#: includes/class-auth.php:597
 msgid "VozCaster — Confirm the connection"
 msgstr ""
 
-#: includes/class-auth.php:502
+#: includes/class-auth.php:604
 msgid "This confirmation could not be verified. Open the link again from the bot or the app."
 msgstr ""
 
-#: includes/class-auth.php:528
+#: includes/class-auth.php:630
 msgid "Connected!"
 msgstr ""
 
 #. translators: %s: the user's display name, wrapped in a <strong> tag.
-#: includes/class-auth.php:531
+#: includes/class-auth.php:633
 #, php-format
 msgid "Hello, %s."
 msgstr ""
 
-#: includes/class-auth.php:534
+#: includes/class-auth.php:636
 msgid "You can now go back to the Telegram bot and continue."
 msgstr ""
 
-#: includes/class-auth.php:538
+#: includes/class-auth.php:640
 msgid "VozCaster — Connection completed"
 msgstr ""
 
-#: includes/class-auth.php:548
+#: includes/class-auth.php:650
 msgid "Connect VozCaster to this site?"
 msgstr ""
 
 #. translators: 1: the user's display name, 2: the site's domain. Both wrapped in <strong> tags.
-#: includes/class-auth.php:551
+#: includes/class-auth.php:653
 #, php-format
 msgid "VozCaster will be able to publish podcast episodes as %1$s on %2$s."
 msgstr ""
 
-#: includes/class-auth.php:556
+#: includes/class-auth.php:658
 msgid "Only continue if you have just asked for this connection yourself, from the VozCaster bot or app. If someone sent you this link, close this page."
 msgstr ""
 
-#: includes/class-auth.php:563
+#: includes/class-auth.php:665
 msgid "Cancel"
 msgstr ""
 
-#: includes/class-auth.php:586
+#: includes/class-auth.php:688
 msgid "Back to the Telegram bot"
 msgstr ""
 
@@ -961,7 +962,7 @@ msgid "Log in with your account on this site to use VozCaster."
 msgstr ""
 
 #: includes/class-frontend.php:127
-#: includes/class-pairing.php:241
+#: includes/class-pairing.php:334
 msgid "Log in"
 msgstr ""
 
@@ -1164,87 +1165,143 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
-#: includes/class-pairing.php:107
-#: includes/class-pairing.php:117
-#: includes/class-pairing.php:159
-#: includes/class-pairing.php:403
+#: includes/class-pairing.php:108
+#: includes/class-pairing.php:118
+#: includes/class-pairing.php:160
+#: includes/class-pairing.php:497
 #: blocks/index.js:24
 msgid "Connect with VozCaster"
 msgstr ""
 
-#: includes/class-pairing.php:161
+#: includes/class-pairing.php:162
 msgid "You talk, VozCaster does the rest: it cleans your audio, writes the post, makes the cover and publishes the episode on this site. Connect your account once, then record in the VozCaster app or in Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:166
+#: includes/class-pairing.php:167
 msgid "PowerPress is not active. Install and activate it before connecting, so episodes reach your podcast feed."
 msgstr ""
 
-#: includes/class-pairing.php:172
+#: includes/class-pairing.php:173
 msgid "Your account is already connected to VozCaster. You can also connect from another place (the app, Telegram, another phone): each connection works on its own. With several podcasts, connecting again switches the one you publish to."
 msgstr ""
 
-#: includes/class-pairing.php:204
+#: includes/class-pairing.php:206
 msgid "The app opens in a new tab, ready to record from your phone or computer; you can add it to your home screen. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
 msgstr ""
 
-#: includes/class-pairing.php:239
+#: includes/class-pairing.php:242
+msgid "Telegram (and the app opened from it)"
+msgstr ""
+
+#: includes/class-pairing.php:243
+msgid "VozCaster app"
+msgstr ""
+
+#: includes/class-pairing.php:244
+msgid "Connected while the hosting blocked VozCaster"
+msgstr ""
+
+#: includes/class-pairing.php:246
+msgid "Earlier connection"
+msgstr ""
+
+#: includes/class-pairing.php:261
+msgid "Your connections"
+msgstr ""
+
+#. translators: %s: date.
+#: includes/class-pairing.php:267
+#, php-format
+msgid "connected on %s"
+msgstr ""
+
+#: includes/class-pairing.php:269
+msgid "connected before version 1.20"
+msgstr ""
+
+#. translators: %s: date.
+#: includes/class-pairing.php:273
+#, php-format
+msgid "last used on %s"
+msgstr ""
+
+#: includes/class-pairing.php:279
+msgid "Disconnect"
+msgstr ""
+
+#: includes/class-pairing.php:279
+msgid "Disconnect? VozCaster will no longer publish from there until you connect again."
+msgstr ""
+
+#: includes/class-pairing.php:284
+msgid "Disconnect everywhere"
+msgstr ""
+
+#: includes/class-pairing.php:284
+msgid "Disconnect everywhere? VozCaster will no longer publish as you until you connect again."
+msgstr ""
+
+#: includes/class-pairing.php:299
+msgid "You need to log in."
+msgstr ""
+
+#: includes/class-pairing.php:332
 msgid "Log in with your account on this site to connect it with the VozCaster bot and publish podcast episodes from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:249
+#: includes/class-pairing.php:342
 msgid "Your account is not authorized to publish from VozCaster yet. Ask the site administrator for access."
 msgstr ""
 
-#: includes/class-pairing.php:259
+#: includes/class-pairing.php:352
 msgid "Your account cannot send episodes to any podcast of this site yet. Ask the site administrator for access."
 msgstr ""
 
-#: includes/class-pairing.php:264
+#: includes/class-pairing.php:357
 msgid "Your account is already connected to the bot."
 msgstr ""
 
-#: includes/class-pairing.php:264
+#: includes/class-pairing.php:357
 msgid "You can also connect from another place (the app, Telegram, another phone): each connection works on its own."
 msgstr ""
 
-#: includes/class-pairing.php:270
+#: includes/class-pairing.php:364
 msgid "Open the bot, send /conectar and paste this address:"
 msgstr ""
 
 #. translators: %s: podcast name.
-#: includes/class-pairing.php:284
+#: includes/class-pairing.php:378
 #, php-format
 msgid "Connect «%s» in the app"
 msgstr ""
 
 #. translators: %s: podcast name.
-#: includes/class-pairing.php:289
+#: includes/class-pairing.php:383
 #, php-format
 msgid "Connect «%s» in Telegram"
 msgstr ""
 
-#: includes/class-pairing.php:303
+#: includes/class-pairing.php:397
 msgid "The app opens in a new tab, ready to record from your phone or computer. Telegram opens the bot instead: press Start and confirm there. Each link works once and expires in 15 minutes."
 msgstr ""
 
-#: includes/class-pairing.php:316
+#: includes/class-pairing.php:410
 msgid "Your role is not authorized to publish from VozCaster."
 msgstr ""
 
-#: includes/class-pairing.php:392
+#: includes/class-pairing.php:486
 msgid "Set up your podcast in a few minutes."
 msgstr ""
 
-#: includes/class-pairing.php:393
+#: includes/class-pairing.php:487
 msgid "A short guide takes you through the essentials and connects your account with VozCaster."
 msgstr ""
 
-#: includes/class-pairing.php:395
+#: includes/class-pairing.php:489
 msgid "Publish your podcast from Telegram."
 msgstr ""
 
-#: includes/class-pairing.php:396
+#: includes/class-pairing.php:490
 msgid "Connect your account with the VozCaster bot in one click."
 msgstr ""
 
