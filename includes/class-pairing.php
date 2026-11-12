@@ -229,6 +229,10 @@ class VPConn_Pairing {
 	 * @return string HTML, empty when the user has no connection.
 	 */
 	public static function render_connections( int $user_id ): string {
+		// Only ever the viewer's own connections.
+		if ( get_current_user_id() !== $user_id ) {
+			return '';
+		}
 		$connections = VPConn_Auth::get_connections( $user_id );
 		if ( ! $connections ) {
 			return '';
@@ -258,10 +262,12 @@ class VPConn_Pairing {
 		$html .= '<ul style="list-style:none;margin:0;padding:0;">';
 		foreach ( $connections as $connection ) {
 			$details = [];
-			$details[] = $connection['created']
+			if ( $connection['created'] ) {
 				/* translators: %s: date. */
-				? sprintf( __( 'connected on %s', 'connector-for-vozcaster' ), date_i18n( $format, $connection['created'] ) )
-				: __( 'connected before version 1.20', 'connector-for-vozcaster' );
+				$details[] = sprintf( __( 'connected on %s', 'connector-for-vozcaster' ), date_i18n( $format, $connection['created'] ) );
+			} else {
+				$details[] = __( 'connected before version 1.20', 'connector-for-vozcaster' );
+			}
 			if ( $connection['last_used'] ) {
 				/* translators: %s: date. */
 				$details[] = sprintf( __( 'last used on %s', 'connector-for-vozcaster' ), date_i18n( $format, $connection['last_used'] ) );

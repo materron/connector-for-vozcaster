@@ -165,17 +165,26 @@ class VPConn_Auth {
 	 * they no longer use.
 	 */
 	private static function touch_token( int $user_id, string $hash ): void {
-		$clients = self::get_token_clients( $user_id );
-		foreach ( $clients as $key => $entry ) {
-			if ( $entry['hash'] !== $hash ) {
-				continue;
+		$clients = get_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, true );
+		$key     = null;
+		foreach ( is_array( $clients ) ? $clients : [] as $k => $entry ) {
+			if ( is_array( $entry ) && ( $entry['hash'] ?? '' ) === $hash ) {
+				$key = $k;
+				break;
 			}
-			if ( (int) ( $entry['last_used'] ?? 0 ) < time() - HOUR_IN_SECONDS ) {
-				$clients[ $key ]['last_used'] = time();
-				update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $clients );
-			}
+		}
+		if ( null === $key || (int) ( $clients[ $key ]['last_used'] ?? 0 ) >= time() - HOUR_IN_SECONDS ) {
 			return;
 		}
+		// Re-read just before writing, so a connection added or removed by a
+		// concurrent request is not overwritten; only this entry's date changes.
+		wp_cache_delete( $user_id, 'user_meta' );
+		$fresh = get_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, true );
+		if ( ! is_array( $fresh ) || ( $fresh[ $key ]['hash'] ?? '' ) !== $hash ) {
+			return;
+		}
+		$fresh[ $key ]['last_used'] = time();
+		update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $fresh );
 	}
 
 	/**
@@ -326,7 +335,8 @@ class VPConn_Auth {
 		if ( $clients ) {
 			update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $clients );
 		} else {
-			delete_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS );
+			// The last one: clear everything, including unused relay connections.
+			self::revoke_user_token( $user_id );
 		}
 		return true;
 	}
