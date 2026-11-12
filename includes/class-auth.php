@@ -152,7 +152,30 @@ class VPConn_Auth {
 			return $promoted && self::is_user_allowed( $promoted ) ? $promoted : false;
 		}
 		$user_id = (int) $ids[0];
-		return self::is_user_allowed( $user_id ) ? $user_id : false;
+		if ( ! self::is_user_allowed( $user_id ) ) {
+			return false;
+		}
+		self::touch_token( $user_id, self::hash_token( $token ) );
+		return $user_id;
+	}
+
+	/**
+	 * Notes when a token was last used (at most once an hour, to avoid a
+	 * database write on every request), so the user can spot connections
+	 * they no longer use.
+	 */
+	private static function touch_token( int $user_id, string $hash ): void {
+		$clients = self::get_token_clients( $user_id );
+		foreach ( $clients as $key => $entry ) {
+			if ( $entry['hash'] !== $hash ) {
+				continue;
+			}
+			if ( (int) ( $entry['last_used'] ?? 0 ) < time() - HOUR_IN_SECONDS ) {
+				$clients[ $key ]['last_used'] = time();
+				update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $clients );
+			}
+			return;
+		}
 	}
 
 	/**
@@ -257,6 +280,55 @@ class VPConn_Auth {
 	 */
 	public static function client_key( int $account_id ): string {
 		return 0 === $account_id ? '' : 'account:' . $account_id;
+	}
+
+	/**
+	 * The user's connections, newest first, for the user to review them.
+	 * "kind" is telegram (a Telegram account, also when the app was opened
+	 * from it), app (an app-only account), relay, unknown or legacy.
+	 *
+	 * @return array<int, array{key: string, kind: string, created: int, last_used: int}>
+	 */
+	public static function get_connections( int $user_id ): array {
+		$list = [];
+		foreach ( self::get_token_clients( $user_id ) as $key => $entry ) {
+			$key = (string) $key;
+			if ( str_starts_with( $key, 'account:' ) ) {
+				$kind = (int) substr( $key, 8 ) < 0 ? 'app' : 'telegram';
+			} elseif ( str_starts_with( $key, 'legacy-' ) ) {
+				$kind = 'legacy';
+			} else {
+				$kind = in_array( $key, [ 'relay', 'unknown' ], true ) ? $key : 'unknown';
+			}
+			$list[] = [
+				'key'       => $key,
+				'kind'      => $kind,
+				'created'   => (int) ( $entry['created'] ?? 0 ),
+				'last_used' => (int) ( $entry['last_used'] ?? 0 ),
+			];
+		}
+		usort( $list, static fn( $a, $b ) => $b['created'] <=> $a['created'] );
+		return $list;
+	}
+
+	/**
+	 * Closes one of the user's connections. Only that token stops working.
+	 *
+	 * @return bool Whether the connection existed.
+	 */
+	public static function revoke_connection( int $user_id, string $key ): bool {
+		$clients = self::get_token_clients( $user_id );
+		if ( '' === $key || ! isset( $clients[ $key ] ) ) {
+			return false;
+		}
+		self::delete_token_hash( $user_id, $clients[ $key ]['hash'] );
+		unset( $clients[ $key ] );
+		if ( $clients ) {
+			update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $clients );
+		} else {
+			delete_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS );
+		}
+		return true;
 	}
 
 	/**

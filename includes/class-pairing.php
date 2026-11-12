@@ -33,6 +33,7 @@ class VPConn_Pairing {
 		// Before VPConn_Settings (priority 10), which hangs its pages from this menu.
 		add_action( 'admin_menu', [ $this, 'add_page' ], 9 );
 		add_action( 'admin_post_vpconn_pair', [ $this, 'handle_pair' ] );
+		add_action( 'admin_post_vpconn_disconnect', [ $this, 'handle_disconnect' ] );
 		add_action( 'admin_init', [ $this, 'handle_dismiss' ] );
 		add_action( 'admin_notices', [ $this, 'show_connect_notice' ] );
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
@@ -171,6 +172,7 @@ class VPConn_Pairing {
 				<div class="notice notice-success inline"><p>
 					<?php esc_html_e( 'Your account is already connected to VozCaster. You can also connect from another place (the app, Telegram, another phone): each connection works on its own. With several podcasts, connecting again switches the one you publish to.', 'connector-for-vozcaster' ); ?>
 				</p></div>
+				<?php echo self::render_connections( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside. ?>
 			<?php endif; ?>
 
 			<?php if ( null !== $host ) : ?>
@@ -219,6 +221,91 @@ class VPConn_Pairing {
 	}
 
 	/**
+	 * The user's own connections, each with a "Disconnect" button, so they can
+	 * close one they no longer use (a lost phone, for instance) without asking
+	 * the administrator. Works in wp-admin and on the front end.
+	 *
+	 * @param int $user_id User ID (always the current user).
+	 * @return string HTML, empty when the user has no connection.
+	 */
+	public static function render_connections( int $user_id ): string {
+		$connections = VPConn_Auth::get_connections( $user_id );
+		if ( ! $connections ) {
+			return '';
+		}
+
+		$labels = [
+			'telegram' => __( 'Telegram (and the app opened from it)', 'connector-for-vozcaster' ),
+			'app'      => __( 'VozCaster app', 'connector-for-vozcaster' ),
+			'relay'    => __( 'Connected while the hosting blocked VozCaster', 'connector-for-vozcaster' ),
+			'unknown'  => __( 'VozCaster', 'connector-for-vozcaster' ),
+			'legacy'   => __( 'Earlier connection', 'connector-for-vozcaster' ),
+		];
+		$format = get_option( 'date_format' );
+		$button = static function ( string $key, string $label, string $confirm ): string {
+			return sprintf(
+				'<form method="post" action="%1$s" style="display:inline;margin:0;" onsubmit="return confirm(\'%2$s\');">%3$s<input type="hidden" name="action" value="vpconn_disconnect"><input type="hidden" name="connection" value="%4$s"><button type="submit" class="button wp-element-button vpconn-connections__close">%5$s</button></form>',
+				esc_url( admin_url( 'admin-post.php' ) ),
+				esc_js( $confirm ),
+				wp_nonce_field( 'vpconn_disconnect', '_wpnonce', true, false ),
+				esc_attr( $key ),
+				esc_html( $label )
+			);
+		};
+
+		$html  = '<div class="vpconn-connections">';
+		$html .= '<h3>' . esc_html__( 'Your connections', 'connector-for-vozcaster' ) . '</h3>';
+		$html .= '<ul style="list-style:none;margin:0;padding:0;">';
+		foreach ( $connections as $connection ) {
+			$details = [];
+			$details[] = $connection['created']
+				/* translators: %s: date. */
+				? sprintf( __( 'connected on %s', 'connector-for-vozcaster' ), date_i18n( $format, $connection['created'] ) )
+				: __( 'connected before version 1.20', 'connector-for-vozcaster' );
+			if ( $connection['last_used'] ) {
+				/* translators: %s: date. */
+				$details[] = sprintf( __( 'last used on %s', 'connector-for-vozcaster' ), date_i18n( $format, $connection['last_used'] ) );
+			}
+			$html .= sprintf(
+				'<li style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(0,0,0,.08);"><span><strong>%1$s</strong> <small>· %2$s</small></span>%3$s</li>',
+				esc_html( $labels[ $connection['kind'] ] ?? $labels['unknown'] ),
+				esc_html( implode( ' · ', $details ) ),
+				$button( $connection['key'], __( 'Disconnect', 'connector-for-vozcaster' ), __( 'Disconnect? VozCaster will no longer publish from there until you connect again.', 'connector-for-vozcaster' ) )
+			);
+		}
+		$html .= '</ul>';
+		if ( count( $connections ) > 1 ) {
+			$html .= '<p>' . $button( 'all', __( 'Disconnect everywhere', 'connector-for-vozcaster' ), __( 'Disconnect everywhere? VozCaster will no longer publish as you until you connect again.', 'connector-for-vozcaster' ) ) . '</p>';
+		}
+		$html .= '</div>';
+		return $html;
+	}
+
+	/**
+	 * admin-post.php?action=vpconn_disconnect — closes one of the current
+	 * user's connections, or all of them. A user can only close their own.
+	 */
+	public function handle_disconnect(): void {
+		check_admin_referer( 'vpconn_disconnect' );
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			wp_die( esc_html__( 'You need to log in.', 'connector-for-vozcaster' ), '', [ 'response' => 403 ] );
+		}
+
+		$key = sanitize_text_field( wp_unslash( $_POST['connection'] ?? '' ) );
+		if ( 'all' === $key ) {
+			VPConn_Auth::revoke_user_token( $user_id );
+		} else {
+			VPConn_Auth::revoke_connection( $user_id, $key );
+		}
+
+		$back = wp_get_referer();
+		wp_safe_redirect( $back ? $back : self::get_page_url() );
+		exit;
+	}
+
+	/**
 	 * [vozcaster_connect] — the "Connect in Telegram" buttons on any page of the
 	 * site, so authorized users (e.g. teachers with a custom role) can connect
 	 * without ever opening wp-admin.
@@ -262,6 +349,7 @@ class VPConn_Pairing {
 
 		if ( VPConn_Auth::has_token( $user_id ) ) {
 			echo '<p><strong>' . esc_html__( 'Your account is already connected to the bot.', 'connector-for-vozcaster' ) . '</strong> ' . esc_html__( 'You can also connect from another place (the app, Telegram, another phone): each connection works on its own.', 'connector-for-vozcaster' ) . '</p>';
+			echo self::render_connections( $user_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped inside.
 		}
 
 		if ( null === self::get_encoded_host() ) {
