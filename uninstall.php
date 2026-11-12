@@ -11,6 +11,7 @@ delete_option( 'vpconn_authorized_roles' );
 delete_option( 'vpconn_allowed_wp_users' );
 delete_option( 'vpconn_feed_permissions' );
 delete_metadata( 'user', 0, 'vpconn_bot_token_hash', '', true );
+delete_metadata( 'user', 0, 'vpconn_bot_token_clients', '', true );
 delete_metadata( 'user', 0, 'vpconn_bot_token', '', true );
 delete_metadata( 'user', 0, 'vpconn_connect_notice_dismissed', '', true );
 delete_metadata( 'user', 0, 'vpconn_pending_token_hash', '', true );

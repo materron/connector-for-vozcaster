@@ -1139,7 +1139,15 @@ class VPConn_Settings {
 								<td><?php echo esc_html( $roles_display ); ?></td>
 								<td>
 									<?php if ( VPConn_Auth::is_user_allowed( $wp_user->ID ) ) : ?>
-										<span style="color:#46b450;">&#10004; <?php esc_html_e( 'Connected', 'connector-for-vozcaster' ); ?></span>
+										<span style="color:#46b450;">&#10004; <?php
+										$places = VPConn_Auth::count_tokens( $wp_user->ID );
+										echo esc_html(
+											$places > 1
+												/* translators: %d: number of places (app, Telegram, other phones) the user is connected from. */
+												? sprintf( _n( 'Connected from %d place', 'Connected from %d places', $places, 'connector-for-vozcaster' ), $places )
+												: __( 'Connected', 'connector-for-vozcaster' )
+										);
+										?></span>
 									<?php else : ?>
 										<span style="color:#dc3232;">&#10008; <?php esc_html_e( 'Role not authorized', 'connector-for-vozcaster' ); ?></span>
 									<?php endif; ?>

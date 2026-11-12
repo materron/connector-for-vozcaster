@@ -19,7 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class VPConn_Auth {
 
 	const OPTION_AUTHORIZED_ROLES     = 'vpconn_authorized_roles';
+	// One row per active token (several rows per user since 1.20.0).
 	const USER_META_TOKEN_HASH        = 'vpconn_bot_token_hash';
+	// Which VozCaster account each token belongs to: client key => [hash, created].
+	const USER_META_TOKEN_CLIENTS     = 'vpconn_bot_token_clients';
+	// Tokens a user can hold at once; the oldest goes when a new one exceeds it.
+	const MAX_TOKENS_PER_USER         = 5;
 	const STATE_PATTERN               = '/^[a-f0-9]{32}$/';
 	// SHA-256 (hex) of the secret that only the client starting the web flow holds.
 	const CHALLENGE_PATTERN           = '/^[a-f0-9]{64}$/';
@@ -152,41 +157,121 @@ class VPConn_Auth {
 
 	/**
 	 * Generates a random token for the user and stores its hash.
-	 * Any previous token of that user stops working (re-authentication).
 	 *
-	 * @return string Plain-text token, handed to the bot once.
+	 * Since 1.20.0 a user can be connected from several VozCaster accounts at
+	 * once (the app and Telegram, two phones…): each account ($client) has its
+	 * own token. Connecting again from the same account replaces only that
+	 * account's token; the others keep working. At most MAX_TOKENS_PER_USER
+	 * tokens are kept: beyond that, the oldest stops working.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $client  Client key from client_key(); '' when unknown.
+	 * @return string Plain-text token, handed to the client once.
 	 */
-	public static function generate_user_token( int $user_id ): string {
+	public static function generate_user_token( int $user_id, string $client = '' ): string {
 		$token = bin2hex( random_bytes( 32 ) );
-		update_user_meta( $user_id, self::USER_META_TOKEN_HASH, self::hash_token( $token ) );
+		self::add_token_hash( $user_id, self::hash_token( $token ), $client );
 		return $token;
 	}
 
 	/**
-	 * Revokes the user's token: the bot can no longer publish with it.
-	 * The user has to connect again.
+	 * Stores a token hash for a client, replacing that client's previous one.
+	 *
+	 * @param int    $user_id User ID.
+	 * @param string $hash    SHA-256 hash of the token.
+	 * @param string $client  Client key; '' when unknown.
+	 */
+	public static function add_token_hash( int $user_id, string $hash, string $client = '' ): void {
+		$client  = '' === $client ? 'unknown' : $client;
+		$clients = self::get_token_clients( $user_id );
+
+		if ( isset( $clients[ $client ] ) ) {
+			delete_user_meta( $user_id, self::USER_META_TOKEN_HASH, $clients[ $client ]['hash'] );
+			unset( $clients[ $client ] );
+		}
+
+		add_user_meta( $user_id, self::USER_META_TOKEN_HASH, $hash );
+		$clients[ $client ] = [
+			'hash'    => $hash,
+			'created' => time(),
+		];
+
+		// Oldest first; drop what exceeds the limit.
+		uasort( $clients, static fn( $a, $b ) => $a['created'] <=> $b['created'] );
+		while ( count( $clients ) > self::MAX_TOKENS_PER_USER ) {
+			$oldest = array_key_first( $clients );
+			delete_user_meta( $user_id, self::USER_META_TOKEN_HASH, $clients[ $oldest ]['hash'] );
+			unset( $clients[ $oldest ] );
+		}
+
+		update_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, $clients );
+	}
+
+	/**
+	 * The user's tokens by client. Hash rows with no entry (tokens issued
+	 * before 1.20.0) are listed as "legacy", so they count towards the limit
+	 * and are dropped first when it is reached.
+	 *
+	 * @return array<string, array{hash: string, created: int}>
+	 */
+	private static function get_token_clients( int $user_id ): array {
+		$clients = get_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS, true );
+		$clients = is_array( $clients ) ? $clients : [];
+		$hashes  = array_map( 'strval', (array) get_user_meta( $user_id, self::USER_META_TOKEN_HASH ) );
+
+		// Keep only entries whose token still exists.
+		$clients = array_filter(
+			$clients,
+			static fn( $entry ) => is_array( $entry ) && in_array( (string) ( $entry['hash'] ?? '' ), $hashes, true )
+		);
+		$known = array_column( $clients, 'hash' );
+		foreach ( array_values( array_diff( $hashes, $known ) ) as $i => $hash ) {
+			$clients[ 'legacy-' . $i ] = [
+				'hash'    => $hash,
+				'created' => 0,
+			];
+		}
+		return $clients;
+	}
+
+	/**
+	 * Client key for a VozCaster account id (Telegram users are positive,
+	 * app-only accounts negative; 0 when the client did not say).
+	 */
+	public static function client_key( int $account_id ): string {
+		return 0 === $account_id ? '' : 'account:' . $account_id;
+	}
+
+	/**
+	 * Revokes all the user's tokens: VozCaster can no longer publish as them
+	 * from anywhere. The user has to connect again.
 	 */
 	public static function revoke_user_token( int $user_id ): void {
 		delete_user_meta( $user_id, self::USER_META_TOKEN_HASH );
+		delete_user_meta( $user_id, self::USER_META_TOKEN_CLIENTS );
 	}
 
 	public static function has_token( int $user_id ): bool {
 		return (bool) get_user_meta( $user_id, self::USER_META_TOKEN_HASH, true );
 	}
 
+	/** Number of places (VozCaster accounts) the user is connected from. */
+	public static function count_tokens( int $user_id ): int {
+		return count( (array) get_user_meta( $user_id, self::USER_META_TOKEN_HASH ) );
+	}
+
 	/** @return int[] IDs of the users that have connected the bot. */
 	public static function get_connected_user_ids(): array {
-		return array_map(
-			'intval',
-			get_users(
-				[
-					'meta_key'    => self::USER_META_TOKEN_HASH, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Admin screen only.
-					'fields'      => 'ID',
-					'orderby'     => 'display_name',
-					'count_total' => false,
-				]
-			)
+		$ids = get_users(
+			[
+				'meta_key'    => self::USER_META_TOKEN_HASH, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Admin screen only.
+				'fields'      => 'ID',
+				'orderby'     => 'display_name',
+				'count_total' => false,
+			]
 		);
+		// One row per token: a user with several tokens must appear once.
+		return array_values( array_unique( array_map( 'intval', $ids ) ) );
 	}
 
 	private static function hash_token( string $token ): string {
@@ -425,7 +510,7 @@ class VPConn_Auth {
 		// Single use: the pending flow is consumed before the token exists.
 		delete_transient( 'vpconn_pending_' . $state );
 
-		$token = self::generate_user_token( $user->ID );
+		$token = self::generate_user_token( $user->ID, self::client_key( (int) $pending['telegram_id'] ) );
 
 		// Kept for the client that started the flow to collect via /auth/estado (TTL: 10 min).
 		set_transient(
