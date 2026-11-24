@@ -32,4 +32,31 @@
 
 		frame.open();
 	};
+
+	/**
+	 * Opens the media picker to choose the face photo of a cover character.
+	 * It only fills the row: the form is saved with its own button.
+	 *
+	 * @param {number} index Row of the characters table.
+	 */
+	window.vpconnPickFace = function ( index ) {
+		var frame = wp.media( {
+			title: vpconnAdmin.selectFace,
+			button: { text: vpconnAdmin.select },
+			library: { type: 'image' },
+			multiple: false
+		} );
+
+		frame.on( 'select', function () {
+			var attachment = frame.state().get( 'selection' ).first().toJSON();
+			var sizes = attachment.sizes || {};
+			var url = ( sizes.thumbnail || sizes.medium || attachment ).url;
+			var img = document.getElementById( 'vpconn_face_img_' + index );
+			document.getElementById( 'vpconn_face_id_' + index ).value = attachment.id;
+			img.src = url;
+			img.style.display = '';
+		} );
+
+		frame.open();
+	};
 }() );

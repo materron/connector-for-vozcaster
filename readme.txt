@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.21.0
+Stable tag: 1.22.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ Recording an episode takes minutes. Producing it takes hours: cleaning the audio
 * **The sound**: trims silences, removes noise, levels the voice and mixes your intro and outro, with the music fading under the voice. The same, every time.
 * **Several audios, one episode**: record an interview or a show in parts and VozCaster joins them, with an optional separator sound between them.
 * **The words** (Pro): transcribes what you said and writes a title, an excerpt, a full article and the chapters with their times, in the language you speak and in your podcast's own voice if you describe it.
-* **The cover** (Pro): generates a featured image from what the episode is about, with the element you choose for your show and the style of a reference image, if you set them.
+* **The cover** (Pro): generates a featured image from what the episode is about, with the element you choose for your show, the style of a reference image and the people of your show with their own faces, if you set them.
 * **The publishing**: uploads the audio, creates the post with PowerPress, numbers the episode and the season, and sets the featured image and the Apple Podcasts artwork. Draft or live: you decide.
 * **The platforms**: checks that your feed has everything Spotify, Apple Podcasts and the rest ask for, and walks you through submitting it to each one.
 * **Blog posts too** (Pro): dictate or jot down an idea and get a written post, without audio.
@@ -53,7 +53,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 = What the plugin adds to WordPress =
 
 * A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
-* **Per-podcast settings**: title prefix or a title pattern with placeholders (E{episode}S{season} ({title})), season, how your podcast writes (a style guide for the AI), intro, outro and separator sound with their mixing times, post signature, a fixed element and a style reference image for the covers, and category mapping.
+* **Per-podcast settings**: title prefix or a title pattern with placeholders (E{episode}S{season} ({title})), season, how your podcast writes (a style guide for the AI), intro, outro and separator sound with their mixing times, post signature, a fixed element, a style reference image and characters (name and face photo) for the covers, and category mapping.
 * **Chapters**: listed at the end of the post and added to the feed as `<podcast:chapters>`, so podcast apps show them.
 * **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
 * **Who publishes where**: a table of roles × podcasts where each cell is "publishes", "with review" or no access, so a school's English teachers publish only in the English podcast and the general one, and its students send theirs for review.
@@ -98,6 +98,10 @@ If your site's address cannot be passed on automatically (for example, WordPress
 
 == Frequently Asked Questions ==
 
+= Can my face appear on the covers? =
+
+Yes. In VozCaster → Episodes → Characters, add each person with a name and a clear, well-lit photo of their face. Then, for each episode, mark in the bot or the app who appears on the cover ("me alone", "me with Mariano"…), and the AI draws them in a scene taken from the post. Your choice is kept for the next episodes. Use someone's face only with their permission. The photos are sent to the image AI only when a cover is generated, and the local AI does not use them.
+
 = Does it work with PowerPress? =
 
 Yes. PowerPress is a hard requirement — the plugin uses PowerPress to register episode metadata, enclosures, season and episode numbers.
@@ -122,7 +126,7 @@ Permanently, only in your own WordPress media library. VozCaster processes the a
 
 Your **audio is never sent to a third-party AI service**. Transcription runs on a local Whisper model on VozCaster's server, so the audio file itself stays on that server (and on Telegram, if you record there).
 
-To draft the episode **title, description and content**, VozCaster sends the transcribed *text* to Anthropic's Claude API. If you ask it to generate a cover image, the *image prompt* is sent to OpenAI's image API. These providers receive text only, and only when you request content or image generation. See the "External Services" section below for the providers and their privacy policies.
+To draft the episode **title, description and content**, VozCaster sends the transcribed *text* to Anthropic's Claude API. If you ask it to generate a cover image, the *image prompt* (the episode's post), and the style reference image and the face photos of the characters on that cover if you set them, are sent to Google's Gemini API, or to OpenAI's image API if Gemini is not available. Nothing is sent unless you request content or image generation, and your audio is never sent. See the "External Services" section below for the providers and their privacy policies.
 
 = Do I need Telegram? =
 
@@ -198,10 +202,10 @@ The following data is transmitted:
 4. **From the bot's server to Apple's public catalogue**
    - When you open the distribution list in the bot, it searches the public iTunes Search API for your podcast title to check whether your feed is already on Apple Podcasts. Only the podcast title is sent; the plugin itself makes no such request. Apple's privacy policy: https://www.apple.com/legal/privacy/
 
-5. **From the bot's server to AI providers (text only)**
+5. **From the bot's server to AI providers**
    - To draft the episode title, description and content, the bot sends the transcribed *text* of your recording to **Anthropic (Claude)**.
-   - If you request a cover image, the bot sends a *text prompt* to **OpenAI** to generate the image.
-   - Only text is sent, and only when content or image generation is requested. Your audio file is **never** transmitted to these providers.
+   - If you request a cover image, the bot sends a *text prompt* (the episode's post) to **Google (Gemini)** to generate the image, or to **OpenAI** if Gemini is not available. If you set them in VozCaster → Episodes, it also sends the style reference image and the face photos of the characters you chose for that cover.
+   - Data is sent only when content or image generation is requested. Your audio file is **never** transmitted to these providers.
 
 6. **From your WordPress site to the VozCaster service (only for sites whose hosting blocks VozCaster)**
    - When the service cannot reach your site, it keeps the episode (audio, cover, transcript, title and text) or the settings change and sends the user a single-use link to your site. When the user opens that link and confirms, your site downloads those files and data from https://app.vozcaster.com, publishes them through this plugin's own endpoints, reports the result to the service, and sends it an updated copy of the settings listed above (and the intro/outro files if they changed).
@@ -220,6 +224,9 @@ Service URLs and policies:
 * Anthropic (Claude, AI text generation): https://www.anthropic.com
 * Anthropic privacy policy: https://www.anthropic.com/legal/privacy
 * Anthropic terms of service: https://www.anthropic.com/legal/consumer-terms
+* Google Gemini API (AI image generation): https://ai.google.dev
+* Google privacy policy: https://policies.google.com/privacy
+* Gemini API terms of service: https://ai.google.dev/gemini-api/terms
 * OpenAI (AI image generation): https://openai.com
 * OpenAI privacy policy: https://openai.com/policies/privacy-policy
 * OpenAI terms of service: https://openai.com/policies/terms-of-use
@@ -237,6 +244,9 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.22.0 =
+* New: cover characters. Add the people of your show (or a mascot) with a name and a photo of the face in VozCaster → Episodes, and choose in VozCaster, episode by episode, who appears on the AI cover. The AI keeps their likeness and chooses the scene from the post. Up to 6 characters.
 
 = 1.21.0 =
 * New: users can see where they are connected (Telegram, the app…), when each connection was made and last used, and disconnect any of them, or all at once, from VozCaster → Connect or the connect block. Useful after losing a phone, without asking the administrator.

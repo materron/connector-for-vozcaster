@@ -33,6 +33,7 @@ delete_option( 'vpconn_separator_attachment_id' );
 delete_option( 'vpconn_writing_style' );
 delete_option( 'vpconn_title_template' );
 delete_option( 'vpconn_style_reference_id' );
+delete_option( 'vpconn_characters' );
 delete_option( 'vpconn_show_chapters' );
 delete_option( 'vpconn_gs_podcast_saved' );
 delete_option( 'vpconn_default_cover_id' );
