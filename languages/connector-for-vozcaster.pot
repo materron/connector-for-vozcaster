@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Connector for VozCaster 1.21.0\n"
+"Project-Id-Version: Connector for VozCaster 1.22.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/connector-for-vozcaster\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-12T09:58:58+00:00\n"
+"POT-Creation-Date: 2026-11-24T12:57:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: connector-for-vozcaster\n"
@@ -61,7 +61,7 @@ msgstr ""
 
 #: includes/class-access.php:226
 #: includes/class-roles.php:181
-#: includes/class-settings.php:1123
+#: includes/class-settings.php:1219
 msgid "Role"
 msgstr ""
 
@@ -94,8 +94,8 @@ msgstr ""
 #: includes/class-ai-notice.php:143
 #: includes/class-pairing.php:109
 #: includes/class-pairing.php:245
-#: includes/class-settings.php:81
 #: includes/class-settings.php:82
+#: includes/class-settings.php:83
 msgid "VozCaster"
 msgstr ""
 
@@ -111,28 +111,28 @@ msgstr ""
 msgid "The AI notice is turned off for the whole site in VozCaster → Episodes."
 msgstr ""
 
-#: includes/class-api.php:750
+#: includes/class-api.php:751
 msgid "The title pattern must include {title}, where the episode title goes."
 msgstr ""
 
-#: includes/class-api.php:760
+#: includes/class-api.php:761
 msgid "That attachment is not an image."
 msgstr ""
 
-#: includes/class-api.php:1030
+#: includes/class-api.php:1038
 msgid "You are not allowed to publish in this podcast."
 msgstr ""
 
-#: includes/class-api.php:1047
+#: includes/class-api.php:1055
 msgid "The scheduled date must be in the future."
 msgstr ""
 
-#: includes/class-api.php:1551
+#: includes/class-api.php:1559
 msgid "No file received."
 msgstr ""
 
 #. translators: %s: the rejected MIME content type.
-#: includes/class-api.php:1588
+#: includes/class-api.php:1596
 #, php-format
 msgid "File type not allowed: %s"
 msgstr ""
@@ -345,7 +345,7 @@ msgstr ""
 
 #: includes/class-assistant.php:642
 #: includes/class-distribution.php:278
-#: includes/class-settings.php:1239
+#: includes/class-settings.php:1335
 msgid "Title"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 
 #: includes/class-assistant.php:650
 #: includes/class-distribution.php:282
-#: includes/class-settings.php:1240
+#: includes/class-settings.php:1336
 msgid "Author"
 msgstr ""
 
@@ -447,14 +447,14 @@ msgid "Choose from the media library"
 msgstr ""
 
 #: includes/class-assistant.php:742
-#: includes/class-settings.php:460
-#: includes/class-settings.php:1105
+#: includes/class-settings.php:497
+#: includes/class-settings.php:1201
 msgid "Save and continue"
 msgstr ""
 
 #: includes/class-assistant.php:743
 #: includes/class-guided-setup.php:389
-#: includes/class-settings.php:460
+#: includes/class-settings.php:497
 msgid "Keep as is"
 msgstr ""
 
@@ -706,8 +706,29 @@ msgid "Back to the Telegram bot"
 msgstr ""
 
 #: includes/class-chapters.php:159
-#: includes/class-settings.php:625
+#: includes/class-settings.php:662
 msgid "Chapters"
+msgstr ""
+
+#: includes/class-characters.php:80
+#: includes/class-characters.php:94
+msgid "The list of characters is not valid."
+msgstr ""
+
+#. translators: %d: maximum number of characters.
+#: includes/class-characters.php:86
+#, php-format
+msgid "A podcast can have up to %d characters."
+msgstr ""
+
+#: includes/class-characters.php:99
+msgid "Every character needs a name."
+msgstr ""
+
+#. translators: %s: character name.
+#: includes/class-characters.php:105
+#, php-format
+msgid "%s needs a photo."
 msgstr ""
 
 #: includes/class-classes.php:125
@@ -745,7 +766,7 @@ msgstr ""
 #: includes/class-guided-setup.php:60
 #: includes/class-guided-setup.php:66
 #: includes/class-guided-setup.php:72
-#: includes/class-settings.php:61
+#: includes/class-settings.php:62
 msgid "Episodes"
 msgstr ""
 
@@ -904,7 +925,7 @@ msgid "Find my podcast"
 msgstr ""
 
 #: includes/class-distribution.php:343
-#: includes/class-settings.php:1241
+#: includes/class-settings.php:1337
 msgid "Status"
 msgstr ""
 
@@ -936,12 +957,12 @@ msgstr ""
 
 #: includes/class-frontend.php:65
 #: includes/class-frontend.php:70
-#: includes/class-settings.php:418
+#: includes/class-settings.php:455
 msgid "VozCaster — Access"
 msgstr ""
 
 #: includes/class-frontend.php:66
-#: includes/class-settings.php:63
+#: includes/class-settings.php:64
 msgid "Access"
 msgstr ""
 
@@ -991,7 +1012,7 @@ msgid "Episode returned to its author."
 msgstr ""
 
 #: includes/class-frontend.php:179
-#: includes/class-settings.php:353
+#: includes/class-settings.php:388
 msgid "Access settings saved."
 msgstr ""
 
@@ -1036,7 +1057,7 @@ msgid "This is the identity of your podcast: the name, description, cover and ca
 msgstr ""
 
 #: includes/class-guided-setup.php:49
-#: includes/class-settings.php:476
+#: includes/class-settings.php:513
 msgid "Episode titles"
 msgstr ""
 
@@ -1045,7 +1066,7 @@ msgid "Here you choose how the title of each episode is built: a prefix such as 
 msgstr ""
 
 #: includes/class-guided-setup.php:55
-#: includes/class-settings.php:597
+#: includes/class-settings.php:634
 msgid "How your podcast writes"
 msgstr ""
 
@@ -1054,7 +1075,7 @@ msgid "VozCaster can write the title, excerpt, post and chapters of each episode
 msgstr ""
 
 #: includes/class-guided-setup.php:61
-#: includes/class-settings.php:651
+#: includes/class-settings.php:688
 msgid "Post footer (signature)"
 msgstr ""
 
@@ -1071,7 +1092,7 @@ msgid "Episode covers can be drawn with AI. You can ask for a recurring element 
 msgstr ""
 
 #: includes/class-guided-setup.php:73
-#: includes/class-settings.php:767
+#: includes/class-settings.php:863
 msgid "AI content notice"
 msgstr ""
 
@@ -1081,7 +1102,7 @@ msgstr ""
 
 #: includes/class-guided-setup.php:78
 #: includes/class-guided-setup.php:84
-#: includes/class-settings.php:62
+#: includes/class-settings.php:63
 msgid "Audio"
 msgstr ""
 
@@ -1138,6 +1159,7 @@ msgid "Podcast: %s"
 msgstr ""
 
 #: includes/class-guided-setup.php:314
+#: includes/class-settings.php:825
 msgid "Change"
 msgstr ""
 
@@ -1538,9 +1560,9 @@ msgid "Delete this role?"
 msgstr ""
 
 #: includes/class-roles.php:203
-#: includes/class-settings.php:856
-#: includes/class-settings.php:897
-#: includes/class-settings.php:939
+#: includes/class-settings.php:952
+#: includes/class-settings.php:993
+#: includes/class-settings.php:1035
 msgid "Delete"
 msgstr ""
 
@@ -1578,587 +1600,631 @@ msgid "Select the style reference image"
 msgstr ""
 
 #: includes/class-settings.php:49
+msgid "Select a photo of the face"
+msgstr ""
+
+#: includes/class-settings.php:50
 msgid "Select"
 msgstr ""
 
-#: includes/class-settings.php:64
+#: includes/class-settings.php:65
 msgid "History"
 msgstr ""
 
-#: includes/class-settings.php:222
+#: includes/class-settings.php:257
 msgid "No file selected."
 msgstr ""
 
-#: includes/class-settings.php:321
+#: includes/class-settings.php:356
 msgid "Invalid attachment."
 msgstr ""
 
-#: includes/class-settings.php:351
+#: includes/class-settings.php:386
 msgid "Platform status saved."
 msgstr ""
 
-#: includes/class-settings.php:352
+#: includes/class-settings.php:387
 msgid "AI notice settings saved."
 msgstr ""
 
-#: includes/class-settings.php:354
+#: includes/class-settings.php:389
 msgid "Bot access revoked. The user will need to connect again."
 msgstr ""
 
-#: includes/class-settings.php:355
+#: includes/class-settings.php:390
 msgid "Intro file deleted."
 msgstr ""
 
-#: includes/class-settings.php:356
+#: includes/class-settings.php:391
 msgid "Outro file deleted."
 msgstr ""
 
-#: includes/class-settings.php:357
+#: includes/class-settings.php:392
 msgid "Intro file uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:358
+#: includes/class-settings.php:393
 msgid "Outro file uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:359
+#: includes/class-settings.php:394
 msgid "Error uploading intro file. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:360
+#: includes/class-settings.php:395
 msgid "Error uploading outro file. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:361
+#: includes/class-settings.php:396
 msgid "Separator sound deleted."
 msgstr ""
 
-#: includes/class-settings.php:362
+#: includes/class-settings.php:397
 msgid "Separator sound uploaded successfully."
 msgstr ""
 
-#: includes/class-settings.php:363
+#: includes/class-settings.php:398
 msgid "Error uploading the separator sound. Please make sure it is a valid audio file."
 msgstr ""
 
-#: includes/class-settings.php:364
+#: includes/class-settings.php:399
 msgid "Episode history cleared."
 msgstr ""
 
-#: includes/class-settings.php:365
+#: includes/class-settings.php:400
 msgid "Mix settings saved."
 msgstr ""
 
-#: includes/class-settings.php:366
+#: includes/class-settings.php:401
 msgid "Title settings saved."
 msgstr ""
 
-#: includes/class-settings.php:367
+#: includes/class-settings.php:402
 msgid "Post footer saved."
 msgstr ""
 
-#: includes/class-settings.php:368
+#: includes/class-settings.php:403
 msgid "Image style saved."
 msgstr ""
 
-#: includes/class-settings.php:369
+#: includes/class-settings.php:404
+msgid "Characters saved."
+msgstr ""
+
+#: includes/class-settings.php:405
+msgid "The characters were not saved."
+msgstr ""
+
+#: includes/class-settings.php:406
 msgid "Writing style saved."
 msgstr ""
 
-#: includes/class-settings.php:370
+#: includes/class-settings.php:407
 msgid "The title pattern must include {title}, where the episode title goes. Nothing was saved."
 msgstr ""
 
-#: includes/class-settings.php:416
+#: includes/class-settings.php:453
 msgid "VozCaster — Episodes"
 msgstr ""
 
-#: includes/class-settings.php:417
+#: includes/class-settings.php:454
 msgid "VozCaster — Audio"
 msgstr ""
 
-#: includes/class-settings.php:419
+#: includes/class-settings.php:456
 msgid "VozCaster — History"
 msgstr ""
 
-#: includes/class-settings.php:478
+#: includes/class-settings.php:515
 msgid "Define the prefix prepended to the number and title of each episode. Can also be changed from VozCaster, with /settings in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:490
+#: includes/class-settings.php:527
 msgid "Title pattern"
 msgstr ""
 
-#: includes/class-settings.php:500
+#: includes/class-settings.php:537
 msgid "Optional. When set, it replaces the prefix below. Placeholders: {title} (the episode title, required), {season}, {episode} (number within the season) and {number} (the number the prefix would use). The Spanish names {titulo}, {temporada}, {episodio} and {numero} work too."
 msgstr ""
 
-#: includes/class-settings.php:506
+#: includes/class-settings.php:543
 msgid "Title prefix"
 msgstr ""
 
-#: includes/class-settings.php:512
+#: includes/class-settings.php:549
 msgid "E.g.: Chapter, Episode, Ep."
 msgstr ""
 
-#: includes/class-settings.php:516
+#: includes/class-settings.php:553
 msgid "Empty = no prefix. With prefix and no season: «Chapter 15: Title». With season: «Chapter T2E15: Title»."
 msgstr ""
 
-#: includes/class-settings.php:521
+#: includes/class-settings.php:558
 msgid "Include season number"
 msgstr ""
 
-#: includes/class-settings.php:528
+#: includes/class-settings.php:565
 msgid "Include T2E15 in the title (if a prefix is defined)"
 msgstr ""
 
-#: includes/class-settings.php:534
+#: includes/class-settings.php:571
 msgid "Current season"
 msgstr ""
 
-#: includes/class-settings.php:541
+#: includes/class-settings.php:578
 msgid "auto"
 msgstr ""
 
 #. translators: %d: the season number currently stored.
-#: includes/class-settings.php:548
+#: includes/class-settings.php:585
 #, php-format
 msgid "Stored season: %d. Leave blank to keep it."
 msgstr ""
 
-#: includes/class-settings.php:550
+#: includes/class-settings.php:587
 msgid "Not set — the season is derived from the latest published episode."
 msgstr ""
 
-#: includes/class-settings.php:554
+#: includes/class-settings.php:591
 msgid "Changing this is a big change:"
 msgstr ""
 
-#: includes/class-settings.php:555
+#: includes/class-settings.php:592
 msgid "the next episode is numbered within the target season (E1 if it has no published episodes yet, otherwise it continues from the last one published in it), and the <itunes:season> tag in the RSS feed changes (Apple Podcasts, Spotify). Moving to a season below the latest published episode also requires editing that episode in PowerPress."
 msgstr ""
 
-#: includes/class-settings.php:561
+#: includes/class-settings.php:598
 msgid "Chapter numbering in title"
 msgstr ""
 
-#: includes/class-settings.php:568
+#: includes/class-settings.php:605
 msgid "Chapter within the season (resets at T1, T2…)"
 msgstr ""
 
-#: includes/class-settings.php:569
+#: includes/class-settings.php:606
 msgid "Example: «Chapter 5: Title» even if it is episode 37 overall."
 msgstr ""
 
-#: includes/class-settings.php:575
+#: includes/class-settings.php:612
 msgid "Global sequential number (inferred from the previous post title)"
 msgstr ""
 
-#: includes/class-settings.php:576
+#: includes/class-settings.php:613
 msgid "Example: «Chapter 38: Title». PowerPress still uses the chapter within the season internally."
 msgstr ""
 
-#: includes/class-settings.php:582
+#: includes/class-settings.php:619
 msgid "Save title settings"
 msgstr ""
 
-#: includes/class-settings.php:599
+#: includes/class-settings.php:636
 msgid "A style guide for the AI that writes the title, excerpt, post and chapters: tone, humour, register, words to use or avoid. Without it, the AI copies the tone it hears. You can also change it from VozCaster, with /tono in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:611
+#: includes/class-settings.php:648
 msgid "Style guide"
 msgstr ""
 
-#: includes/class-settings.php:617
+#: includes/class-settings.php:654
 msgid "e.g. Extremely irreverent, like the hosts. Swear words are fine. Keep the running jokes and the nicknames."
 msgstr ""
 
-#: includes/class-settings.php:620
+#: includes/class-settings.php:657
 msgid "Up to 1,000 characters. It shapes the voice only: the AI still writes in the language of the episode and never invents facts."
 msgstr ""
 
-#: includes/class-settings.php:629
+#: includes/class-settings.php:666
 msgid "Show the chapter list at the end of each post"
 msgstr ""
 
-#: includes/class-settings.php:632
+#: includes/class-settings.php:669
 msgid "With AI, the bot splits each episode into chapters with their times. They always go to the feed (podcast apps show them); this only decides whether the post lists them too."
 msgstr ""
 
-#: includes/class-settings.php:637
+#: includes/class-settings.php:674
 msgid "Save writing style"
 msgstr ""
 
-#: includes/class-settings.php:653
+#: includes/class-settings.php:690
 msgid "HTML or Gutenberg block markup appended automatically to every post published by VozCaster. You can also edit it from VozCaster, with /firma in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:665
+#: includes/class-settings.php:702
 msgid "Footer content"
 msgstr ""
 
-#: includes/class-settings.php:675
+#: includes/class-settings.php:712
 msgid "Accepts raw HTML and Gutenberg block comments. Appended verbatim after the episode content. Leave empty to disable."
 msgstr ""
 
-#: includes/class-settings.php:680
+#: includes/class-settings.php:717
 msgid "Save footer"
 msgstr ""
 
-#: includes/class-settings.php:696
+#: includes/class-settings.php:733
 msgid "Image style"
 msgstr ""
 
-#: includes/class-settings.php:698
+#: includes/class-settings.php:735
 msgid "A recurring element for every AI-generated cover of this podcast. You can also change it from VozCaster, with /estilo in Telegram."
 msgstr ""
 
-#: includes/class-settings.php:710
+#: includes/class-settings.php:747
 msgid "Style text"
 msgstr ""
 
-#: includes/class-settings.php:719
+#: includes/class-settings.php:756
 msgid "e.g. An orange cat wearing studio headphones"
 msgstr ""
 
-#: includes/class-settings.php:722
+#: includes/class-settings.php:759
 msgid "An element that appears in every cover of this podcast, woven into the scene of each episode. Leave empty to disable."
 msgstr ""
 
-#: includes/class-settings.php:727
+#: includes/class-settings.php:764
 msgid "Save image style"
 msgstr ""
 
-#: includes/class-settings.php:730
+#: includes/class-settings.php:767
 msgid "Style reference image"
 msgstr ""
 
-#: includes/class-settings.php:732
+#: includes/class-settings.php:769
 msgid "Generated covers take the style of this image (technique, colours, mood), never its subject. You can also send it from Telegram: a photo with the caption /referencia."
 msgstr ""
 
-#: includes/class-settings.php:743
+#: includes/class-settings.php:780
 msgid "Change image"
 msgstr ""
 
-#: includes/class-settings.php:743
+#: includes/class-settings.php:780
 msgid "Choose image"
 msgstr ""
 
-#: includes/class-settings.php:747
+#: includes/class-settings.php:784
+#: includes/class-settings.php:833
 msgid "Remove"
 msgstr ""
 
-#: includes/class-settings.php:769
-msgid "When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor."
-msgstr ""
-
-#: includes/class-settings.php:780
-msgid "Show the AI notice"
-msgstr ""
-
-#: includes/class-settings.php:784
-msgid "Show it on posts whose text was written by AI"
-msgstr ""
-
 #: includes/class-settings.php:790
-msgid "Notice text"
+msgid "Characters"
 msgstr ""
 
-#: includes/class-settings.php:794
-msgid "Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed."
+#: includes/class-settings.php:792
+msgid "People (or mascots) who can appear on the covers with their own face: a name and a clear, well-lit photo of the face. For each episode you choose in VozCaster who appears, and the AI decides the scene from the post. Only image models that accept photos use them; the local AI ignores them."
 msgstr ""
 
-#: includes/class-settings.php:799
-msgid "Position"
+#: includes/class-settings.php:800
+msgid "Photo"
 msgstr ""
 
-#: includes/class-settings.php:803
-msgid "At the end of the post"
-msgstr ""
-
-#: includes/class-settings.php:804
-msgid "At the beginning of the post"
-msgstr ""
-
-#: includes/class-settings.php:809
-msgid "VozCaster credit"
-msgstr ""
-
-#: includes/class-settings.php:813
-msgid "Show a \"Published with VozCaster\" line with a link under posts published from the bot"
-msgstr ""
-
-#: includes/class-settings.php:815
-msgid "Off by default. Turning it on helps VozCaster grow — thank you!"
-msgstr ""
-
-#: includes/class-settings.php:819
-msgid "Save notice settings"
-msgstr ""
-
-#: includes/class-settings.php:835
-msgid "Intro, outro &amp; separator"
-msgstr ""
-
-#: includes/class-settings.php:837
-msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu)."
-msgstr ""
-
-#: includes/class-settings.php:843
-msgid "Intro"
-msgstr ""
-
-#: includes/class-settings.php:855
-msgid "Delete the intro file?"
-msgstr ""
-
-#: includes/class-settings.php:860
-msgid "To replace the intro, upload a new file:"
-msgstr ""
-
-#: includes/class-settings.php:862
-msgid "No intro loaded."
-msgstr ""
-
-#: includes/class-settings.php:868
-msgid "Intro audio file"
-msgstr ""
-
-#: includes/class-settings.php:870
-msgid "Replace intro"
-msgstr ""
-
-#: includes/class-settings.php:870
-msgid "Upload intro"
-msgstr ""
-
-#: includes/class-settings.php:879
-#: includes/class-settings.php:920
-#: includes/class-settings.php:962
-msgid "Select from media library"
-msgstr ""
-
-#: includes/class-settings.php:884
-msgid "Outro"
-msgstr ""
-
-#: includes/class-settings.php:896
-msgid "Delete the outro file?"
-msgstr ""
-
-#: includes/class-settings.php:901
-msgid "To replace the outro, upload a new file:"
-msgstr ""
-
-#: includes/class-settings.php:903
-msgid "No outro loaded."
-msgstr ""
-
-#: includes/class-settings.php:909
-msgid "Outro audio file"
-msgstr ""
-
-#: includes/class-settings.php:911
-msgid "Replace outro"
-msgstr ""
-
-#: includes/class-settings.php:911
-msgid "Upload outro"
-msgstr ""
-
-#: includes/class-settings.php:925
-msgid "Separator sound"
-msgstr ""
-
-#: includes/class-settings.php:927
-msgid "Short sound played between the sections of an episode recorded in several audios (for example, interviews at an event). Without it, sections are joined with a one-second pause."
-msgstr ""
-
-#: includes/class-settings.php:938
-msgid "Delete the separator sound?"
-msgstr ""
-
-#: includes/class-settings.php:943
-msgid "To replace the separator sound, upload a new file:"
-msgstr ""
-
-#: includes/class-settings.php:945
-msgid "No separator sound loaded."
-msgstr ""
-
-#: includes/class-settings.php:951
-msgid "Separator sound file"
-msgstr ""
-
-#: includes/class-settings.php:953
-msgid "Replace separator sound"
-msgstr ""
-
-#: includes/class-settings.php:953
-msgid "Upload separator sound"
-msgstr ""
-
-#: includes/class-settings.php:987
-msgid "Audio mix settings (intro/outro)"
-msgstr ""
-
-#: includes/class-settings.php:989
-msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster."
-msgstr ""
-
-#: includes/class-settings.php:1001
-msgid "Intro duck-in second"
-msgstr ""
-
-#: includes/class-settings.php:1008
-#: includes/class-settings.php:1064
-msgid "seconds"
-msgstr ""
-
-#: includes/class-settings.php:1009
-msgid "The intro plays at 100% until this second. From here it starts fading down and the podcast voice fades in."
-msgstr ""
-
-#: includes/class-settings.php:1014
-msgid "Intro volume under podcast"
-msgstr ""
-
-#: includes/class-settings.php:1022
-msgid "Volume to which the intro fades during duck-in, before reaching 0. Example: 30 = intro fades to 30% while the voice comes in."
-msgstr ""
-
-#: includes/class-settings.php:1027
-msgid "Second at which intro reaches 0"
-msgstr ""
-
-#: includes/class-settings.php:1035
-msgid "seconds (empty = until the end of the intro file)"
-msgstr ""
-
-#: includes/class-settings.php:1036
-msgid "Exact second at which the intro reaches silence. If left empty, the fade lasts until the end of the intro file."
-msgstr ""
-
-#: includes/class-settings.php:1041
-msgid "Knee: seconds to reach duck volume"
-msgstr ""
-
-#: includes/class-settings.php:1049
-msgid "seconds after duck start (empty = linear)"
-msgstr ""
-
-#: includes/class-settings.php:1051
-msgid "Seconds after the duck start at which the intro has already dropped to the duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by a long gentle tail. The outro uses the exact mirror curve automatically. Leave empty for a linear fade."
-msgstr ""
-
-#: includes/class-settings.php:1057
-msgid "Seconds before end for outro fade-in"
-msgstr ""
-
-#: includes/class-settings.php:1065
-msgid "The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%."
-msgstr ""
-
-#: includes/class-settings.php:1070
-msgid "Outro volume under podcast"
-msgstr ""
-
-#: includes/class-settings.php:1078
-msgid "Maximum volume of the outro while the podcast voice is still playing. When the voice ends, the outro rises to 100%."
-msgstr ""
-
-#: includes/class-settings.php:1082
-msgid "Save mix settings"
-msgstr ""
-
-#: includes/class-settings.php:1097
-msgid "Who can publish, in which podcast"
-msgstr ""
-
-#: includes/class-settings.php:1107
-msgid "Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin."
-msgstr ""
-
-#: includes/class-settings.php:1110
-msgid "Connected users"
-msgstr ""
-
-#: includes/class-settings.php:1112
-msgid "Each authorized user connects their own account from VozCaster → Connect."
-msgstr ""
-
-#: includes/class-settings.php:1113
-msgid "Connect your account"
-msgstr ""
-
-#: includes/class-settings.php:1116
-msgid "Nobody has connected the bot to this site yet."
-msgstr ""
-
-#: includes/class-settings.php:1121
-msgid "Username"
-msgstr ""
-
-#: includes/class-settings.php:1122
+#: includes/class-settings.php:801
+#: includes/class-settings.php:1218
 msgid "Name"
 msgstr ""
 
-#: includes/class-settings.php:1124
+#: includes/class-settings.php:825
+msgid "Choose photo"
+msgstr ""
+
+#: includes/class-settings.php:829
+msgid "New character, e.g. Mariano"
+msgstr ""
+
+#. translators: %d: maximum number of characters.
+#: includes/class-settings.php:843
+#, php-format
+msgid "Up to %d characters. Use the face of a person only with their permission."
+msgstr ""
+
+#: includes/class-settings.php:846
+msgid "Save characters"
+msgstr ""
+
+#: includes/class-settings.php:865
+msgid "When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor."
+msgstr ""
+
+#: includes/class-settings.php:876
+msgid "Show the AI notice"
+msgstr ""
+
+#: includes/class-settings.php:880
+msgid "Show it on posts whose text was written by AI"
+msgstr ""
+
+#: includes/class-settings.php:886
+msgid "Notice text"
+msgstr ""
+
+#: includes/class-settings.php:890
+msgid "Leave it empty to use the default text (shown greyed out in the box), in the language of the site. Basic HTML such as links is allowed."
+msgstr ""
+
+#: includes/class-settings.php:895
+msgid "Position"
+msgstr ""
+
+#: includes/class-settings.php:899
+msgid "At the end of the post"
+msgstr ""
+
+#: includes/class-settings.php:900
+msgid "At the beginning of the post"
+msgstr ""
+
+#: includes/class-settings.php:905
+msgid "VozCaster credit"
+msgstr ""
+
+#: includes/class-settings.php:909
+msgid "Show a \"Published with VozCaster\" line with a link under posts published from the bot"
+msgstr ""
+
+#: includes/class-settings.php:911
+msgid "Off by default. Turning it on helps VozCaster grow — thank you!"
+msgstr ""
+
+#: includes/class-settings.php:915
+msgid "Save notice settings"
+msgstr ""
+
+#: includes/class-settings.php:931
+msgid "Intro, outro &amp; separator"
+msgstr ""
+
+#: includes/class-settings.php:933
+msgid "Upload your intro, outro and separator audio files here. They can also be uploaded from VozCaster: in the app (Site music and timings) or in the Telegram bot (Intro/Outro menu)."
+msgstr ""
+
+#: includes/class-settings.php:939
+msgid "Intro"
+msgstr ""
+
+#: includes/class-settings.php:951
+msgid "Delete the intro file?"
+msgstr ""
+
+#: includes/class-settings.php:956
+msgid "To replace the intro, upload a new file:"
+msgstr ""
+
+#: includes/class-settings.php:958
+msgid "No intro loaded."
+msgstr ""
+
+#: includes/class-settings.php:964
+msgid "Intro audio file"
+msgstr ""
+
+#: includes/class-settings.php:966
+msgid "Replace intro"
+msgstr ""
+
+#: includes/class-settings.php:966
+msgid "Upload intro"
+msgstr ""
+
+#: includes/class-settings.php:975
+#: includes/class-settings.php:1016
+#: includes/class-settings.php:1058
+msgid "Select from media library"
+msgstr ""
+
+#: includes/class-settings.php:980
+msgid "Outro"
+msgstr ""
+
+#: includes/class-settings.php:992
+msgid "Delete the outro file?"
+msgstr ""
+
+#: includes/class-settings.php:997
+msgid "To replace the outro, upload a new file:"
+msgstr ""
+
+#: includes/class-settings.php:999
+msgid "No outro loaded."
+msgstr ""
+
+#: includes/class-settings.php:1005
+msgid "Outro audio file"
+msgstr ""
+
+#: includes/class-settings.php:1007
+msgid "Replace outro"
+msgstr ""
+
+#: includes/class-settings.php:1007
+msgid "Upload outro"
+msgstr ""
+
+#: includes/class-settings.php:1021
+msgid "Separator sound"
+msgstr ""
+
+#: includes/class-settings.php:1023
+msgid "Short sound played between the sections of an episode recorded in several audios (for example, interviews at an event). Without it, sections are joined with a one-second pause."
+msgstr ""
+
+#: includes/class-settings.php:1034
+msgid "Delete the separator sound?"
+msgstr ""
+
+#: includes/class-settings.php:1039
+msgid "To replace the separator sound, upload a new file:"
+msgstr ""
+
+#: includes/class-settings.php:1041
+msgid "No separator sound loaded."
+msgstr ""
+
+#: includes/class-settings.php:1047
+msgid "Separator sound file"
+msgstr ""
+
+#: includes/class-settings.php:1049
+msgid "Replace separator sound"
+msgstr ""
+
+#: includes/class-settings.php:1049
+msgid "Upload separator sound"
+msgstr ""
+
+#: includes/class-settings.php:1083
+msgid "Audio mix settings (intro/outro)"
+msgstr ""
+
+#: includes/class-settings.php:1085
+msgid "Define how intro and outro music is mixed with the podcast audio. These are the default values and can be changed from VozCaster."
+msgstr ""
+
+#: includes/class-settings.php:1097
+msgid "Intro duck-in second"
+msgstr ""
+
+#: includes/class-settings.php:1104
+#: includes/class-settings.php:1160
+msgid "seconds"
+msgstr ""
+
+#: includes/class-settings.php:1105
+msgid "The intro plays at 100% until this second. From here it starts fading down and the podcast voice fades in."
+msgstr ""
+
+#: includes/class-settings.php:1110
+msgid "Intro volume under podcast"
+msgstr ""
+
+#: includes/class-settings.php:1118
+msgid "Volume to which the intro fades during duck-in, before reaching 0. Example: 30 = intro fades to 30% while the voice comes in."
+msgstr ""
+
+#: includes/class-settings.php:1123
+msgid "Second at which intro reaches 0"
+msgstr ""
+
+#: includes/class-settings.php:1131
+msgid "seconds (empty = until the end of the intro file)"
+msgstr ""
+
+#: includes/class-settings.php:1132
+msgid "Exact second at which the intro reaches silence. If left empty, the fade lasts until the end of the intro file."
+msgstr ""
+
+#: includes/class-settings.php:1137
+msgid "Knee: seconds to reach duck volume"
+msgstr ""
+
+#: includes/class-settings.php:1145
+msgid "seconds after duck start (empty = linear)"
+msgstr ""
+
+#: includes/class-settings.php:1147
+msgid "Seconds after the duck start at which the intro has already dropped to the duck volume %. A short value (e.g. 1) gives a sharp initial drop followed by a long gentle tail. The outro uses the exact mirror curve automatically. Leave empty for a linear fade."
+msgstr ""
+
+#: includes/class-settings.php:1153
+msgid "Seconds before end for outro fade-in"
+msgstr ""
+
+#: includes/class-settings.php:1161
+msgid "The outro starts playing in the background this many seconds before the podcast voice ends. When the voice ends, it rises to 100%."
+msgstr ""
+
+#: includes/class-settings.php:1166
+msgid "Outro volume under podcast"
+msgstr ""
+
+#: includes/class-settings.php:1174
+msgid "Maximum volume of the outro while the podcast voice is still playing. When the voice ends, the outro rises to 100%."
+msgstr ""
+
+#: includes/class-settings.php:1178
+msgid "Save mix settings"
+msgstr ""
+
+#: includes/class-settings.php:1193
+msgid "Who can publish, in which podcast"
+msgstr ""
+
+#: includes/class-settings.php:1203
+msgid "Tip: the VozCaster blocks (connect, classes, review and access) let your users do all this from a page of your site, without opening wp-admin."
+msgstr ""
+
+#: includes/class-settings.php:1206
+msgid "Connected users"
+msgstr ""
+
+#: includes/class-settings.php:1208
+msgid "Each authorized user connects their own account from VozCaster → Connect."
+msgstr ""
+
+#: includes/class-settings.php:1209
+msgid "Connect your account"
+msgstr ""
+
+#: includes/class-settings.php:1212
+msgid "Nobody has connected the bot to this site yet."
+msgstr ""
+
+#: includes/class-settings.php:1217
+msgid "Username"
+msgstr ""
+
+#: includes/class-settings.php:1220
 msgid "Bot status"
 msgstr ""
 
 #. translators: %d: number of places (app, Telegram, other phones) the user is connected from.
-#: includes/class-settings.php:1147
+#: includes/class-settings.php:1243
 #, php-format
 msgid "Connected from %d place"
 msgid_plural "Connected from %d places"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-settings.php:1148
+#: includes/class-settings.php:1244
 msgid "Connected"
 msgstr ""
 
-#: includes/class-settings.php:1152
+#: includes/class-settings.php:1248
 msgid "Role not authorized"
 msgstr ""
 
-#: includes/class-settings.php:1163
+#: includes/class-settings.php:1259
 msgid "Revoke access? The user will need to connect again."
 msgstr ""
 
-#: includes/class-settings.php:1164
+#: includes/class-settings.php:1260
 msgid "Revoke"
 msgstr ""
 
-#: includes/class-settings.php:1192
+#: includes/class-settings.php:1288
 msgid "PowerPress is not installed or not active. Episodes will be created without podcast data."
 msgstr ""
 
-#: includes/class-settings.php:1231
+#: includes/class-settings.php:1327
 msgid "Recent published episodes"
 msgstr ""
 
-#: includes/class-settings.php:1233
+#: includes/class-settings.php:1329
 msgid "No episodes have been published with the bot yet."
 msgstr ""
 
-#: includes/class-settings.php:1238
+#: includes/class-settings.php:1334
 msgid "Date"
 msgstr ""
 
-#: includes/class-settings.php:1242
+#: includes/class-settings.php:1338
 msgid "Link"
 msgstr ""
 
-#: includes/class-settings.php:1254
+#: includes/class-settings.php:1350
 msgid "View"
 msgstr ""
 
-#: includes/class-settings.php:1266
+#: includes/class-settings.php:1362
 msgid "Clear history"
 msgstr ""
 

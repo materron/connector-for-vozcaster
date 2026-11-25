@@ -46,6 +46,7 @@ class VPConn_Settings {
 				'selectOutro' => __( 'Select outro audio', 'connector-for-vozcaster' ),
 				'selectSeparator' => __( 'Select separator sound', 'connector-for-vozcaster' ),
 				'selectStyle' => __( 'Select the style reference image', 'connector-for-vozcaster' ),
+				'selectFace'  => __( 'Select a photo of the face', 'connector-for-vozcaster' ),
 				'select'      => __( 'Select', 'connector-for-vozcaster' ),
 			]
 		);
@@ -138,6 +139,40 @@ class VPConn_Settings {
 				$ref_id = absint( wp_unslash( $_POST['style_reference_id'] ?? 0 ) );
 				update_option( 'vpconn_style_reference_id', wp_attachment_is_image( $ref_id ) ? $ref_id : 0 );
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'image_style_saved' ], self::back_url() ) );
+				exit;
+
+			case 'save_characters':
+				$rows  = isset( $_POST['characters'] ) && is_array( $_POST['characters'] ) ? wp_unslash( $_POST['characters'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- each field is sanitized in VPConn_Characters::save().
+				$list  = [];
+				foreach ( $rows as $row ) {
+					if ( ! is_array( $row ) || ! empty( $row['remove'] ) ) {
+						continue;
+					}
+					$name     = sanitize_text_field( (string) ( $row['name'] ?? '' ) );
+					$image_id = absint( $row['image_id'] ?? 0 );
+					if ( '' === $name && ! $image_id ) {
+						continue; // The empty "new character" row.
+					}
+					$list[] = [
+						'id'       => sanitize_key( (string) ( $row['id'] ?? '' ) ),
+						'name'     => $name,
+						'image_id' => $image_id,
+					];
+				}
+				$saved = VPConn_Characters::save( $list );
+				if ( is_wp_error( $saved ) ) {
+					wp_safe_redirect(
+						add_query_arg(
+							[
+								'vpconn_msg' => 'characters_err',
+								'vpconn_err' => rawurlencode( $saved->get_error_message() ),
+							],
+							self::back_url( true )
+						)
+					);
+					exit;
+				}
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'characters_saved' ], self::back_url() ) );
 				exit;
 
 			case 'save_title_config':
@@ -366,11 +401,13 @@ class VPConn_Settings {
 			'title_config_saved'     => __( 'Title settings saved.', 'connector-for-vozcaster' ),
 			'post_footer_saved'      => __( 'Post footer saved.', 'connector-for-vozcaster' ),
 			'image_style_saved'      => __( 'Image style saved.', 'connector-for-vozcaster' ),
+			'characters_saved'       => __( 'Characters saved.', 'connector-for-vozcaster' ),
+			'characters_err'         => __( 'The characters were not saved.', 'connector-for-vozcaster' ),
 			'writing_style_saved'    => __( 'Writing style saved.', 'connector-for-vozcaster' ),
 			'title_template_err'     => __( 'The title pattern must include {title}, where the episode title goes. Nothing was saved.', 'connector-for-vozcaster' ),
 		];
 
-		$errors = [ 'intro_upload_err', 'outro_upload_err', 'separator_upload_err', 'title_template_err' ];
+		$errors = [ 'intro_upload_err', 'outro_upload_err', 'separator_upload_err', 'title_template_err', 'characters_err' ];
 		if ( in_array( $msg, $errors, true ) && isset( $messages[ $msg ] ) ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice detail after a nonce-verified redirect.
 			$detail = ! empty( $_GET['vpconn_err'] ) ? ' — ' . esc_html( rawurldecode( sanitize_text_field( wp_unslash( $_GET['vpconn_err'] ) ) ) ) : '';
@@ -748,6 +785,65 @@ class VPConn_Settings {
 						</button>
 					<?php endif; ?>
 				</p>
+			</form>
+
+			<h3 id="vpconn-characters"><?php esc_html_e( 'Characters', 'connector-for-vozcaster' ); ?></h3>
+			<p class="description">
+				<?php esc_html_e( 'People (or mascots) who can appear on the covers with their own face: a name and a clear, well-lit photo of the face. For each episode you choose in VozCaster who appears, and the AI decides the scene from the post. Only image models that accept photos use them; the local AI ignores them.', 'connector-for-vozcaster' ); ?>
+			</p>
+			<form method="post" action="" id="vpconn_characters_form">
+				<?php echo $nonce_field; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<input type="hidden" name="vpconn_action" value="save_characters">
+				<table class="widefat striped" style="max-width:640px;">
+					<thead>
+						<tr>
+							<th style="width:90px;"><?php esc_html_e( 'Photo', 'connector-for-vozcaster' ); ?></th>
+							<th><?php esc_html_e( 'Name', 'connector-for-vozcaster' ); ?></th>
+							<th style="width:110px;"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$rows = VPConn_Characters::get_all();
+						if ( count( $rows ) < VPConn_Characters::MAX ) {
+							$rows[] = [
+								'id'       => '',
+								'name'     => '',
+								'image_id' => 0,
+							];
+						}
+						foreach ( $rows as $i => $row ) :
+							$is_new  = '' === $row['id'];
+							$img_url = $row['image_id'] ? (string) wp_get_attachment_image_url( $row['image_id'], 'thumbnail' ) : '';
+							?>
+							<tr>
+								<td>
+									<input type="hidden" name="characters[<?php echo (int) $i; ?>][id]" value="<?php echo esc_attr( $row['id'] ); ?>">
+									<input type="hidden" name="characters[<?php echo (int) $i; ?>][image_id]" id="vpconn_face_id_<?php echo (int) $i; ?>" value="<?php echo esc_attr( (string) $row['image_id'] ); ?>">
+									<img id="vpconn_face_img_<?php echo (int) $i; ?>" src="<?php echo esc_url( $img_url ); ?>" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:50%;<?php echo $img_url ? '' : 'display:none;'; ?>">
+									<button type="button" class="button button-small" onclick="vpconnPickFace(<?php echo (int) $i; ?>)">
+										<?php echo esc_html( $img_url ? __( 'Change', 'connector-for-vozcaster' ) : __( 'Choose photo', 'connector-for-vozcaster' ) ); ?>
+									</button>
+								</td>
+								<td>
+									<input type="text" name="characters[<?php echo (int) $i; ?>][name]" value="<?php echo esc_attr( $row['name'] ); ?>" maxlength="<?php echo (int) VPConn_Characters::NAME_MAX; ?>" class="regular-text" placeholder="<?php echo esc_attr( $is_new ? __( 'New character, e.g. Mariano', 'connector-for-vozcaster' ) : '' ); ?>">
+								</td>
+								<td>
+									<?php if ( ! $is_new ) : ?>
+										<label><input type="checkbox" name="characters[<?php echo (int) $i; ?>][remove]" value="1"> <?php esc_html_e( 'Remove', 'connector-for-vozcaster' ); ?></label>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+				<p class="description">
+					<?php
+					/* translators: %d: maximum number of characters. */
+					echo esc_html( sprintf( __( 'Up to %d characters. Use the face of a person only with their permission.', 'connector-for-vozcaster' ), VPConn_Characters::MAX ) );
+					?>
+				</p>
+				<p><button type="submit" class="button"><?php esc_html_e( 'Save characters', 'connector-for-vozcaster' ); ?></button></p>
 			</form>
 		<?php
 	}

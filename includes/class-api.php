@@ -479,7 +479,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks', 'writing_style', 'title_template', 'style_reference', 'chapters' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks', 'writing_style', 'title_template', 'style_reference', 'chapters', 'characters' ],
 			]
 		);
 	}
@@ -610,6 +610,7 @@ class VPConn_API {
 			'style_reference_id'      => (int) get_option( 'vpconn_style_reference_id', 0 ),
 			'style_reference_url'     => self::style_reference_url(),
 			'show_chapters'           => VPConn_Chapters::show_in_post(),
+			'characters'              => VPConn_Characters::for_api(),
 		] + VPConn_Media::mix_config();
 	}
 
@@ -764,6 +765,13 @@ class VPConn_API {
 
 		if ( isset( $body['show_chapters'] ) ) {
 			update_option( VPConn_Chapters::OPTION_SHOW, $body['show_chapters'] ? 1 : 0 );
+		}
+
+		if ( isset( $body['characters'] ) ) {
+			$saved = VPConn_Characters::save( $body['characters'] );
+			if ( is_wp_error( $saved ) ) {
+				return $saved;
+			}
 		}
 
 		return new WP_REST_Response( [ 'updated' => true, 'settings' => $this->_read_all_settings() ] );
