@@ -479,7 +479,7 @@ class VPConn_API {
 				'version'     => VPCONN_VERSION,
 				'powerpress'  => $this->is_powerpress_active(),
 				// Lets the bot adapt to what this version supports.
-				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks', 'writing_style', 'title_template', 'style_reference', 'chapters', 'characters' ],
+				'features'    => [ 'ai_notice', 'pairing', 'role_auth', 'podcast_info', 'distribution', 'review', 'connect_shortcode', 'separator', 'app_pairing', 'schedule', 'relay', 'feed_access', 'classes', 'review_api', 'blocks', 'writing_style', 'title_template', 'style_reference', 'chapters', 'characters', 'feed_settings' ],
 			]
 		);
 	}
@@ -530,7 +530,7 @@ class VPConn_API {
 				'outro'  => VPConn_Media::get_intro_outro_info( 'outro' ),
 				'separator' => VPConn_Media::get_intro_outro_info( 'separator' ),
 				'config' => VPConn_Media::mix_config(),
-			]
+			] + self::scope_info()
 		);
 		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate' );
 		$response->header( 'Pragma', 'no-cache' );
@@ -562,14 +562,14 @@ class VPConn_API {
 		}
 		if ( array_key_exists( 'intro_fade_end', $body ) ) {
 			if ( is_null( $body['intro_fade_end'] ) ) {
-				delete_option( 'vpconn_intro_fade_end' );
+				VPConn_Feed_Scope::delete( 'vpconn_intro_fade_end' );
 			} else {
 				update_option( 'vpconn_intro_fade_end', (float) $body['intro_fade_end'] );
 			}
 		}
 		if ( array_key_exists( 'intro_knee_time', $body ) ) {
 			if ( is_null( $body['intro_knee_time'] ) ) {
-				delete_option( 'vpconn_intro_knee_time' );
+				VPConn_Feed_Scope::delete( 'vpconn_intro_knee_time' );
 			} else {
 				update_option( 'vpconn_intro_knee_time', max( 0, (float) $body['intro_knee_time'] ) );
 			}
@@ -611,7 +611,23 @@ class VPConn_API {
 			'style_reference_url'     => self::style_reference_url(),
 			'show_chapters'           => VPConn_Chapters::show_in_post(),
 			'characters'              => VPConn_Characters::for_api(),
-		] + VPConn_Media::mix_config();
+		] + VPConn_Media::mix_config() + self::scope_info();
+	}
+
+	/**
+	 * Which podcast the settings belong to: `feed` (the main one is
+	 * "podcast") and whether it has settings of its own or uses the main ones.
+	 *
+	 * @return array{feed: string, feed_name: string, own_settings: bool}
+	 */
+	public static function scope_info(): array {
+		$feed = VPConn_Feed_Scope::current();
+		$row  = null !== $feed ? VPConn_Access::find_feed( $feed ) : null;
+		return [
+			'feed'         => $feed ?? VPConn_Feed_Scope::MAIN,
+			'feed_name'    => $row ? (string) $row['name'] : '',
+			'own_settings' => null !== $feed && VPConn_Feed_Scope::has_own( $feed ),
+		];
 	}
 
 	/** URL of the cover style reference image, or '' if there is none. */
@@ -681,6 +697,15 @@ class VPConn_API {
 			return new WP_Error( 'invalid_body', 'JSON body requerido.', [ 'status' => 400 ] );
 		}
 
+		// A podcast goes back to the main podcast's settings.
+		if ( ! empty( $body['use_main_settings'] ) ) {
+			$feed = VPConn_Feed_Scope::current();
+			if ( null !== $feed ) {
+				VPConn_Feed_Scope::reset( $feed );
+			}
+			return new WP_REST_Response( $this->_read_all_settings() );
+		}
+
 		if ( array_key_exists( 'title_prefix', $body ) ) {
 			$prefix = sanitize_text_field( (string) $body['title_prefix'] );
 			update_option( 'vpconn_title_prefix', $prefix );
@@ -708,14 +733,14 @@ class VPConn_API {
 		}
 		if ( array_key_exists( 'intro_fade_end', $body ) ) {
 			if ( is_null( $body['intro_fade_end'] ) ) {
-				delete_option( 'vpconn_intro_fade_end' );
+				VPConn_Feed_Scope::delete( 'vpconn_intro_fade_end' );
 			} else {
 				update_option( 'vpconn_intro_fade_end', (float) $body['intro_fade_end'] );
 			}
 		}
 		if ( array_key_exists( 'intro_knee_time', $body ) ) {
 			if ( is_null( $body['intro_knee_time'] ) ) {
-				delete_option( 'vpconn_intro_knee_time' );
+				VPConn_Feed_Scope::delete( 'vpconn_intro_knee_time' );
 			} else {
 				update_option( 'vpconn_intro_knee_time', max( 0, (float) $body['intro_knee_time'] ) );
 			}
@@ -1308,7 +1333,9 @@ class VPConn_API {
 	 * `get_next_episode_info()` then treats as the source of truth.
 	 */
 	public function season_increment( WP_REST_Request $request ): WP_REST_Response {
-		$before   = $this->get_next_episode_info( 'podcast' );
+		// Each podcast runs its own seasons (the request's `feed` is in scope).
+		$feed     = VPConn_Feed_Scope::current() ?? 'podcast';
+		$before   = $this->get_next_episode_info( $feed );
 		$previous = (int) $before['season_number'];
 
 		$target = (int) $request->get_param( 'season' );
@@ -1326,7 +1353,7 @@ class VPConn_API {
 		// Recompute so the caller can tell the user the real next episode: it is
 		// E1 only when the target season has no published episodes yet, otherwise
 		// it continues from the last published episode of that season.
-		$after = $this->get_next_episode_info( 'podcast' );
+		$after = $this->get_next_episode_info( $feed );
 		return new WP_REST_Response(
 			[
 				'season'               => (int) $after['season_number'],
@@ -1359,6 +1386,19 @@ class VPConn_API {
 	 * @return array{episode_number: int, season_number: int}
 	 */
 	private function get_next_episode_info( string $feed_slug = 'podcast' ): array {
+		// The numbering settings and the season are the podcast's own.
+		return VPConn_Feed_Scope::run(
+			$feed_slug,
+			fn() => $this->next_episode_info_in_scope( $feed_slug )
+		);
+	}
+
+	/**
+	 * get_next_episode_info() with $feed_slug already in scope.
+	 *
+	 * @return array{episode_number: int, season_number: int}
+	 */
+	private function next_episode_info_in_scope( string $feed_slug ): array {
 		$mode = (string) get_option( 'vpconn_episode_numbering_mode', 'enclosure' );
 
 		// All published posts in the feed that have a non-empty enclosure meta
