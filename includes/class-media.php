@@ -72,7 +72,8 @@ class VPConn_Media {
 	public static function mix_settings(): array {
 		$intro_len  = self::music_length( 'intro' );
 		$outro_len  = self::music_length( 'outro' );
-		$configured = false !== get_option( 'vpconn_intro_duck_start', false );
+		// null, not false, as the default: see VPConn_Feed_Scope::filter_get().
+		$configured = null !== get_option( 'vpconn_intro_duck_start', null );
 
 		$ds = (float) get_option( 'vpconn_intro_duck_start', null !== $intro_len ? min( self::MIX_SOLO_S, $intro_len ) : self::MIX_SOLO_S );
 
@@ -118,7 +119,7 @@ class VPConn_Media {
 		// Verificar que el attachment sigue existiendo en la biblioteca.
 		$url = wp_get_attachment_url( $id );
 		if ( ! $url ) {
-			delete_option( $option );
+			VPConn_Feed_Scope::delete( $option );
 			return [ 'exists' => false ];
 		}
 
@@ -147,7 +148,7 @@ class VPConn_Media {
 	 */
 	public static function clear_intro_outro( string $type ): void {
 		$option = self::option_for( $type );
-		delete_option( $option );
+		VPConn_Feed_Scope::delete( $option );
 	}
 
 	/**
@@ -163,9 +164,14 @@ class VPConn_Media {
 			return false;
 		}
 
+		// Another podcast of the site still uses the file: only this one lets go of it.
+		if ( VPConn_Feed_Scope::attachment_used_elsewhere( $id ) ) {
+			VPConn_Feed_Scope::delete( $option );
+			return true;
+		}
 		$deleted = (bool) wp_delete_attachment( $id, true );
 		if ( $deleted ) {
-			delete_option( $option );
+			VPConn_Feed_Scope::delete( $option );
 		}
 		return $deleted;
 	}

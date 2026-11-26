@@ -210,12 +210,12 @@ class VPConn_Settings {
 				update_option( 'vpconn_intro_duck_start',  max( 0, $duck_start ) );
 				update_option( 'vpconn_intro_duck_volume', min( 100, max( 1, $duck_vol ) ) );
 				if ( '' === $fade_end ) {
-					delete_option( 'vpconn_intro_fade_end' );
+					VPConn_Feed_Scope::delete( 'vpconn_intro_fade_end' );
 				} else {
 					update_option( 'vpconn_intro_fade_end', max( $duck_start + 1, $fade_end ) );
 				}
 				if ( '' === $knee_delay || $knee_delay <= 0 ) {
-					delete_option( 'vpconn_intro_knee_time' );
+					VPConn_Feed_Scope::delete( 'vpconn_intro_knee_time' );
 				} else {
 					// Guardar como segundo absoluto: duck_start + knee_delay
 					update_option( 'vpconn_intro_knee_time', $duck_start + $knee_delay );
@@ -358,6 +358,14 @@ class VPConn_Settings {
 				}
 				exit;
 
+			case 'use_main_settings':
+				$feed = VPConn_Feed_Scope::current();
+				if ( null !== $feed ) {
+					VPConn_Feed_Scope::reset( $feed );
+				}
+				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'main_settings_restored' ], self::back_url() ) );
+				exit;
+
 			case 'clear_log':
 				update_option( self::OPTION_LOG, [] );
 				wp_safe_redirect( add_query_arg( [ 'vpconn_msg' => 'log_cleared' ], self::back_url() ) );
@@ -398,6 +406,7 @@ class VPConn_Settings {
 			'separator_upload_err'   => __( 'Error uploading the separator sound. Please make sure it is a valid audio file.', 'connector-for-vozcaster' ),
 			'log_cleared'            => __( 'Episode history cleared.', 'connector-for-vozcaster' ),
 			'mix_config_saved'       => __( 'Mix settings saved.', 'connector-for-vozcaster' ),
+			'main_settings_restored' => __( 'This podcast uses the main podcast settings again.', 'connector-for-vozcaster' ),
 			'title_config_saved'     => __( 'Title settings saved.', 'connector-for-vozcaster' ),
 			'post_footer_saved'      => __( 'Post footer saved.', 'connector-for-vozcaster' ),
 			'image_style_saved'      => __( 'Image style saved.', 'connector-for-vozcaster' ),
@@ -478,7 +487,10 @@ class VPConn_Settings {
 			return VPConn_Guided_Setup::return_url( $stay );
 		}
 		$tab  = str_starts_with( $page, 'vozcaster-' ) ? substr( $page, strlen( 'vozcaster-' ) ) : '';
-		return self::get_page_url( array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes' );
+		$url  = self::get_page_url( array_key_exists( $tab, self::get_page_titles() ) ? $tab : 'episodes' );
+		// Back to the podcast whose settings were saved.
+		$feed = VPConn_Feed_Scope::current();
+		return null !== $feed ? add_query_arg( 'vpconn_feed', $feed, $url ) : $url;
 	}
 
 	/** Hidden field that sends the user to the next assistant step after saving. */
@@ -667,6 +679,9 @@ class VPConn_Settings {
 							</label>
 							<p class="description">
 								<?php esc_html_e( 'With AI, the bot splits each episode into chapters with their times. They always go to the feed (podcast apps show them); this only decides whether the post lists them too.', 'connector-for-vozcaster' ); ?>
+								<?php if ( null !== VPConn_Feed_Scope::current() ) : ?>
+									<strong><?php esc_html_e( 'This option is the same for every podcast of the site.', 'connector-for-vozcaster' ); ?></strong>
+								<?php endif; ?>
 							</p>
 						</td>
 					</tr>
@@ -864,6 +879,9 @@ class VPConn_Settings {
 			<p class="description">
 				<?php esc_html_e( 'When the bot writes the text of a post with AI, a short notice is shown with it so readers know. It is added when the post is displayed, so changes here apply to every post published from the bot. It can also be hidden on a single post from the editor.', 'connector-for-vozcaster' ); ?>
 			</p>
+			<?php if ( null !== VPConn_Feed_Scope::current() ) : ?>
+			<p class="description"><strong><?php esc_html_e( 'This notice is the same for every podcast of the site.', 'connector-for-vozcaster' ); ?></strong></p>
+			<?php endif; ?>
 
 			
 			<?php endif; ?>
@@ -1269,6 +1287,69 @@ class VPConn_Settings {
 		<?php
 	}
 
+	/**
+	 * Chooser of the podcast whose settings the Episodes and Audio pages show,
+	 * with what applies to it. Only on sites with more than one podcast.
+	 *
+	 * @param string $tab Current page.
+	 */
+	private static function feed_selector( string $tab ): void {
+		$feeds = array_values(
+			array_filter(
+				self::get_powerpress_feeds(),
+				static fn( $f ) => VPConn_Feed_Scope::MAIN !== $f['slug']
+			)
+		);
+		if ( ! $feeds ) {
+			return;
+		}
+		$current = VPConn_Feed_Scope::current();
+		$main    = null;
+		foreach ( self::get_powerpress_feeds() as $f ) {
+			if ( VPConn_Feed_Scope::MAIN === $f['slug'] ) {
+				$main = $f;
+			}
+		}
+		$main_label = $main
+			/* translators: %s: name of the site's main podcast. */
+			? sprintf( __( '%s (main podcast)', 'connector-for-vozcaster' ), $main['name'] )
+			: __( 'All podcasts (default settings)', 'connector-for-vozcaster' );
+		$page       = 'vozcaster-' . $tab;
+		?>
+		<form method="get" action="<?php echo esc_url( admin_url( 'admin.php' ) ); ?>" class="vpconn-feed-selector" style="margin:12px 0;padding:12px 16px;background:#fff;border:1px solid #c3c4c7;border-left:4px solid #2e276b;">
+			<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>">
+			<label for="vpconn_feed"><strong><?php esc_html_e( 'Settings of the podcast:', 'connector-for-vozcaster' ); ?></strong></label>
+			<select name="vpconn_feed" id="vpconn_feed" onchange="this.form.submit()">
+				<option value=""<?php selected( null, $current ); ?>><?php echo esc_html( $main_label ); ?></option>
+				<?php foreach ( $feeds as $f ) : ?>
+					<option value="<?php echo esc_attr( $f['slug'] ); ?>"<?php selected( $f['slug'], $current ); ?>><?php echo esc_html( $f['name'] ); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<noscript><button type="submit" class="button"><?php esc_html_e( 'Show', 'connector-for-vozcaster' ); ?></button></noscript>
+			<p class="description" style="margin:8px 0 0;">
+				<?php
+				if ( null === $current ) {
+					esc_html_e( 'These settings are used by every podcast that has no settings of its own.', 'connector-for-vozcaster' );
+				} elseif ( VPConn_Feed_Scope::has_own( $current ) ) {
+					esc_html_e( 'This podcast has settings of its own: what you change here only applies to it. The season is always per podcast.', 'connector-for-vozcaster' );
+				} else {
+					esc_html_e( 'This podcast uses the main podcast settings (shown below). If you save any change here, it gets its own copy and the change only applies to it.', 'connector-for-vozcaster' );
+				}
+				?>
+			</p>
+		</form>
+		<?php if ( null !== $current && VPConn_Feed_Scope::has_own( $current ) ) : ?>
+			<form method="post" action="" style="margin:-4px 0 12px;">
+				<?php wp_nonce_field( 'vpconn_settings_action' ); ?>
+				<input type="hidden" name="vpconn_action" value="use_main_settings">
+				<button type="submit" class="button" onclick="return confirm(<?php echo esc_attr( wp_json_encode( __( 'This podcast will lose its own music, titles, styles and characters and use the main podcast ones. Continue?', 'connector-for-vozcaster' ) ) ); ?>);">
+					<?php esc_html_e( 'Use the main podcast settings again', 'connector-for-vozcaster' ); ?>
+				</button>
+			</form>
+		<?php endif; ?>
+		<?php
+	}
+
 	private function render_page( string $tab ): void {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
@@ -1288,6 +1369,12 @@ class VPConn_Settings {
 					<?php esc_html_e( 'PowerPress is not installed or not active. Episodes will be created without podcast data.', 'connector-for-vozcaster' ); ?>
 				</p></div>
 			<?php endif; ?>
+
+			<?php
+			if ( in_array( $tab, [ 'episodes', 'audio' ], true ) ) {
+				self::feed_selector( $tab );
+			}
+			?>
 
 			<?php if ( 'episodes' === $tab ) : ?>
 

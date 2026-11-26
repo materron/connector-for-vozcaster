@@ -210,6 +210,13 @@ class VPConn_Relay {
 			foreach ( [ '/episode/next-number', '/podcast', '/distribution' ] as $route ) {
 				$calls[] = [ $route, [ 'feed' => $feed['slug'] ] ];
 			}
+			// Settings and music of each podcast other than the main one (the
+			// season is always its own, so every podcast is sent).
+			if ( VPConn_Feed_Scope::MAIN !== $feed['slug'] ) {
+				foreach ( [ '/settings', '/media/intro-outro' ] as $route ) {
+					$calls[] = [ $route, [ 'feed' => $feed['slug'] ] ];
+				}
+			}
 		}
 		foreach ( $calls as [ $route, $query ] ) {
 			$result = self::dispatch( $user_id, 'GET', $route, [ 'query' => $query ] );
@@ -224,10 +231,10 @@ class VPConn_Relay {
 
 	/** Local file of a media URL of this site (intro, outro, separator). */
 	private static function media_file( string $url ): ?string {
-		foreach ( [ 'intro', 'outro', 'separator' ] as $type ) {
-			$info = VPConn_Media::get_intro_outro_info( $type );
-			if ( ! empty( $info['exists'] ) && $info['url'] === $url ) {
-				$path = get_attached_file( (int) $info['id'] );
+		// The intro, outro and separator of any of the site's podcasts.
+		foreach ( VPConn_Feed_Scope::all_audio_attachments() as $id ) {
+			if ( wp_get_attachment_url( $id ) === $url ) {
+				$path = get_attached_file( $id );
 				return $path && is_readable( $path ) ? $path : null;
 			}
 		}
@@ -549,6 +556,7 @@ class VPConn_Relay {
 							'X-VozPress-Filename'   => (string) ( $op['filename'] ?? 'audio.mp3' ),
 						],
 						'body'    => $bytes,
+						'query'   => (array) ( $op['query'] ?? [] ),
 					]
 				);
 				if ( 202 === $out['status'] ) {
@@ -577,6 +585,7 @@ class VPConn_Relay {
 							'Content-Disposition' => 'attachment; filename=' . sanitize_file_name( (string) ( $op['filename'] ?? 'file' ) ),
 						],
 						'body'    => $bytes,
+						'query'   => (array) ( $op['query'] ?? [] ),
 					]
 				);
 				if ( $out['status'] < 300 ) {
@@ -587,6 +596,8 @@ class VPConn_Relay {
 			}
 		} else {
 			$args = isset( $op['json'] ) ? [ 'json' => (array) $op['json'] ] : [];
+			// The podcast a settings change is for (`feed`).
+			$args['query'] = (array) ( $op['query'] ?? [] );
 			$out  = self::dispatch( (int) $user_id, (string) ( $op['method'] ?? 'POST' ), (string) $op['route'], $args );
 			if ( $out['status'] < 300 ) {
 				$result = $out['data'];

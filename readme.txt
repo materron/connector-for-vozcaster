@@ -4,7 +4,7 @@ Tags: podcast, powerpress, podcast production, transcription, audio
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.22.0
+Stable tag: 1.23.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,7 @@ Can't see the player? [Watch it on YouTube](https://www.youtube.com/watch?v=Wexf
 * A **VozCaster** menu with **Connect in the app** and **Connect in Telegram** buttons for each podcast: no address to type, no second login.
 * **Per-podcast settings**: title prefix or a title pattern with placeholders (E{episode}S{season} ({title})), season, how your podcast writes (a style guide for the AI), intro, outro and separator sound with their mixing times, post signature, a fixed element, a style reference image and characters (name and face photo) for the covers, and category mapping.
 * **Chapters**: listed at the end of the post and added to the feed as `<podcast:chapters>`, so podcast apps show them.
-* **Several podcasts on the same site**, with PowerPress custom channels or category podcasting.
+* **Several podcasts on the same site**, with PowerPress custom channels or category podcasting, each with its own music, titles, season, styles and characters if you want.
 * **Who publishes where**: a table of roles × podcasts where each cell is "publishes", "with review" or no access, so a school's English teachers publish only in the English podcast and the general one, and its students send theirs for review.
 * **Classes**: groups inside a podcast (B1.1, "Mila's students"…), created by the teachers themselves, each with its own page, its own feed and the teachers who review it. Their episodes are published in the podcast as usual; at the end of the year a class is archived, never deleted.
 * **Review**: what is sent for review reaches the teachers of its class, by email and in VozCaster. They listen to it and publish it, or return it to its author with a comment.
@@ -101,6 +101,10 @@ If your site's address cannot be passed on automatically (for example, WordPress
 = Can my face appear on the covers? =
 
 Yes. In VozCaster → Episodes → Characters, add each person with a name and a clear, well-lit photo of their face. Then, for each episode, mark in the bot or the app who appears on the cover ("me alone", "me with Mariano"…), and the AI draws them in a scene taken from the post. Your choice is kept for the next episodes. Use someone's face only with their permission. The photos are sent to the image AI only when a cover is generated, and the local AI does not use them.
+
+= My site has several podcasts. Can each one have its own intro, outro and settings? =
+
+Yes. In VozCaster → Episodes and VozCaster → Audio, choose the podcast at the top. A podcast uses the main podcast's settings until you change something for it: then it gets its own copy, and only that podcast changes. The same happens when you change the music or the settings from VozCaster while that podcast is the active one. Each podcast always keeps its own season. The AI notice is the same for the whole site.
 
 = Does it work with PowerPress? =
 
@@ -244,6 +248,10 @@ Service URLs and policies:
 6. VozCaster → Access: roles authorised to publish from the bot and connected users.
 
 == Changelog ==
+
+= 1.23.0 =
+* New: settings per podcast. On sites with several podcasts, each one can have its own intro, outro and separator sound, mixing times, title pattern, writing style, cover style, reference image and characters. Choose the podcast at the top of VozCaster → Episodes and VozCaster → Audio. Podcasts you don't change keep using the main podcast's settings.
+* Fix: the season was shared by all the podcasts of a site, so a new podcast could start in another one's season. Now each podcast has its own.
 
 = 1.22.0 =
 * New: cover characters. Add the people of your show (or a mascot) with a name and a photo of the face in VozCaster → Episodes, and choose in VozCaster, episode by episode, who appears on the AI cover. The AI keeps their likeness and chooses the scene from the post. Up to 6 characters.
